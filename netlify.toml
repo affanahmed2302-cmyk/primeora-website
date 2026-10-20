@@ -15,19 +15,23 @@
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), browsing-topics=()"
     X-DNS-Prefetch-Control = "on"
 
-# Noindex protection for Deploy Previews and Branch Subdomains
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Robots-Tag = "noindex, nofollow"
-  [context.deploy-preview.headers.values]
-    X-Robots-Tag = "noindex, nofollow"
-  [context.branch-deploy.headers.values]
-    X-Robots-Tag = "noindex, nofollow"
-
-# Admin section security
+# Admin portal security and indexing guard
 [[headers]]
   for = "/admin/*"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
     Cache-Control = "no-store, no-cache, must-revalidate, proxy-revalidate"
+
+# Inbound enquiry and team API caching guard
+[[headers]]
+  for = "/api/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store, no-cache, must-revalidate, proxy-revalidate"
+
+# Non-production contexts: Deploy Previews & Branch Deploys must not be indexed by crawlers
+[context.deploy-preview.environment]
+  NEXT_PUBLIC_APP_ENV = "preview"
+
+[context.branch-deploy.environment]
+  NEXT_PUBLIC_APP_ENV = "branch"

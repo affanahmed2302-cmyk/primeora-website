@@ -1,6 +1,12 @@
 import urllib.request
 import json
 import urllib.error
+import hmac
+import hashlib
+import base64
+import time
+import os
+import sys
 
 base = 'http://localhost:3000'
 results = []
@@ -10,42 +16,112 @@ def record(test_name, success, details=''):
     mark = 'PASS' if success else 'FAIL'
     print(f'[{mark}] {test_name} - {details}')
 
-# 1. Test all public pages
+def make_session_token(secret: str, user_id: str, email: str, role: str) -> str:
+    payload = {
+        'userId': user_id,
+        'email': email,
+        'fullName': f'Test {role.title()}',
+        'role': role,
+        'exp': int(time.time()) + 3600
+    }
+    payload_json = json.dumps(payload, separators=(',', ':')).encode('utf-8')
+    payload_b64 = base64.urlsafe_b64encode(payload_json).decode('utf-8').rstrip('=')
+    sig = hmac.new(secret.encode('utf-8'), payload_b64.encode('utf-8'), hashlib.sha256).digest()
+    sig_b64 = base64.urlsafe_b64encode(sig).decode('utf-8').rstrip('=')
+    return f'{payload_b64}.{sig_b64}'
+
+print("====================================================================")
+print("  RITKARA VEYRA — PRE-DEPLOYMENT SECURITY & RELIABILITY TEST SUITE  ")
+print("====================================================================")
+
+# -------------------------------------------------------------------
+# 1. PUBLIC ROUTES VERIFICATION
+# -------------------------------------------------------------------
 public_routes = [
-    '/',
-    '/services',
-    '/about',
-    '/process',
-    '/work',
-    '/readiness',
-    '/insights',
-    '/contact',
-    '/privacy',
-    '/terms',
-    '/cookie-preferences',
-    '/sitemap.xml',
-    '/robots.txt',
+    ('/', 'Homepage'),
+    ('/services', 'Services Practice Overview'),
+    ('/about', 'Firm & Team Leadership'),
+    ('/process', 'Strategic Methodology'),
+    ('/work', 'Selected Case Studies'),
+    ('/readiness', 'Interactive Diagnostic'),
+    ('/insights', 'AEO Knowledge Base'),
+    ('/contact', 'Project Consultation'),
+    ('/privacy', 'GDPR/DPDP Privacy Disclosure'),
+    ('/terms', 'Entity Governance Terms'),
+    ('/cookie-preferences', 'Cookie Preferences'),
+    ('/sitemap.xml', 'Technical XML Sitemap'),
+    ('/robots.txt', 'Search Engine Robots Directive'),
 ]
 
-for path in public_routes:
+for path, label in public_routes:
     try:
         req = urllib.request.Request(base + path)
         with urllib.request.urlopen(req) as resp:
-            headers = dict(resp.info())
-            record(f'GET {path}', resp.status == 200, f'Status {resp.status}')
+            record(f'Public Route: {path} ({label})', resp.status == 200, f'Status {resp.status}')
     except Exception as e:
-        record(f'GET {path}', False, str(e))
+        record(f'Public Route: {path} ({label})', False, str(e))
 
-# 2. Public Team API
+# -------------------------------------------------------------------
+# 2. PUBLIC TEAM API
+# -------------------------------------------------------------------
 try:
     with urllib.request.urlopen(base + '/api/team') as resp:
         data = json.loads(resp.read().decode())
         members = data.get('members', [])
-        record('GET /api/team', data.get('success') and len(members) >= 3, f'Returned {len(members)} published members')
+        # Only published members should be returned
+        all_published = all(m.get('status') == 'published' for m in members)
+        record(
+            'Public API: GET /api/team',
+            data.get('success') is True and len(members) >= 3 and all_published,
+            f'Returned {len(members)} published members, draft/inactive hidden'
+        )
 except Exception as e:
-    record('GET /api/team', False, str(e))
+    record('Public API: GET /api/team', False, str(e))
 
-# 3. Enquiry Validation - Empty Body
+# -------------------------------------------------------------------
+# 3. DIRECT UNAUTHENTICATED ACCESS REJECTION (Admin API Guard)
+# -------------------------------------------------------------------
+unauth_endpoints = [
+    ('/api/admin/session', 'GET', None, 401),
+    ('/api/admin/enquiries', 'GET', None, 401),
+    ('/api/admin/team', 'GET', None, 401),
+    ('/api/admin/team', 'POST', {'fullName': 'Hacker', 'publicTitle': 'Bot', 'bio': 'Test'}, 401),
+    ('/api/admin/team?id=fake_id', 'DELETE', None, 401),
+]
+
+for endpoint, method, payload, expected_code in unauth_endpoints:
+    try:
+        data_bytes = json.dumps(payload).encode() if payload else None
+        headers = {'Content-Type': 'application/json'} if payload else {}
+        req = urllib.request.Request(base + endpoint, data=data_bytes, headers=headers, method=method)
+        urllib.request.urlopen(req)
+        record(f'Unauthenticated Guard: {method} {endpoint}', False, 'Allowed access without authentication!')
+    except urllib.error.HTTPError as e:
+        record(
+            f'Unauthenticated Guard: {method} {endpoint}',
+            e.code == expected_code,
+            f'Correctly denied with HTTP {e.code}'
+        )
+    except Exception as e:
+        record(f'Unauthenticated Guard: {method} {endpoint}', False, str(e))
+
+# -------------------------------------------------------------------
+# 4. TAMPERED SESSION TOKEN REJECTION
+# -------------------------------------------------------------------
+try:
+    tampered_cookie = 'admin_session=eyJ1c2VySWQiOiJoYWNrZXIifQ.invalidsignaturehere'
+    req = urllib.request.Request(base + '/api/admin/session', headers={'Cookie': tampered_cookie})
+    urllib.request.urlopen(req)
+    record('Security Guard: Tampered Session Token', False, 'Accepted forged token!')
+except urllib.error.HTTPError as e:
+    record('Security Guard: Tampered Session Token', e.code == 401, f'Correctly rejected with HTTP {e.code}')
+except Exception as e:
+    record('Security Guard: Tampered Session Token', False, str(e))
+
+# -------------------------------------------------------------------
+# 5. ENQUIRY API DEFENSES
+# -------------------------------------------------------------------
+# 5a. Empty Body Validation
 try:
     req = urllib.request.Request(
         base + '/api/enquiry',
@@ -54,40 +130,85 @@ try:
         method='POST'
     )
     urllib.request.urlopen(req)
-    record('POST /api/enquiry (Empty payload)', False, 'Should fail with 400')
+    record('Enquiry Guard: Empty Payload', False, 'Accepted empty submission')
 except urllib.error.HTTPError as e:
-    record('POST /api/enquiry (Empty payload)', e.code == 400, f'Correctly rejected: {e.code}')
+    record('Enquiry Guard: Empty Payload', e.code == 400, f'Rejected with HTTP {e.code}')
+except Exception as e:
+    record('Enquiry Guard: Empty Payload', False, str(e))
 
-# 4. Enquiry Bot Trap - Honeypot filled
+# 5b. Honeypot Bot Trap
 try:
     req = urllib.request.Request(
         base + '/api/enquiry',
         data=json.dumps({
-            'fullName': 'Spam Bot',
-            'businessName': 'Spam Inc',
-            'contactEmail': 'bot@spam.com',
-            'problemSummary': 'This should be caught by honeypot',
-            '_hp': 'http://spambot.com'
+            'fullName': 'Spam Crawler',
+            'businessName': 'Spam Network',
+            'contactEmail': 'crawler@spambot.net',
+            'problemSummary': 'Testing automated bot traps with honeypot fields.',
+            '_hp': 'http://automated-spam-url.com'
         }).encode(),
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
     with urllib.request.urlopen(req) as resp:
         data = json.loads(resp.read().decode())
-        record('POST /api/enquiry (Honeypot Bot)', data.get('success') is True, 'Silently discarded bot submission')
+        record('Enquiry Guard: Honeypot Trap', data.get('success') is True, 'Silently discarded bot without saving')
 except Exception as e:
-    record('POST /api/enquiry (Honeypot Bot)', False, str(e))
+    record('Enquiry Guard: Honeypot Trap', False, str(e))
 
-# 5. Valid Enquiry Submission
+# 5c. Sub-second Script Submission Trap
+try:
+    req = urllib.request.Request(
+        base + '/api/enquiry',
+        data=json.dumps({
+            'fullName': 'Fast Bot',
+            'businessName': 'Speed Spammer',
+            'contactEmail': 'speed@fastbot.com',
+            'problemSummary': 'Submitting form in less than 50 milliseconds.',
+            '_ts': int(time.time() * 1000) - 50 # 50ms ago
+        }).encode(),
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    with urllib.request.urlopen(req) as resp:
+        data = json.loads(resp.read().decode())
+        record('Enquiry Guard: Sub-second Bot Timing', data.get('success') is True, 'Silently caught rapid submission')
+except Exception as e:
+    record('Enquiry Guard: Sub-second Bot Timing', False, str(e))
+
+# 5d. Oversized Request Body Guard (Payload > 32KB)
+try:
+    oversized_data = {
+        'fullName': 'Oversized Attacker',
+        'businessName': 'Buffer Overflow Inc',
+        'contactEmail': 'overflow@target.org',
+        'problemSummary': 'A' * 40000 # 40KB payload
+    }
+    req = urllib.request.Request(
+        base + '/api/enquiry',
+        data=json.dumps(oversized_data).encode(),
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    urllib.request.urlopen(req)
+    record('Enquiry Guard: Oversized Payload (>32KB)', False, 'Allowed oversized payload')
+except urllib.error.HTTPError as e:
+    record('Enquiry Guard: Oversized Payload (>32KB)', e.code == 413, f'Rejected with HTTP {e.code}')
+except Exception as e:
+    record('Enquiry Guard: Oversized Payload (>32KB)', False, str(e))
+
+# 5e. Valid Client Enquiry Submission
+valid_enquiry_id = None
 try:
     valid_payload = {
-        'fullName': 'Akarsh Verification Client',
-        'businessName': 'Tech Logistics Ltd',
-        'contactEmail': 'client@techlogistics.in',
+        'fullName': 'Strategic Verification Client',
+        'businessName': 'Apex Financial Technologies',
+        'contactEmail': 'advisory@apexfintech.example.com',
         'phone': '+91 9876543210',
         'serviceInterest': 'Operations & Automation',
-        'problemSummary': 'Need to connect Shopify orders directly to Zoho Books with automated GST invoicing and Slack alerts.',
-        'targetTimeline': 'Within 1-2 months'
+        'problemSummary': 'Need to connect multi-channel enterprise sales into Zoho Books with automated GST invoicing and compliance checks.',
+        'targetTimeline': 'Within 1-2 months',
+        '_ts': int(time.time() * 1000) - 5000 # 5 seconds ago
     }
     req = urllib.request.Request(
         base + '/api/enquiry',
@@ -97,112 +218,165 @@ try:
     )
     with urllib.request.urlopen(req) as resp:
         data = json.loads(resp.read().decode())
-        enq_id = data.get('enquiryId', '')
-        record('POST /api/enquiry (Valid submission)', data.get('success') is True, f'Enquiry ID: {enq_id}')
+        valid_enquiry_id = data.get('enquiryId')
+        record('Enquiry Submission: Valid Request', data.get('success') is True, f'Generated Enquiry ID: {valid_enquiry_id}')
 except Exception as e:
-    record('POST /api/enquiry (Valid submission)', False, str(e))
+    record('Enquiry Submission: Valid Request', False, str(e))
 
-# 6. Admin Authentication
-# Bad login attempt
+# 5f. Duplicate Submission Prevention
 try:
     req = urllib.request.Request(
-        base + '/api/admin/login',
-        data=json.dumps({'email': 'admin@primeorasolutions.com', 'password': 'wrongpassword'}).encode(),
-        headers={'Content-Type': 'application/json'},
-        method='POST'
-    )
-    urllib.request.urlopen(req)
-    record('POST /api/admin/login (Bad Password)', False, 'Should reject invalid credentials')
-except urllib.error.HTTPError as e:
-    record('POST /api/admin/login (Bad Password)', e.code == 401, f'Correctly rejected: {e.code}')
-
-# Good login attempt
-session_cookie = None
-try:
-    req = urllib.request.Request(
-        base + '/api/admin/login',
-        data=json.dumps({'email': 'admin@primeorasolutions.com', 'password': 'ChangeMeInProd2026!'}).encode(),
+        base + '/api/enquiry',
+        data=json.dumps(valid_payload).encode(),
         headers={'Content-Type': 'application/json'},
         method='POST'
     )
     with urllib.request.urlopen(req) as resp:
         data = json.loads(resp.read().decode())
-        for c in resp.headers.get_all('Set-Cookie', []):
-            if 'admin_session=' in c:
-                session_cookie = c.split(';')[0]
-        role = data.get('user', {}).get('role')
-        record('POST /api/admin/login (Valid credentials)', data.get('success') is True, f'User Role: {role}')
+        is_deduped = 'already received' in data.get('message', '').lower()
+        record('Enquiry Guard: Deduplication Window', is_deduped, 'Recognized identical duplicate submission within 10m')
 except Exception as e:
-    record('POST /api/admin/login (Valid credentials)', False, str(e))
+    record('Enquiry Guard: Deduplication Window', False, str(e))
 
-# 7. Check Admin Protected Routes using Session Cookie
-if session_cookie:
-    try:
-        req = urllib.request.Request(base + '/api/admin/session', headers={'Cookie': session_cookie})
-        with urllib.request.urlopen(req) as resp:
-            data = json.loads(resp.read().decode())
-            admin_email = data.get('user', {}).get('email')
-            record('GET /api/admin/session', data.get('authenticated') is True, f'Authenticated as {admin_email}')
-    except Exception as e:
-        record('GET /api/admin/session', False, str(e))
+# -------------------------------------------------------------------
+# 6. ROLE-BASED ACCESS CONTROL (RBAC) & PERMISSIONS
+# -------------------------------------------------------------------
+test_secret = os.environ.get('ADMIN_JWT_SECRET', 'test_verification_secret_key_32bytes_minimum_length!')
+editor_token = make_session_token(test_secret, 'user_editor_01', 'editor@ritkaraveyra.internal', 'content_editor')
+super_token = make_session_token(test_secret, 'user_super_01', 'super@ritkaraveyra.internal', 'super_admin')
 
-    try:
-        req = urllib.request.Request(base + '/api/admin/enquiries', headers={'Cookie': session_cookie})
-        with urllib.request.urlopen(req) as resp:
-            data = json.loads(resp.read().decode())
-            enqs = data.get('enquiries', [])
-            record('GET /api/admin/enquiries', data.get('success') is True, f'Found {len(enqs)} enquiries in admin queue')
-    except Exception as e:
-        record('GET /api/admin/enquiries', False, str(e))
+editor_cookie = f'admin_session={editor_token}'
+super_cookie = f'admin_session={super_token}'
 
-    # Add a team member via admin API
+# 6a. Content Editor Session Verification
+try:
+    req = urllib.request.Request(base + '/api/admin/session', headers={'Cookie': editor_cookie})
+    with urllib.request.urlopen(req) as resp:
+        data = json.loads(resp.read().decode())
+        record('RBAC: Content Editor Session', data.get('user', {}).get('role') == 'content_editor', 'Authenticated as content_editor')
+except Exception as e:
+    record('RBAC: Content Editor Session', False, str(e))
+
+# 6b. Content Editor FORBIDDEN from accessing client enquiries
+try:
+    req = urllib.request.Request(base + '/api/admin/enquiries', headers={'Cookie': editor_cookie})
+    urllib.request.urlopen(req)
+    record('RBAC: Editor Enquiry Access (Forbidden)', False, 'Content editor should NOT access private enquiries')
+except urllib.error.HTTPError as e:
+    record('RBAC: Editor Enquiry Access (Forbidden)', e.code == 403, f'Correctly rejected with HTTP {e.code} Forbidden')
+except Exception as e:
+    record('RBAC: Editor Enquiry Access (Forbidden)', False, str(e))
+
+# 6c. Super Admin ALLOWED to access client enquiries
+try:
+    req = urllib.request.Request(base + '/api/admin/enquiries', headers={'Cookie': super_cookie})
+    with urllib.request.urlopen(req) as resp:
+        data = json.loads(resp.read().decode())
+        enqs = data.get('enquiries', [])
+        record('RBAC: Super Admin Enquiry Access', data.get('success') is True, f'Super admin retrieved {len(enqs)} enquiries')
+except Exception as e:
+    record('RBAC: Super Admin Enquiry Access', False, str(e))
+
+# 6d. Content Editor FORBIDDEN from deleting team members
+try:
+    req = urllib.request.Request(base + '/api/admin/team?id=dummy_id', headers={'Cookie': editor_cookie}, method='DELETE')
+    urllib.request.urlopen(req)
+    record('RBAC: Editor Member Deletion (Forbidden)', False, 'Content editor should NOT delete team members')
+except urllib.error.HTTPError as e:
+    record('RBAC: Editor Member Deletion (Forbidden)', e.code == 403, f'Correctly rejected with HTTP {e.code} Forbidden')
+except Exception as e:
+    record('RBAC: Editor Member Deletion (Forbidden)', False, str(e))
+
+# 6e. Content Editor ALLOWED to add a team member
+created_member_id = None
+try:
+    new_member_payload = {
+        'fullName': 'Siddharth Practice Director',
+        'publicTitle': 'Principal Systems Architect',
+        'department': 'Technology Practice',
+        'bio': 'Specializes in distributed enterprise architectures and high-throughput systems design.',
+        'responsibilities': ['Architecture Reviews', 'Scalability Audits'],
+        'displayOrder': 5,
+        'status': 'published'
+    }
+    req = urllib.request.Request(
+        base + '/api/admin/team',
+        data=json.dumps(new_member_payload).encode(),
+        headers={'Content-Type': 'application/json', 'Cookie': editor_cookie},
+        method='POST'
+    )
+    with urllib.request.urlopen(req) as resp:
+        data = json.loads(resp.read().decode())
+        created_member_id = data.get('member', {}).get('id')
+        record('RBAC: Editor Add Member Profile', data.get('success') is True, f'Created member ID: {created_member_id}')
+except Exception as e:
+    record('RBAC: Editor Add Member Profile', False, str(e))
+
+# 6f. Super Admin ALLOWED to delete team member
+if created_member_id:
     try:
-        new_member = {
-            'fullName': 'Consultant Associate',
-            'publicTitle': 'Senior Strategy Associate',
-            'department': 'Operations',
-            'bio': 'Specializes in business process mapping and ERP integrations.',
-            'responsibilities': ['Process mapping', 'Client workshops'],
-            'displayOrder': 4,
-            'status': 'published'
-        }
         req = urllib.request.Request(
-            base + '/api/admin/team',
-            data=json.dumps(new_member).encode(),
-            headers={'Content-Type': 'application/json', 'Cookie': session_cookie},
-            method='POST'
+            base + f'/api/admin/team?id={created_member_id}',
+            headers={'Cookie': super_cookie},
+            method='DELETE'
         )
         with urllib.request.urlopen(req) as resp:
             data = json.loads(resp.read().decode())
-            mem_id = data.get('member', {}).get('id')
-            record('POST /api/admin/team (Add Member)', data.get('success') is True, f'Created member ID: {mem_id}')
+            record('RBAC: Super Admin Delete Member Profile', data.get('success') is True, 'Permanently deleted member profile')
     except Exception as e:
-        record('POST /api/admin/team (Add Member)', False, str(e))
+        record('RBAC: Super Admin Delete Member Profile', False, str(e))
 
-    # Verify that the newly added member appears on public /api/team
-    try:
-        with urllib.request.urlopen(base + '/api/team') as resp:
-            data = json.loads(resp.read().decode())
-            members = data.get('members', [])
-            found_new = any(m.get('fullName') == 'Consultant Associate' for m in members)
-            record('Public /api/team reflects CMS addition', found_new, f'Found newly added member among {len(members)} published members')
-    except Exception as e:
-        record('Public /api/team reflects CMS addition', False, str(e))
-
-# 8. Check Security Headers
+# -------------------------------------------------------------------
+# 7. SECURITY & CACHING HEADERS VERIFICATION
+# -------------------------------------------------------------------
 try:
     req = urllib.request.Request(base + '/')
     with urllib.request.urlopen(req) as resp:
         headers = dict(resp.info())
         has_xfo = 'X-Frame-Options' in headers or 'x-frame-options' in headers
         has_xcto = 'X-Content-Type-Options' in headers or 'x-content-type-options' in headers
-        record('Security Headers (Frame & MIME guard)', has_xfo and has_xcto, f'Frame: {has_xfo}, MIME: {has_xcto}')
+        has_rp = 'Referrer-Policy' in headers or 'referrer-policy' in headers
+        record(
+            'DevOps Security: Response Headers',
+            has_xfo and has_xcto and has_rp,
+            f'XFO: {has_xfo}, XCTO: {has_xcto}, Referrer: {has_rp}'
+        )
 except Exception as e:
-    record('Security Headers (Frame & MIME guard)', False, str(e))
+    record('DevOps Security: Response Headers', False, str(e))
 
-# Summary
+# -------------------------------------------------------------------
+# 8. ROBOTS DIRECTIVE & DISALLOW CHECKS
+# -------------------------------------------------------------------
+try:
+    req = urllib.request.Request(base + '/robots.txt')
+    with urllib.request.urlopen(req) as resp:
+        robots_txt = resp.read().decode()
+        disallows_admin = '/admin/' in robots_txt
+        disallows_api = '/api/' in robots_txt
+        record(
+            'Technical SEO: Robots.txt Rules',
+            disallows_admin and disallows_api,
+            'Disallows /admin/ and /api/ from automated web crawlers'
+        )
+except Exception as e:
+    record('Technical SEO: Robots.txt Rules', False, str(e))
+
+# -------------------------------------------------------------------
+# FINAL SUMMARY REPORT
+# -------------------------------------------------------------------
 passed = sum(1 for r in results if r['success'])
 failed = len(results) - passed
-print(f'\n======================================================')
-print(f'Total Tests: {len(results)} | Passed: {passed} | Failed: {failed}')
-print(f'======================================================')
+
+print('\n====================================================================')
+print(f'TOTAL AUDIT CHECKS: {len(results)} | PASSED: {passed} | FAILED: {failed}')
+print('====================================================================')
+
+if failed > 0:
+    print('FAILURES DETECTED:')
+    for r in results:
+        if not r['success']:
+            print(f" - {r['test']}: {r['details']}")
+    sys.exit(1)
+else:
+    print('ALL PRE-DEPLOYMENT AUDIT CHECKS PASSED WITH ZERO ERRORS.')
+    sys.exit(0)

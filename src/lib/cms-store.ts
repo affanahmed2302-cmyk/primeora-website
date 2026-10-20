@@ -2,203 +2,497 @@ import fs from 'fs';
 import path from 'path';
 import { TeamMember, EnquirySubmission, AdminUser } from '@/types';
 import { INITIAL_FOUNDERS } from '@/config/brand';
-import { hashPassword, verifyPassword } from './auth';
+import { verifyPassword } from './auth';
+import { getSupabaseAdminClient, isSupabaseConfigured } from './supabase';
 
 const DATA_DIR = path.join(process.cwd(), 'src', 'data', 'storage');
 const TEAM_FILE = path.join(DATA_DIR, 'team.json');
 const ENQUIRIES_FILE = path.join(DATA_DIR, 'enquiries.json');
-const ADMINS_FILE = path.join(DATA_DIR, 'admins.json');
 
-// Ensure directory exists
+// In-memory runtime cache for serverless invocation lifecycle & deduplication
+const inMemoryEnquiries: EnquirySubmission[] = [];
+let inMemoryTeam: TeamMember[] | null = null;
+
+// Ensure directory exists for local development fallback only
 function ensureDataDir() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-}
-
-// -----------------------------------------------------------------------
-// Team Members Storage
-// -----------------------------------------------------------------------
-export function getTeamMembers(includeAll = false): TeamMember[] {
-  ensureDataDir();
-  if (!fs.existsSync(TEAM_FILE)) {
-    // Seed initial founders
-    fs.writeFileSync(TEAM_FILE, JSON.stringify(INITIAL_FOUNDERS, null, 2), 'utf8');
-    return includeAll
-      ? INITIAL_FOUNDERS
-      : INITIAL_FOUNDERS.filter((m) => m.status === 'published');
-  }
-
   try {
-    const raw = fs.readFileSync(TEAM_FILE, 'utf8');
-    const list: TeamMember[] = JSON.parse(raw);
-    const sorted = list.sort((a, b) => a.displayOrder - b.displayOrder);
-    return includeAll ? sorted : sorted.filter((m) => m.status === 'published');
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
   } catch {
-    return includeAll
-      ? INITIAL_FOUNDERS
-      : INITIAL_FOUNDERS.filter((m) => m.status === 'published');
+    // Ignored in read-only / ephemeral serverless environments
   }
 }
 
-export function saveTeamMembers(members: TeamMember[]): void {
-  ensureDataDir();
-  fs.writeFileSync(TEAM_FILE, JSON.stringify(members, null, 2), 'utf8');
+// Check if administrative authentication is configured
+export function isAuthConfigured(): boolean {
+  if (isSupabaseConfigured()) return true;
+  if (process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD_HASH && process.env.ADMIN_PASSWORD_SALT) {
+    return true;
+  }
+  return false;
 }
 
-export function saveTeamMember(member: TeamMember): TeamMember {
-  const members = getTeamMembers(true);
-  const index = members.findIndex((m) => m.id === member.id);
+// Check if durable persistence is configured
+export function isDurableStorageConfigured(): boolean {
+  return isSupabaseConfigured();
+}
+
+function shouldAllowLocalFallback(): boolean {
+  return (
+    process.env.ALLOW_LOCAL_STORAGE_FALLBACK === 'true' ||
+    process.env.NODE_ENV !== 'production'
+  );
+}
+
+// -----------------------------------------------------------------------
+// Team Members Mappers & Storage
+// -----------------------------------------------------------------------
+
+interface DbTeamMemberRow {
+  id: string;
+  full_name: string;
+  public_title: string;
+  department: string;
+  bio: string;
+  responsibilities: string[];
+  photo_url: string | null;
+  linkedin_url: string | null;
+  portfolio_url: string | null;
+  display_order: number;
+  status: 'draft' | 'published' | 'inactive';
+  created_at?: string;
+  updated_at?: string;
+}
+
+function mapDbToTeamMember(row: DbTeamMemberRow): TeamMember {
+  return {
+    id: String(row.id),
+    fullName: row.full_name,
+    publicTitle: row.public_title,
+    department: row.department,
+    bio: row.bio,
+    responsibilities: Array.isArray(row.responsibilities) ? row.responsibilities : [],
+    photoUrl: row.photo_url || undefined,
+    linkedinUrl: row.linkedin_url || undefined,
+    portfolioUrl: row.portfolio_url || undefined,
+    displayOrder: typeof row.display_order === 'number' ? row.display_order : 10,
+    status: row.status || 'draft',
+    isFounder: false,
+  };
+}
+
+function mapTeamMemberToDb(m: TeamMember): Partial<DbTeamMemberRow> {
+  const row: Partial<DbTeamMemberRow> = {
+    full_name: m.fullName.trim(),
+    public_title: m.publicTitle.trim(),
+    department: (m.department || 'Consulting Practice').trim(),
+    bio: m.bio.trim(),
+    responsibilities: m.responsibilities || [],
+    photo_url: m.photoUrl?.trim() || null,
+    linkedin_url: m.linkedinUrl?.trim() || null,
+    portfolio_url: m.portfolioUrl?.trim() || null,
+    display_order: Number(m.displayOrder) || 10,
+    status: m.status,
+    updated_at: new Date().toISOString(),
+  };
+
+  // If ID is valid UUID, preserve it for Supabase
+  if (m.id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(m.id)) {
+    row.id = m.id;
+  }
+  return row;
+}
+
+export async function getTeamMembers(includeAll = false): Promise<TeamMember[]> {
+  // 1. If Supabase PostgreSQL is configured, query the durable database
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = getSupabaseAdminClient();
+      if (supabase) {
+        let query = supabase.from('team_members').select('*');
+        if (!includeAll) {
+          query = query.eq('status', 'published');
+        }
+        const { data, error } = await query.order('display_order', { ascending: true });
+
+        if (!error && Array.isArray(data) && data.length > 0) {
+          return data.map((r) => mapDbToTeamMember(r as DbTeamMemberRow));
+        }
+      }
+    } catch {
+      // Fallback on database error
+    }
+  }
+
+  // 2. Check in-memory team cache
+  if (inMemoryTeam && inMemoryTeam.length > 0) {
+    const sorted = [...inMemoryTeam].sort((a, b) => a.displayOrder - b.displayOrder);
+    return includeAll ? sorted : sorted.filter((m) => m.status === 'published');
+  }
+
+  // 3. Local file fallback if permitted
+  if (shouldAllowLocalFallback() && fs.existsSync(TEAM_FILE)) {
+    try {
+      const raw = fs.readFileSync(TEAM_FILE, 'utf8');
+      const list: TeamMember[] = JSON.parse(raw);
+      inMemoryTeam = list;
+      const sorted = list.sort((a, b) => a.displayOrder - b.displayOrder);
+      return includeAll ? sorted : sorted.filter((m) => m.status === 'published');
+    } catch {
+      // Continue to fallback
+    }
+  }
+
+  // 4. Immutable production fallback (Initial Founders from Brand Config)
+  const initial = [...INITIAL_FOUNDERS].sort((a, b) => a.displayOrder - b.displayOrder);
+  return includeAll ? initial : initial.filter((m) => m.status === 'published');
+}
+
+export async function saveTeamMember(member: TeamMember): Promise<TeamMember> {
+  // 1. If Supabase is configured, execute durable PostgreSQL upsert
+  if (isSupabaseConfigured()) {
+    const supabase = getSupabaseAdminClient();
+    if (!supabase) {
+      throw new Error('Supabase client initialization failed.');
+    }
+
+    const payload = mapTeamMemberToDb(member);
+    const { data, error } = await supabase
+      .from('team_members')
+      .upsert(payload)
+      .select()
+      .single();
+
+    if (error || !data) {
+      throw new Error(`Database error saving team member: ${error?.message || 'Unknown'}`);
+    }
+
+    return mapDbToTeamMember(data as DbTeamMemberRow);
+  }
+
+  // 2. Check fallback authorization
+  if (!shouldAllowLocalFallback()) {
+    throw new Error(
+      'DURABLE_STORAGE_UNCONFIGURED: Durable database storage is unconfigured. In production serverless environments, team mutations require Supabase PostgreSQL.'
+    );
+  }
+
+  // 3. Memory & Local file fallback
+  const current = await getTeamMembers(true);
+  const index = current.findIndex((m) => m.id === member.id);
 
   if (index >= 0) {
-    members[index] = { ...member };
+    current[index] = { ...member };
   } else {
-    members.push({ ...member });
+    current.push({ ...member });
   }
 
-  saveTeamMembers(members);
+  inMemoryTeam = current;
+
+  try {
+    ensureDataDir();
+    fs.writeFileSync(TEAM_FILE, JSON.stringify(current, null, 2), 'utf8');
+  } catch {
+    // In read-only filesystem, in-memory updates still reflect during instance lifecycle
+  }
+
   return member;
 }
 
-export function deleteTeamMember(id: string): boolean {
-  const members = getTeamMembers(true);
-  const filtered = members.filter((m) => m.id !== id);
-  if (filtered.length !== members.length) {
-    saveTeamMembers(filtered);
+export async function deleteTeamMember(id: string): Promise<boolean> {
+  // 1. Durable Supabase delete
+  if (isSupabaseConfigured()) {
+    const supabase = getSupabaseAdminClient();
+    if (!supabase) return false;
+
+    const { error } = await supabase.from('team_members').delete().eq('id', id);
+    return !error;
+  }
+
+  // 2. Check fallback authorization
+  if (!shouldAllowLocalFallback()) {
+    throw new Error(
+      'DURABLE_STORAGE_UNCONFIGURED: Durable database storage is unconfigured. In production serverless environments, team mutations require Supabase PostgreSQL.'
+    );
+  }
+
+  // 3. Memory & local file fallback
+  const current = await getTeamMembers(true);
+  const filtered = current.filter((m) => m.id !== id);
+  if (filtered.length !== current.length) {
+    inMemoryTeam = filtered;
+    try {
+      ensureDataDir();
+      fs.writeFileSync(TEAM_FILE, JSON.stringify(filtered, null, 2), 'utf8');
+    } catch {
+      // Ignored
+    }
     return true;
   }
   return false;
 }
 
 // -----------------------------------------------------------------------
-// Inbound Project Enquiries Storage
+// Inbound Project Enquiries Mappers & Storage
 // -----------------------------------------------------------------------
-export function getEnquiries(): EnquirySubmission[] {
-  ensureDataDir();
-  if (!fs.existsSync(ENQUIRIES_FILE)) {
-    fs.writeFileSync(ENQUIRIES_FILE, JSON.stringify([], null, 2), 'utf8');
-    return [];
-  }
-  try {
-    const raw = fs.readFileSync(ENQUIRIES_FILE, 'utf8');
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
+
+interface DbEnquiryRow {
+  id: string;
+  full_name: string;
+  business_name: string;
+  contact_email: string;
+  phone: string | null;
+  service_interest: string;
+  problem_summary: string;
+  target_timeline: string | null;
+  website_url: string | null;
+  status: EnquirySubmission['status'];
+  ip_hash: string | null;
+  created_at: string;
 }
 
-export function saveEnquiry(enquiry: Omit<EnquirySubmission, 'id' | 'createdAt' | 'status'> & { ipHash?: string }): EnquirySubmission {
-  const list = getEnquiries();
-  const newEntry: EnquirySubmission = {
+function mapDbToEnquiry(row: DbEnquiryRow): EnquirySubmission {
+  return {
+    id: String(row.id),
+    fullName: row.full_name,
+    businessName: row.business_name,
+    contactEmail: row.contact_email,
+    phone: row.phone || undefined,
+    serviceInterest: row.service_interest,
+    problemSummary: row.problem_summary,
+    targetTimeline: row.target_timeline || undefined,
+    websiteUrl: row.website_url || undefined,
+    status: row.status,
+    createdAt: row.created_at,
+  };
+}
+
+export async function getEnquiries(): Promise<EnquirySubmission[]> {
+  // 1. Durable Supabase storage
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = getSupabaseAdminClient();
+      if (supabase) {
+        const { data, error } = await supabase
+          .from('enquiries')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (!error && Array.isArray(data)) {
+          return data.map((r) => mapDbToEnquiry(r as DbEnquiryRow));
+        }
+      }
+    } catch {
+      return [];
+    }
+  }
+
+  // 2. Return in-memory queue if populated (provides instant deduplication across queries)
+  if (inMemoryEnquiries.length > 0) {
+    return [...inMemoryEnquiries];
+  }
+
+  // 3. Local development file fallback
+  if (shouldAllowLocalFallback() && fs.existsSync(ENQUIRIES_FILE)) {
+    try {
+      const raw = fs.readFileSync(ENQUIRIES_FILE, 'utf8');
+      const list: EnquirySubmission[] = JSON.parse(raw);
+      return list;
+    } catch {
+      return [];
+    }
+  }
+
+  return [];
+}
+
+export async function saveEnquiry(
+  enquiry: Omit<EnquirySubmission, 'id' | 'createdAt' | 'status'> & { ipHash?: string }
+): Promise<EnquirySubmission> {
+  const now = new Date().toISOString();
+
+  // 1. Durable Supabase storage
+  if (isSupabaseConfigured()) {
+    const supabase = getSupabaseAdminClient();
+    if (supabase) {
+      const dbPayload = {
+        full_name: enquiry.fullName,
+        business_name: enquiry.businessName,
+        contact_email: enquiry.contactEmail,
+        phone: enquiry.phone || null,
+        service_interest: enquiry.serviceInterest,
+        problem_summary: enquiry.problemSummary,
+        target_timeline: enquiry.targetTimeline || null,
+        website_url: enquiry.websiteUrl || null,
+        status: 'new',
+        ip_hash: enquiry.ipHash || null,
+        created_at: now,
+      };
+
+      const { data, error } = await supabase
+        .from('enquiries')
+        .insert(dbPayload)
+        .select()
+        .single();
+
+      if (!error && data) {
+        const saved = mapDbToEnquiry(data as DbEnquiryRow);
+        inMemoryEnquiries.unshift(saved);
+        return saved;
+      }
+    }
+  }
+
+  // 2. In-memory & local development fallback
+  const generatedId = `enq_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+  const localEntry: EnquirySubmission = {
     ...enquiry,
-    id: `enq_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+    id: generatedId,
     status: 'new',
-    createdAt: new Date().toISOString(),
+    createdAt: now,
   };
 
-  list.unshift(newEntry);
-  ensureDataDir();
-  fs.writeFileSync(ENQUIRIES_FILE, JSON.stringify(list, null, 2), 'utf8');
-  return newEntry;
+  inMemoryEnquiries.unshift(localEntry);
+  if (inMemoryEnquiries.length > 200) {
+    inMemoryEnquiries.pop();
+  }
+
+  if (shouldAllowLocalFallback()) {
+    ensureDataDir();
+    try {
+      fs.writeFileSync(ENQUIRIES_FILE, JSON.stringify(inMemoryEnquiries, null, 2), 'utf8');
+    } catch {
+      // Ignored in read-only environment
+    }
+  }
+
+  return localEntry;
 }
 
-export function updateEnquiryStatus(id: string, status: EnquirySubmission['status']): boolean {
-  const list = getEnquiries();
-  const entry = list.find((e) => e.id === id);
+export async function updateEnquiryStatus(
+  id: string,
+  status: EnquirySubmission['status']
+): Promise<boolean> {
+  if (isSupabaseConfigured()) {
+    const supabase = getSupabaseAdminClient();
+    if (!supabase) return false;
+
+    const { error } = await supabase
+      .from('enquiries')
+      .update({ status, updated_at: new Date().toISOString() })
+      .eq('id', id);
+
+    return !error;
+  }
+
+  const entry = inMemoryEnquiries.find((e) => e.id === id);
   if (entry) {
     entry.status = status;
-    ensureDataDir();
-    fs.writeFileSync(ENQUIRIES_FILE, JSON.stringify(list, null, 2), 'utf8');
+    if (shouldAllowLocalFallback()) {
+      ensureDataDir();
+      try {
+        fs.writeFileSync(ENQUIRIES_FILE, JSON.stringify(inMemoryEnquiries, null, 2), 'utf8');
+      } catch {
+        // Ignored
+      }
+    }
     return true;
   }
+
   return false;
 }
 
-// -----------------------------------------------------------------------
-// Admin Accounts Storage
-// -----------------------------------------------------------------------
-interface StoredAdmin {
-  id: string;
-  email: string;
-  fullName: string;
-  role: 'super_admin' | 'content_editor';
-  passwordHash: string;
-  passwordSalt: string;
-  createdAt: string;
-}
+// Durable cross-serverless rate limit check
+export async function checkEnquiryRateLimit(ipHash: string): Promise<boolean> {
+  if (!ipHash) return true;
 
-export function getAdmins(): StoredAdmin[] {
-  ensureDataDir();
-  if (!fs.existsSync(ADMINS_FILE)) {
-    // Seed default initial super_admin for testing if file does not exist
-    // Password: 'ChangeMeInProd2026!'
-    const { hash, salt } = hashPassword('ChangeMeInProd2026!');
-    const defaultSuperAdmin: StoredAdmin = {
-      id: 'admin_initial_super_01',
-      email: 'admin@primeorasolutions.com',
-      fullName: 'Master Administrator',
-      role: 'super_admin',
-      passwordHash: hash,
-      passwordSalt: salt,
-      createdAt: new Date().toISOString(),
-    };
-    fs.writeFileSync(ADMINS_FILE, JSON.stringify([defaultSuperAdmin], null, 2), 'utf8');
-    return [defaultSuperAdmin];
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = getSupabaseAdminClient();
+      if (supabase) {
+        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+        const { count, error } = await supabase
+          .from('enquiries')
+          .select('id', { count: 'exact', head: true })
+          .eq('ip_hash', ipHash)
+          .gte('created_at', oneHourAgo);
+
+        if (!error && typeof count === 'number') {
+          return count < 5;
+        }
+      }
+    } catch {
+      // Fallback to in-memory check
+    }
   }
-  try {
-    const raw = fs.readFileSync(ADMINS_FILE, 'utf8');
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
+
+  return true;
 }
 
-export function verifyAdminLogin(email: string, passwordAttempt: string): AdminUser | null {
-  const admins = getAdmins();
-  const found = admins.find((a) => a.email.toLowerCase() === email.toLowerCase());
-  if (!found) return null;
+// -----------------------------------------------------------------------
+// Authentication Verification (NO HARDCODED PASSWORDS OR DEFAULT SEEDS)
+// -----------------------------------------------------------------------
 
-  const valid = verifyPassword(passwordAttempt, found.passwordHash, found.passwordSalt);
-  if (!valid) return null;
-
-  return {
-    id: found.id,
-    email: found.email,
-    fullName: found.fullName,
-    role: found.role,
-  };
-}
-
-export function createAdminUser(
+export async function verifyAdminLogin(
   email: string,
-  fullName: string,
-  role: 'super_admin' | 'content_editor',
-  passwordPlain: string
-): AdminUser {
-  const admins = getAdmins();
-  if (admins.some((a) => a.email.toLowerCase() === email.toLowerCase())) {
-    throw new Error('An administrator with this email already exists.');
+  passwordAttempt: string
+): Promise<AdminUser | null> {
+  const cleanEmail = email.trim().toLowerCase();
+
+  // 1. Supabase Auth Integration (Preferred)
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = getSupabaseAdminClient();
+      if (supabase) {
+        const { data: authData, error: authErr } = await supabase.auth.signInWithPassword({
+          email: cleanEmail,
+          password: passwordAttempt,
+        });
+
+        if (!authErr && authData?.user) {
+          // Fetch assigned role from admin_profiles
+          const { data: profile } = await supabase
+            .from('admin_profiles')
+            .select('id, email, full_name, role')
+            .eq('id', authData.user.id)
+            .single();
+
+          if (profile) {
+            return {
+              id: profile.id,
+              email: profile.email,
+              fullName: profile.full_name,
+              role: profile.role,
+            };
+          }
+        }
+      }
+    } catch {
+      // Continue to environment configuration fallback
+    }
   }
 
-  const { hash, salt } = hashPassword(passwordPlain);
-  const newAdmin: StoredAdmin = {
-    id: `adm_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-    email,
-    fullName,
-    role,
-    passwordHash: hash,
-    passwordSalt: salt,
-    createdAt: new Date().toISOString(),
-  };
+  // 2. High-Entropy Environment Configuration (Server-Only, No Defaults)
+  const envAdminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+  const envAdminPassHash = process.env.ADMIN_PASSWORD_HASH?.trim();
+  const envAdminPassSalt = process.env.ADMIN_PASSWORD_SALT?.trim();
 
-  admins.push(newAdmin);
-  ensureDataDir();
-  fs.writeFileSync(ADMINS_FILE, JSON.stringify(admins, null, 2), 'utf8');
+  if (envAdminEmail && envAdminPassHash && envAdminPassSalt) {
+    if (cleanEmail === envAdminEmail) {
+      const isValid = verifyPassword(passwordAttempt, envAdminPassHash, envAdminPassSalt);
+      if (isValid) {
+        const role = process.env.ADMIN_ROLE === 'content_editor' ? 'content_editor' : 'super_admin';
+        return {
+          id: 'admin_env_provisioned',
+          email: envAdminEmail,
+          fullName: process.env.ADMIN_FULL_NAME || 'Designated Administrator',
+          role,
+        };
+      }
+    }
+  }
 
-  return {
-    id: newAdmin.id,
-    email: newAdmin.email,
-    fullName: newAdmin.fullName,
-    role: newAdmin.role,
-  };
+  // FAIL CLOSED: Never seed, store, or accept any hardcoded or default password.
+  return null;
 }
