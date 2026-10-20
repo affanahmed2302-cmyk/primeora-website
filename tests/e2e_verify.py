@@ -31,7 +31,7 @@ def make_session_token(secret: str, user_id: str, email: str, role: str) -> str:
     return f'{payload_b64}.{sig_b64}'
 
 print("====================================================================")
-print("  RITKARA VEYRA — PRE-DEPLOYMENT SECURITY & RELIABILITY TEST SUITE  ")
+print("  PRIMEORA SOLUTIONS — PRE-DEPLOYMENT TEST SUITE                    ")
 print("====================================================================")
 
 # -------------------------------------------------------------------
@@ -242,8 +242,8 @@ except Exception as e:
 # 6. ROLE-BASED ACCESS CONTROL (RBAC) & PERMISSIONS
 # -------------------------------------------------------------------
 test_secret = os.environ.get('ADMIN_JWT_SECRET', 'test_verification_secret_key_32bytes_minimum_length!')
-editor_token = make_session_token(test_secret, 'user_editor_01', 'editor@ritkaraveyra.internal', 'content_editor')
-super_token = make_session_token(test_secret, 'user_super_01', 'super@ritkaraveyra.internal', 'super_admin')
+editor_token = make_session_token(test_secret, 'user_editor_01', 'editor@primeorasolutions.internal', 'content_editor')
+super_token = make_session_token(test_secret, 'user_super_01', 'super@primeorasolutions.internal', 'super_admin')
 
 editor_cookie = f'admin_session={editor_token}'
 super_cookie = f'admin_session={super_token}'

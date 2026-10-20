@@ -7,7 +7,7 @@ interface StructuredDataProps {
 }
 
 export default function StructuredData({ type = 'Organization', data }: StructuredDataProps) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ritkaraveyra.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://primeorasolutions.com';
 
   let schema: Record<string, unknown> = {};
 

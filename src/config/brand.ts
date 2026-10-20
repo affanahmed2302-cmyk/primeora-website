@@ -2,42 +2,50 @@ import { ServicePillar, PackageTier, ProcessStep, TeamMember } from '@/types';
 
 export const BRAND_CONFIG = {
   // Brand identity (central configuration)
-  name: 'RITKARA VEYRA',
-  shortName: 'Ritkara Veyra',
-  tagline: 'MAKE COMPLEXITY WORK.',
+  name: 'PRIMEORA SOLUTIONS',
+  shortName: 'Primeora Solutions',
+  tagline: 'Digital Systems Engineered for Measurable Growth',
   description:
-    'A strategy and technology consultancy helping businesses build resilient digital presence, connected lead systems, practical automation, and clear performance intelligence.',
+    'A strategy and technology engineering consultancy helping businesses build resilient digital presence, connected enquiry systems, practical workflow automation, and clear performance intelligence.',
 
   // Legal & Enterprise Details
   legalEntity: 'Primeora Solutions',
   udyamRegistrationNumber: 'UDYAM-KR-03-0732181',
   udyamStatus: 'Udyam Registered MSME (Micro Enterprise, NIC 62011)',
   legalNotice:
-    'Ritkara Veyra is a working brand of Primeora Solutions (Udyam Registered MSME: UDYAM-KR-03-0732181). All client contracts and formal proposals are executed through Primeora Solutions.',
+    'Primeora Solutions (Udyam Registered MSME: UDYAM-KR-03-0732181). All client contracts, service agreements, and formal proposals are executed directly by Primeora Solutions.',
   location: 'Bangalore, Karnataka, India (PIN 560023)',
 
   // Contact & Channels
-  contactEmail: 'hello@primeorasolutions.com',
-  enquiryEmail: 'projects@primeorasolutions.com',
+  contactEmail: 'primeorasolutions.in@gmail.com',
+  enquiryEmail: 'primeorasolutions.in@gmail.com',
   gbpUrl: 'https://g.page/r/CX12e6eETsn3EBM/review',
   instagramUrl: 'https://instagram.com/primeorasolutions',
 
   // Master Brand Visual Assets
   assets: {
-    logo: '/brand/ritkara-veyra-logo.png',
-    logoCropped: '/brand/ritkara-veyra-cropped.png',
-    logoMaster: '/brand/ritkara-veyra-master.png',
-    emblem: '/brand/emblem-transparent.png',
+    logo: '/brand/primeora-logo.svg',
+    logoCropped: '/brand/primeora-logo.svg',
+    logoMaster: '/brand/primeora-master.png',
+    emblem: '/brand/primeora-emblem.svg',
     emblemSolid: '/brand/emblem.png',
   },
 
-  // Brand Color Palette
+  // Brand Color Palette (Authentic Primeora Deep Tech Identity)
   colors: {
-    forest: '#183B35',
-    teal: '#0F827A',
-    ivory: '#F4EFE3',
-    copper: '#B77B4B',
-    charcoal: '#24252B',
+    obsidian: '#07090F',
+    navy: '#0D1222',
+    azure: '#3D6EF5',
+    azureLight: '#4D7CFF',
+    violet: '#7C5CFF',
+    platinum: '#F0F2F7',
+    slate: '#94A3B8',
+    // Backwards-compatible aliases for transition
+    forest: '#0D1222',
+    teal: '#3D6EF5',
+    ivory: '#07090F',
+    copper: '#7C5CFF',
+    charcoal: '#F0F2F7',
   },
 
   // Navigation Links
@@ -489,8 +497,8 @@ export const INITIAL_FOUNDERS: TeamMember[] = [
       'Qualified project enquiry consultations',
     ],
     photoUrl: '/brand/team/affan-shariff.jpg',
-    linkedinUrl: '', // To be updated with confirmed URL
-    portfolioUrl: '', // Confirmed destination to be linked
+    linkedinUrl: 'https://www.linkedin.com/in/affan-ahmed-shariff',
+    portfolioUrl: 'https://affanahmed2302-cmyk.github.io/',
     displayOrder: 1,
     status: 'published',
     isFounder: true,
@@ -508,7 +516,7 @@ export const INITIAL_FOUNDERS: TeamMember[] = [
       'Continuous deployment & cloud infrastructure',
     ],
     photoUrl: '/brand/team/akarsh-thodaskar.jpg',
-    linkedinUrl: '', // To be updated with confirmed URL
+    linkedinUrl: 'https://www.linkedin.com/in/akarsh-p-6963b5397?utm_source=share_via&utm_content=profile&utm_medium=member_android',
     displayOrder: 2,
     status: 'published',
     isFounder: true,
@@ -526,7 +534,7 @@ export const INITIAL_FOUNDERS: TeamMember[] = [
       'Internal system optimization & QA standards',
     ],
     photoUrl: '/brand/team/dhananjaya-gr.jpg',
-    linkedinUrl: '', // To be updated with confirmed URL
+    linkedinUrl: 'https://www.linkedin.com/in/dhananjaya-gr',
     displayOrder: 3,
     status: 'published',
     isFounder: true,

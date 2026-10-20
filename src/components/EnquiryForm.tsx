@@ -96,15 +96,15 @@ function EnquiryFormContent() {
 
   if (status === 'success') {
     return (
-      <div className="bg-white rounded-xl border border-teal/30 p-8 sm:p-10 shadow-card text-center animate-in fade-in">
-        <div className="w-14 h-14 bg-teal-subtle text-teal rounded-full flex items-center justify-center mx-auto mb-4">
+      <div className="bg-[#0B0F1A]/90 backdrop-blur-xl rounded-2xl border border-azure/40 p-8 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.5)] text-center animate-in fade-in">
+        <div className="w-14 h-14 bg-azure/15 text-azure-bright border border-azure/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
           <CheckCircle2 className="w-8 h-8" />
         </div>
-        <h3 className="font-serif text-2xl font-bold text-forest mb-2">
+        <h3 className="font-['Space_Grotesk'] text-2xl font-bold text-white mb-2">
           Project Enquiry Received
         </h3>
-        <p className="text-sm text-charcoal-muted max-w-md mx-auto leading-relaxed mb-6">
-          Thank you for reaching out. We have logged your request securely. Our leadership team will review your business context and reply with initial thoughts and next steps.
+        <p className="text-sm text-slate-300 max-w-md mx-auto leading-relaxed mb-6">
+          Thank you for reaching out to Primeora Solutions. We have logged your request securely. Our leadership team will review your business context and reply with initial thoughts and next steps.
         </p>
         <button
           type="button"
@@ -123,7 +123,7 @@ function EnquiryFormContent() {
               _ts: Date.now(),
             });
           }}
-          className="px-5 py-2 text-xs font-semibold text-forest bg-ivory border border-border-medium rounded hover:bg-ivory-dark transition-colors"
+          className="px-5 py-2.5 text-xs font-semibold text-white bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:border-azure/40 transition-colors"
         >
           Submit Another Enquiry
         </button>
@@ -135,7 +135,7 @@ function EnquiryFormContent() {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="bg-white rounded-xl border border-border-medium p-6 sm:p-10 shadow-card space-y-5"
+      className="bg-[#0B0F1A]/90 backdrop-blur-xl rounded-2xl border border-white/10 p-6 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.5)] space-y-5"
     >
       {/* Honeypot field (hidden from real users) */}
       <div className="hidden" aria-hidden="true">
@@ -154,9 +154,9 @@ function EnquiryFormContent() {
       {status === 'error' && (
         <div
           role="alert"
-          className="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg flex items-start gap-2.5 text-xs sm:text-sm animate-in fade-in"
+          className="p-4 bg-red-950/40 border border-red-500/40 text-red-200 rounded-xl flex items-start gap-2.5 text-xs sm:text-sm animate-in fade-in"
         >
-          <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+          <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
           <span>{errorMessage}</span>
         </div>
       )}
@@ -164,8 +164,8 @@ function EnquiryFormContent() {
       {/* Row 1: Name & Business */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="fullName" className="block text-xs font-semibold uppercase tracking-wider text-charcoal mb-1.5">
-            Your Name <span className="text-red-500">*</span>
+          <label htmlFor="fullName" className="block text-xs font-mono font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+            Your Name <span className="text-red-400">*</span>
           </label>
           <input
             type="text"
@@ -177,20 +177,20 @@ function EnquiryFormContent() {
             value={formData.fullName}
             onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
             placeholder="Affan Ahmed"
-            className={`w-full px-3.5 py-2.5 text-sm rounded-md border ${
-              errors.fullName ? 'border-red-400 bg-red-50/20' : 'border-border-medium'
-            } focus:outline-none focus:ring-2 focus:ring-teal`}
+            className={`w-full px-3.5 py-2.5 text-sm rounded-xl border bg-[#101524] text-white placeholder-slate-500 ${
+              errors.fullName ? 'border-red-500 bg-red-950/20' : 'border-white/10'
+            } focus:outline-none focus:ring-2 focus:ring-azure/40 focus:border-azure-bright`}
           />
           {errors.fullName && (
-            <p id="fullName-error" className="text-xs text-red-600 mt-1">
+            <p id="fullName-error" className="text-xs text-red-400 mt-1">
               {errors.fullName}
             </p>
           )}
         </div>
 
         <div>
-          <label htmlFor="businessName" className="block text-xs font-semibold uppercase tracking-wider text-charcoal mb-1.5">
-            Business / Venture Name <span className="text-red-500">*</span>
+          <label htmlFor="businessName" className="block text-xs font-mono font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+            Business / Venture Name <span className="text-red-400">*</span>
           </label>
           <input
             type="text"
@@ -202,12 +202,12 @@ function EnquiryFormContent() {
             value={formData.businessName}
             onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
             placeholder="Acme Enterprises"
-            className={`w-full px-3.5 py-2.5 text-sm rounded-md border ${
-              errors.businessName ? 'border-red-400 bg-red-50/20' : 'border-border-medium'
-            } focus:outline-none focus:ring-2 focus:ring-teal`}
+            className={`w-full px-3.5 py-2.5 text-sm rounded-xl border bg-[#101524] text-white placeholder-slate-500 ${
+              errors.businessName ? 'border-red-500 bg-red-950/20' : 'border-white/10'
+            } focus:outline-none focus:ring-2 focus:ring-azure/40 focus:border-azure-bright`}
           />
           {errors.businessName && (
-            <p id="businessName-error" className="text-xs text-red-600 mt-1">
+            <p id="businessName-error" className="text-xs text-red-400 mt-1">
               {errors.businessName}
             </p>
           )}
@@ -217,8 +217,8 @@ function EnquiryFormContent() {
       {/* Row 2: Email & Phone */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="contactEmail" className="block text-xs font-semibold uppercase tracking-wider text-charcoal mb-1.5">
-            Work Email Address <span className="text-red-500">*</span>
+          <label htmlFor="contactEmail" className="block text-xs font-mono font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+            Work Email Address <span className="text-red-400">*</span>
           </label>
           <input
             type="email"
@@ -230,20 +230,20 @@ function EnquiryFormContent() {
             value={formData.contactEmail}
             onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
             placeholder="you@company.com"
-            className={`w-full px-3.5 py-2.5 text-sm rounded-md border ${
-              errors.contactEmail ? 'border-red-400 bg-red-50/20' : 'border-border-medium'
-            } focus:outline-none focus:ring-2 focus:ring-teal`}
+            className={`w-full px-3.5 py-2.5 text-sm rounded-xl border bg-[#101524] text-white placeholder-slate-500 ${
+              errors.contactEmail ? 'border-red-500 bg-red-950/20' : 'border-white/10'
+            } focus:outline-none focus:ring-2 focus:ring-azure/40 focus:border-azure-bright`}
           />
           {errors.contactEmail && (
-            <p id="contactEmail-error" className="text-xs text-red-600 mt-1">
+            <p id="contactEmail-error" className="text-xs text-red-400 mt-1">
               {errors.contactEmail}
             </p>
           )}
         </div>
 
         <div>
-          <label htmlFor="phone" className="block text-xs font-semibold uppercase tracking-wider text-charcoal mb-1.5">
-            Phone / WhatsApp Number <span className="text-charcoal-muted text-[10px]">(Optional)</span>
+          <label htmlFor="phone" className="block text-xs font-mono font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+            Phone / WhatsApp Number <span className="text-slate-500 text-[10px]">(Optional)</span>
           </label>
           <input
             type="tel"
@@ -251,7 +251,7 @@ function EnquiryFormContent() {
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             placeholder="+91 98765 43210"
-            className="w-full px-3.5 py-2.5 text-sm rounded-md border border-border-medium focus:outline-none focus:ring-2 focus:ring-teal"
+            className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-white/10 bg-[#101524] text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-azure/40 focus:border-azure-bright"
           />
         </div>
       </div>
@@ -259,49 +259,49 @@ function EnquiryFormContent() {
       {/* Row 3: Service of Interest & Timeline */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="serviceInterest" className="block text-xs font-semibold uppercase tracking-wider text-charcoal mb-1.5">
+          <label htmlFor="serviceInterest" className="block text-xs font-mono font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
             Primary Area of Interest
           </label>
           <select
             id="serviceInterest"
             value={formData.serviceInterest}
             onChange={(e) => setFormData({ ...formData, serviceInterest: e.target.value })}
-            className="w-full px-3.5 py-2.5 text-sm rounded-md border border-border-medium bg-white focus:outline-none focus:ring-2 focus:ring-teal"
+            className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-white/10 bg-[#101524] text-white focus:outline-none focus:ring-2 focus:ring-azure/40 focus:border-azure-bright"
           >
             {SERVICE_PILLARS.map((p) => (
-              <option key={p.id} value={p.title}>
+              <option key={p.id} value={p.title} className="bg-[#101524] text-white">
                 {p.title}
               </option>
             ))}
-            <option value="Package Tier: LAUNCH">Package: Launch</option>
-            <option value="Package Tier: GROW">Package: Grow</option>
-            <option value="Package Tier: COMPLETE PARTNER">Package: Complete Partner</option>
-            <option value="General Strategic Consultation">General Strategic Consultation</option>
+            <option value="Package Tier: LAUNCH" className="bg-[#101524] text-white">Package: Launch</option>
+            <option value="Package Tier: GROW" className="bg-[#101524] text-white">Package: Grow</option>
+            <option value="Package Tier: COMPLETE PARTNER" className="bg-[#101524] text-white">Package: Complete Partner</option>
+            <option value="General Strategic Consultation" className="bg-[#101524] text-white">General Strategic Consultation</option>
           </select>
         </div>
 
         <div>
-          <label htmlFor="targetTimeline" className="block text-xs font-semibold uppercase tracking-wider text-charcoal mb-1.5">
+          <label htmlFor="targetTimeline" className="block text-xs font-mono font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
             Target Completion Timeline
           </label>
           <select
             id="targetTimeline"
             value={formData.targetTimeline}
             onChange={(e) => setFormData({ ...formData, targetTimeline: e.target.value })}
-            className="w-full px-3.5 py-2.5 text-sm rounded-md border border-border-medium bg-white focus:outline-none focus:ring-2 focus:ring-teal"
+            className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-white/10 bg-[#101524] text-white focus:outline-none focus:ring-2 focus:ring-azure/40 focus:border-azure-bright"
           >
-            <option value="Immediate (Next 2-3 weeks)">Immediate (Next 2-3 weeks)</option>
-            <option value="Within 1-2 months">Within 1-2 months</option>
-            <option value="Planning for next quarter">Planning for next quarter</option>
-            <option value="Exploring initial feasibility">Exploring initial feasibility</option>
+            <option value="Immediate (Next 2-3 weeks)" className="bg-[#101524] text-white">Immediate (Next 2-3 weeks)</option>
+            <option value="Within 1-2 months" className="bg-[#101524] text-white">Within 1-2 months</option>
+            <option value="Planning for next quarter" className="bg-[#101524] text-white">Planning for next quarter</option>
+            <option value="Exploring initial feasibility" className="bg-[#101524] text-white">Exploring initial feasibility</option>
           </select>
         </div>
       </div>
 
       {/* Row 4: Website URL (Optional) */}
       <div>
-        <label htmlFor="websiteUrl" className="block text-xs font-semibold uppercase tracking-wider text-charcoal mb-1.5">
-          Current Website or Social URL <span className="text-charcoal-muted text-[10px]">(Optional)</span>
+        <label htmlFor="websiteUrl" className="block text-xs font-mono font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+          Current Website or Social URL <span className="text-slate-500 text-[10px]">(Optional)</span>
         </label>
         <input
           type="url"
@@ -309,14 +309,14 @@ function EnquiryFormContent() {
           value={formData.websiteUrl}
           onChange={(e) => setFormData({ ...formData, websiteUrl: e.target.value })}
           placeholder="https://yourbusiness.com"
-          className="w-full px-3.5 py-2.5 text-sm rounded-md border border-border-medium focus:outline-none focus:ring-2 focus:ring-teal"
+          className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-white/10 bg-[#101524] text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-azure/40 focus:border-azure-bright"
         />
       </div>
 
       {/* Row 5: Problem Description */}
       <div>
-        <label htmlFor="problemSummary" className="block text-xs font-semibold uppercase tracking-wider text-charcoal mb-1.5">
-          Brief Project Description or Challenge <span className="text-red-500">*</span>
+        <label htmlFor="problemSummary" className="block text-xs font-mono font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+          Brief Project Description or Challenge <span className="text-red-400">*</span>
         </label>
         <textarea
           id="problemSummary"
@@ -328,12 +328,12 @@ function EnquiryFormContent() {
           value={formData.problemSummary}
           onChange={(e) => setFormData({ ...formData, problemSummary: e.target.value })}
           placeholder="Describe your current situation, what is broken or missing, and the outcome you want to achieve..."
-          className={`w-full px-3.5 py-2.5 text-sm rounded-md border ${
-            errors.problemSummary ? 'border-red-400 bg-red-50/20' : 'border-border-medium'
-          } focus:outline-none focus:ring-2 focus:ring-teal`}
+          className={`w-full px-3.5 py-2.5 text-sm rounded-xl border bg-[#101524] text-white placeholder-slate-500 ${
+            errors.problemSummary ? 'border-red-500 bg-red-950/20' : 'border-white/10'
+          } focus:outline-none focus:ring-2 focus:ring-azure/40 focus:border-azure-bright`}
         />
         {errors.problemSummary && (
-          <p id="problemSummary-error" className="text-xs text-red-600 mt-1">
+          <p id="problemSummary-error" className="text-xs text-red-400 mt-1">
             {errors.problemSummary}
           </p>
         )}
@@ -344,7 +344,7 @@ function EnquiryFormContent() {
         <button
           type="submit"
           disabled={status === 'submitting'}
-          className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-ivory bg-forest rounded-md hover:bg-forest-light transition-all shadow-subtle disabled:opacity-50"
+          className="inline-flex items-center justify-center px-6 py-3.5 text-sm font-semibold text-white bg-gradient-to-r from-azure to-violet rounded-xl shadow-[0_4px_25px_rgba(61,110,245,0.4)] hover:shadow-[0_6px_35px_rgba(61,110,245,0.6)] hover:scale-[1.02] transition-all disabled:opacity-50"
         >
           {status === 'submitting' ? (
             <>
@@ -359,11 +359,11 @@ function EnquiryFormContent() {
           )}
         </button>
 
-        <div className="flex items-center gap-1.5 text-xs text-charcoal-muted">
-          <Shield className="w-3.5 h-3.5 text-teal flex-shrink-0" />
+        <div className="flex items-center gap-1.5 text-xs text-slate-400">
+          <Shield className="w-3.5 h-3.5 text-azure-bright flex-shrink-0" />
           <span>
             Data handled in accordance with our{' '}
-            <Link href="/privacy" className="text-forest underline hover:text-teal">
+            <Link href="/privacy" className="text-white underline hover:text-azure-light">
               Privacy Policy
             </Link>
             . Zero spam.
@@ -376,9 +376,8 @@ function EnquiryFormContent() {
 
 export default function EnquiryForm() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-xs font-mono text-charcoal-muted bg-white rounded-xl border border-border-subtle">Loading enquiry interface...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-xs font-mono text-slate-400 bg-[#0B0F1A] rounded-2xl border border-white/10">Loading enquiry interface...</div>}>
       <EnquiryFormContent />
     </Suspense>
   );
 }
-
