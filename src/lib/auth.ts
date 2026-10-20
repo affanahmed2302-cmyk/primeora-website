@@ -28,6 +28,7 @@ export interface AdminSession {
   email: string;
   fullName: string;
   role: 'super_admin' | 'content_editor';
+  mustChangePassword?: boolean;
   exp: number;
 }
 
@@ -39,6 +40,7 @@ export function signSession(user: AdminUser, expiresInSeconds = 28800): string {
     email: user.email,
     fullName: user.fullName,
     role: user.role,
+    mustChangePassword: Boolean(user.mustChangePassword),
     exp: Math.floor(Date.now() / 1000) + expiresInSeconds,
   };
 
@@ -114,6 +116,11 @@ export function isContentEditorOrSuperAdmin(session: AdminSession | null | undef
     session !== undefined &&
     (session.role === 'super_admin' || session.role === 'content_editor')
   );
+}
+
+// Check if user is locked to forced password change (temporary credential)
+export function requiresPasswordChange(session: AdminSession | null | undefined): boolean {
+  return Boolean(session && session.mustChangePassword);
 }
 
 // Hash password with salt using PBKDF2 (100,000 iterations)

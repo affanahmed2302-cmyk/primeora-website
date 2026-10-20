@@ -20,48 +20,57 @@ export default function UpdatePasswordPage() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Check for access_token in URL hash (e.g. #access_token=...&type=recovery)
-    const hash = window.location.hash.substring(1);
-    const params = new URLSearchParams(hash);
-    const token = params.get('access_token');
-    const type = params.get('type');
+    const checkAuthAndToken = async () => {
+      // 1. Check for access_token in URL hash (e.g. #access_token=...&type=recovery)
+      const hash = window.location.hash.substring(1);
+      const params = new URLSearchParams(hash);
+      const token = params.get('access_token');
 
-    if (!token) {
-      // Also check query search params as fallback
+      // 2. Also check query search params as fallback
       const searchParams = new URLSearchParams(window.location.search);
       const queryToken = searchParams.get('access_token') || searchParams.get('token');
-      if (queryToken) {
-        setAccessToken(queryToken);
+
+      const resolvedToken = token || queryToken;
+
+      if (resolvedToken) {
+        setAccessToken(resolvedToken);
+        // Attempt to decode email from JWT payload for friendly greeting
+        try {
+          const parts = resolvedToken.split('.');
+          if (parts.length === 3) {
+            const payload = JSON.parse(atob(parts[1]));
+            if (payload.email) setUserEmail(payload.email);
+          }
+        } catch {
+          // Non-fatal
+        }
         setStatus('ready');
         return;
       }
 
-      setStatus('no_token');
-      return;
-    }
-
-    setAccessToken(token);
-
-    // Attempt to decode email from JWT payload for friendly greeting
-    try {
-      const parts = token.split('.');
-      if (parts.length === 3) {
-        const payload = JSON.parse(atob(parts[1]));
-        if (payload.email) setUserEmail(payload.email);
+      // 3. Check if user is currently logged in via temporary session cookie
+      try {
+        const sessionRes = await fetch('/api/admin/session');
+        if (sessionRes.ok) {
+          const sessionData = await sessionRes.json();
+          if (sessionData.user) {
+            setUserEmail(sessionData.user.email);
+            setStatus('ready');
+            return;
+          }
+        }
+      } catch {
+        // Fallback to no_token
       }
-    } catch {
-      // Non-fatal
-    }
 
-    setStatus('ready');
+      setStatus('no_token');
+    };
+
+    checkAuthAndToken();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!accessToken) {
-      setErrorMessage('Missing authentication token. Please use your valid password setup link.');
-      return;
-    }
 
     if (password.length < 10) {
       setErrorMessage('Password must be at least 10 characters long.');
@@ -77,23 +86,28 @@ export default function UpdatePasswordPage() {
     setErrorMessage('');
 
     try {
+      const payload: { newPassword: string; accessToken?: string } = { newPassword: password };
+      if (accessToken) {
+        payload.accessToken = accessToken;
+      }
+
       const res = await fetch('/api/admin/update-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ accessToken, newPassword: password }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
 
       if (!res.ok || !data.success) {
         setStatus('error');
-        setErrorMessage(data.error || 'Failed to update password. Your link may have expired.');
+        setErrorMessage(data.error || 'Failed to update password. Your session may have expired.');
         return;
       }
 
       setStatus('success');
       setTimeout(() => {
-        router.push('/admin');
+        router.push('/admin?reset_success=true');
         router.refresh();
       }, 1500);
     } catch {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getEnquiries, updateEnquiry } from '@/lib/cms-store';
-import { verifySession, isSuperAdmin } from '@/lib/auth';
+import { verifySession, isSuperAdmin, requiresPasswordChange } from '@/lib/auth';
 
 function getAuthenticatedAdmin(req: NextRequest) {
   const cookie = req.cookies.get('admin_session')?.value;
@@ -12,6 +12,14 @@ export async function GET(req: NextRequest) {
   const session = getAuthenticatedAdmin(req);
   if (!session) {
     return NextResponse.json({ success: false, error: 'Unauthorized: Administrative authentication required.' }, { status: 401 });
+  }
+
+  // Enforce password change if temporary credentials were used
+  if (requiresPasswordChange(session)) {
+    return NextResponse.json(
+      { success: false, error: 'Password change required before accessing administrative operations.', mustChangePassword: true },
+      { status: 403 }
+    );
   }
 
   // Content editors are forbidden from viewing private client enquiries
@@ -61,6 +69,13 @@ export async function PATCH(req: NextRequest) {
   const session = getAuthenticatedAdmin(req);
   if (!session) {
     return NextResponse.json({ success: false, error: 'Unauthorized: Administrative authentication required.' }, { status: 401 });
+  }
+
+  if (requiresPasswordChange(session)) {
+    return NextResponse.json(
+      { success: false, error: 'Password change required before accessing administrative operations.', mustChangePassword: true },
+      { status: 403 }
+    );
   }
 
   if (!isSuperAdmin(session)) {

@@ -508,19 +508,29 @@ export async function verifyAdminLogin(
         });
 
         if (!authErr && authData?.user) {
-          // Fetch assigned role from admin_profiles
+          // Fetch assigned role and credential policy from admin_profiles
           const { data: profile } = await supabase
             .from('admin_profiles')
-            .select('id, email, full_name, role')
+            .select('id, email, full_name, role, must_change_password, temp_password_expires_at, temp_password_active')
             .eq('id', authData.user.id)
             .single();
 
           if (profile) {
+            // Check if temporary credentials have expired
+            if (profile.temp_password_active && profile.temp_password_expires_at) {
+              const expiresAt = new Date(profile.temp_password_expires_at).getTime();
+              if (Date.now() > expiresAt) {
+                // Expired temporary credentials: do not issue authenticated session
+                return null;
+              }
+            }
+
             return {
               id: profile.id,
               email: profile.email,
               fullName: profile.full_name,
               role: profile.role,
+              mustChangePassword: Boolean(profile.must_change_password || profile.temp_password_active),
             };
           }
         }

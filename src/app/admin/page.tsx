@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { AdminUser, EnquirySubmission } from '@/types';
 import { BRAND_CONFIG } from '@/config/brand';
@@ -17,6 +17,9 @@ import {
   ChevronRight,
   Database,
   ArrowRight,
+  AlertTriangle,
+  KeyRound,
+  CheckCircle2,
 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
@@ -24,6 +27,16 @@ export default function AdminDashboardPage() {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [enquiries, setEnquiries] = useState<EnquirySubmission[]>([]);
   const [loading, setLoading] = useState(true);
+  const [resetSuccess, setResetSuccess] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('reset_success') === 'true') {
+        setResetSuccess(true);
+      }
+    }
+  }, []);
 
   const fetchSessionAndData = async () => {
     try {
@@ -117,6 +130,44 @@ export default function AdminDashboardPage() {
             Durable governance portal for customer enquiries, team publishing, and infrastructure telemetry.
           </p>
         </div>
+
+        {resetSuccess && (
+          <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700 rounded-xl text-emerald-900 dark:text-emerald-200 flex items-center justify-between gap-3 shadow-xs animate-in fade-in">
+            <div className="flex items-center gap-2.5">
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+              <span className="text-xs font-medium">
+                Welcome back! Your administrator password has been updated and your session is active.
+              </span>
+            </div>
+            <button
+              onClick={() => setResetSuccess(false)}
+              className="text-xs text-emerald-700 hover:text-emerald-900 dark:text-emerald-300 font-mono px-2 py-1"
+            >
+              Dismiss
+            </button>
+          </div>
+        )}
+
+        {user?.mustChangePassword && (
+          <div className="p-4 bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-400 dark:border-amber-600 rounded-xl text-amber-900 dark:text-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm animate-in fade-in">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="text-sm font-bold">Temporary Password In Use &mdash; Action Required</h3>
+                <p className="text-xs text-amber-800 dark:text-amber-300 mt-0.5 leading-relaxed">
+                  You have signed in using temporary credentials. To ensure administrative security and unlock enquiry management, you must configure your permanent password now.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/admin/update-password"
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-[#C25E38] hover:bg-[#A84E2D] rounded-lg shadow-xs transition-colors flex-shrink-0"
+            >
+              <KeyRound className="w-4 h-4" />
+              <span>Set Permanent Password</span>
+            </Link>
+          </div>
+        )}
 
         {/* Primary Operational Hub Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

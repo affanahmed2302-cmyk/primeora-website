@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
       email: session.email,
       fullName: session.fullName,
       role: session.role,
+      mustChangePassword: Boolean(session.mustChangePassword),
     },
   });
 

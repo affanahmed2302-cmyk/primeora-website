@@ -16,12 +16,13 @@ def record(test_name, success, details=''):
     mark = 'PASS' if success else 'FAIL'
     print(f'[{mark}] {test_name} - {details}')
 
-def make_session_token(secret: str, user_id: str, email: str, role: str) -> str:
+def make_session_token(secret: str, user_id: str, email: str, role: str, must_change: bool = False) -> str:
     payload = {
         'userId': user_id,
         'email': email,
         'fullName': f'Test {role.title()}',
         'role': role,
+        'mustChangePassword': must_change,
         'exp': int(time.time()) + 3600
     }
     payload_json = json.dumps(payload, separators=(',', ':')).encode('utf-8')
@@ -57,6 +58,8 @@ public_routes = [
     ('/terms', 'Entity Governance Terms'),
     ('/cookie-preferences', 'Cookie Preferences'),
     ('/admin/update-password', 'Founder Secure Password Setup'),
+    ('/admin/forgot-password', 'Self-Service Password Recovery'),
+    ('/admin/reset-password', 'Verified Credential Reset'),
     ('/sitemap.xml', 'Technical XML Sitemap'),
     ('/robots.txt', 'Search Engine Robots Directive'),
 ]
@@ -76,6 +79,9 @@ brand_assets = [
     ('/brand/primeora-logo-dark.png', 'Authentic Horizontal Dark Logo'),
     ('/brand/primeora-emblem.png', 'Authentic Cobalt Emblem Mark'),
     ('/brand/primeora-app-icon.png', 'Authentic App Icon'),
+    ('/team/dhananjaya-gr.jpg', 'Dhananjaya G.R. Founder Headshot'),
+    ('/team/akarsh-thodaskar.jpg', 'Akarsh P. Thodaskar Founder Headshot'),
+    ('/team/affan-ahmed-shariff.jpg', 'Affan Ahmed Shariff Founder Headshot'),
 ]
 for asset_path, label in brand_assets:
     try:
@@ -401,6 +407,112 @@ except urllib.error.HTTPError as e:
     record('Password Setup Guard: Missing Token', e.code in (400, 503), f'Correctly rejected with HTTP {e.code}')
 except Exception as e:
     record('Password Setup Guard: Missing Token', False, str(e))
+
+# -------------------------------------------------------------------
+# 8b. FORGOT PASSWORD & RECOVERY WORKFLOW GUARDS
+# -------------------------------------------------------------------
+try:
+    req = urllib.request.Request(
+        base + '/api/admin/forgot-password',
+        data=json.dumps({}).encode(),
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    urllib.request.urlopen(req)
+    record('Forgot Password Guard: Empty Payload', False, 'Should reject empty payload')
+except urllib.error.HTTPError as e:
+    record('Forgot Password Guard: Empty Payload', e.code in (400, 429), f'Correctly rejected with HTTP {e.code}')
+except Exception as e:
+    record('Forgot Password Guard: Empty Payload', False, str(e))
+
+try:
+    # Anti-enumeration test: unknown email returns HTTP 200 with neutral message
+    req = urllib.request.Request(
+        base + '/api/admin/forgot-password',
+        data=json.dumps({'email': 'unknown_random_user_99@primeorasolutions.com'}).encode(),
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    with urllib.request.urlopen(req) as resp:
+        body = json.loads(resp.read().decode())
+        record(
+            'Forgot Password: User Enumeration Defense',
+            resp.status == 200 and body.get('success') is True,
+            f'Neutral confirmation returned: {body.get("message")[:50]}...'
+        )
+except urllib.error.HTTPError as e:
+    record('Forgot Password: User Enumeration Defense', e.code == 429, f'Rate limit triggered: HTTP {e.code}')
+except Exception as e:
+    record('Forgot Password: User Enumeration Defense', False, str(e))
+
+try:
+    req = urllib.request.Request(
+        base + '/api/admin/verify-otp',
+        data=json.dumps({}).encode(),
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    urllib.request.urlopen(req)
+    record('Verify OTP Guard: Empty Payload', False, 'Should reject empty payload')
+except urllib.error.HTTPError as e:
+    record('Verify OTP Guard: Empty Payload', e.code in (400, 429), f'Correctly rejected with HTTP {e.code}')
+except Exception as e:
+    record('Verify OTP Guard: Empty Payload', False, str(e))
+
+try:
+    req = urllib.request.Request(
+        base + '/api/admin/reset-password',
+        data=json.dumps({}).encode(),
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    urllib.request.urlopen(req)
+    record('Reset Password Guard: Missing Token', False, 'Should reject missing token')
+except urllib.error.HTTPError as e:
+    record('Reset Password Guard: Missing Token', e.code in (401, 429), f'Correctly rejected with HTTP {e.code}')
+except Exception as e:
+    record('Reset Password Guard: Missing Token', False, str(e))
+
+# -------------------------------------------------------------------
+# 8c. FORCED PASSWORD CHANGE LOCKOUT TEST
+# -------------------------------------------------------------------
+try:
+    secret = os.environ.get('ADMIN_JWT_SECRET', 'test_verification_secret_key_32bytes_minimum_length!')
+    temp_session = make_session_token(secret, 'founder_1', 'dhananjaya.noir@gmail.com', 'super_admin', must_change=True)
+    
+    # Try accessing protected enquiries with temporary password session
+    req = urllib.request.Request(
+        base + '/api/admin/enquiries',
+        headers={'Cookie': f'admin_session={temp_session}'}
+    )
+    try:
+        urllib.request.urlopen(req)
+        record('Temporary Password Lockout: Enquiries API', False, 'Should have blocked temporary session')
+    except urllib.error.HTTPError as e:
+        body = json.loads(e.read().decode())
+        record(
+            'Temporary Password Lockout: Enquiries API',
+            e.code == 403 and body.get('mustChangePassword') is True,
+            f'Enquiries API returned HTTP {e.code} with mustChangePassword=True'
+        )
+
+    # Try accessing protected team API with temporary password session
+    req = urllib.request.Request(
+        base + '/api/admin/team',
+        headers={'Cookie': f'admin_session={temp_session}'}
+    )
+    try:
+        urllib.request.urlopen(req)
+        record('Temporary Password Lockout: Team API', False, 'Should have blocked temporary session')
+    except urllib.error.HTTPError as e:
+        body = json.loads(e.read().decode())
+        record(
+            'Temporary Password Lockout: Team API',
+            e.code == 403 and body.get('mustChangePassword') is True,
+            f'Team API returned HTTP {e.code} with mustChangePassword=True'
+        )
+except Exception as e:
+    record('Temporary Password Lockout Suite', False, str(e))
 
 # -------------------------------------------------------------------
 # 9. ROBOTS DIRECTIVE & DISALLOW CHECKS

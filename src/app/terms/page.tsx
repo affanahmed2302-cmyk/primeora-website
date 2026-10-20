@@ -1,12 +1,12 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { BRAND_CONFIG } from '@/config/brand';
-import { Shield } from 'lucide-react';
+import { Shield, Scale, FileCheck, AlertCircle, Building2, Landmark } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Terms & Conditions — Engagement Governance | Primeora Solutions',
+  title: 'Terms & Conditions — Engagement Governance & Commercial Terms | Primeora Solutions',
   description:
-    'Terms of use governing the Primeora Solutions website and commercial engagement boundaries.',
+    'Terms and commercial governance conditions governing website use and digital consulting engagements for Primeora Solutions in accordance with Indian commercial law.',
   alternates: {
     canonical: 'https://primeora-solutions.netlify.app/terms',
   },
@@ -18,48 +18,83 @@ export default function TermsPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2 px-3 py-1 bg-white dark:bg-[#22201D] text-[#5A544E] dark:text-[#B8B0A5] border border-[#DDD5C7] dark:border-[#33302B] rounded-md text-xs font-mono mb-4 w-fit shadow-xs">
           <Shield className="w-3.5 h-3.5 text-[#C25E38] dark:text-[#E07A5F]" />
-          <span>Legal Disclosures</span>
+          <span>Statutory Disclosures &amp; Contractual Terms</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-bold mb-3 font-sans text-editorial-ink dark:text-[#FBF9F5]">
           Terms &amp; Conditions
         </h1>
         <p className="text-xs text-[#7C7469] dark:text-[#8E867C] font-mono mb-10">
-          Last updated: 21 October 2026 · Operating Entity: {BRAND_CONFIG.legalEntity} (Udyam MSME: {BRAND_CONFIG.udyamRegistrationNumber})
+          Last revised: 21 October 2026 &middot; Operating Entity: {BRAND_CONFIG.legalEntity} (Udyam MSME: {BRAND_CONFIG.udyamRegistrationNumber}) &middot; Jurisdiction: Bengaluru, Karnataka, India
         </p>
 
         <div className="text-sm text-[#5A544E] dark:text-[#A8A196] leading-relaxed space-y-6">
+          {/* Section 1: Entity Identification */}
           <section className="space-y-3 bg-white dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#2C2926] p-6 sm:p-7 rounded-xl shadow-xs">
-            <h2 className="text-lg font-bold font-sans text-editorial-ink dark:text-[#FBF9F5]">1. Enterprise Identity &amp; Brand Governance</h2>
+            <h2 className="text-lg font-bold font-sans text-editorial-ink dark:text-[#FBF9F5] flex items-center gap-2">
+              <Building2 className="w-5 h-5 text-[#C25E38]" />
+              <span>1. Enterprise Identity &amp; Corporate Status</span>
+            </h2>
             <p>
-              These Terms and Conditions govern the use of this website. This website is owned and operated directly by <strong>{BRAND_CONFIG.legalEntity}</strong> (Udyam Registered MSME: <code>{BRAND_CONFIG.udyamRegistrationNumber}</code>, Bangalore, Karnataka), conducting commercial advisory, software engineering, and digital systems consulting as <strong>{BRAND_CONFIG.name}</strong>.
+              This website is owned and operated by <strong>{BRAND_CONFIG.legalEntity}</strong>, registered with the Ministry of Micro, Small and Medium Enterprises (MSME), Government of India under Udyam Registration Number <code>{BRAND_CONFIG.udyamRegistrationNumber}</code> (Classification: Micro Enterprise, Services), trading commercially as <strong>{BRAND_CONFIG.name}</strong> (&ldquo;Primeora Solutions&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;).
+            </p>
+            <p className="text-xs text-[#7C7469] dark:text-[#8E867C]">
+              Principal Address: {BRAND_CONFIG.registeredAddress} &middot; Official Contact: {BRAND_CONFIG.officialEmail} &middot; {BRAND_CONFIG.contactPhone}.
             </p>
           </section>
 
+          {/* Section 2: Website Use & Scope */}
           <section className="space-y-3 bg-white dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#2C2926] p-6 sm:p-7 rounded-xl shadow-xs">
-            <h2 className="text-lg font-bold font-sans text-editorial-ink dark:text-[#FBF9F5]">2. Informational Purpose &amp; No Unilateral Warranty</h2>
+            <h2 className="text-lg font-bold font-sans text-editorial-ink dark:text-[#FBF9F5] flex items-center gap-2">
+              <Scale className="w-5 h-5 text-[#C25E38]" />
+              <span>2. Informational Purpose &amp; Non-Binding Quotations</span>
+            </h2>
             <p>
-              The content, service descriptions, package tiers, and architectural case models presented on this website are for informational and planning purposes only. They do not constitute a binding unilateral offer to deliver specific outcomes. Formal client engagements require a customized Discovery and a mutually executed written Service Agreement specifying agreed deliverables, milestone pricing, and client dependencies.
+              Case studies, service tier outlines, estimated delivery ranges, and technical architectures published on this website are provided solely for general informational and commercial scoping purposes. They do not constitute an irrevocable unilateral offer or guarantee of specific performance.
+            </p>
+            <p>
+              Formal client engagements require a dedicated discovery workshop and the mutual execution of an individualized, legally binding <strong>Primeora Solutions Master Services Agreement (MSA)</strong> and Statement of Work (SOW) outlining defined milestones, acceptance criteria, and fee schedules.
             </p>
           </section>
 
+          {/* Section 3: Intellectual Property Handover */}
           <section className="space-y-3 bg-white dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#2C2926] p-6 sm:p-7 rounded-xl shadow-xs">
-            <h2 className="text-lg font-bold font-sans text-editorial-ink dark:text-[#FBF9F5]">3. Service Agreement Precedence</h2>
+            <h2 className="text-lg font-bold font-sans text-editorial-ink dark:text-[#FBF9F5] flex items-center gap-2">
+              <FileCheck className="w-5 h-5 text-[#C25E38]" />
+              <span>3. Intellectual Property Handover &amp; Licensing</span>
+            </h2>
             <p>
-              When a client engages our practice for software engineering, website development, CRM integration, automation, or analytics, the relationship is governed by the specific written <strong>Primeora Solutions Service Agreement</strong> and project proposal agreed between the parties. In the event of any conflict between this website copy and an executed Service Agreement, the executed Service Agreement shall govern.
+              All software source code, bespoke application architectures, user interface assets, and custom databases developed specifically for a client under an executed Statement of Work become the exclusive intellectual property of the client upon receipt of full milestone payments.
+            </p>
+            <p className="text-xs text-[#7C7469] dark:text-[#8E867C]">
+              Pre-existing software frameworks, generic automation scripts, third-party libraries, and open-source tools integrated into deliverables remain governed by their respective commercial or open-source licenses (e.g. MIT, Apache 2.0).
             </p>
           </section>
 
+          {/* Section 4: Limitation of Liability */}
           <section className="space-y-3 bg-white dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#2C2926] p-6 sm:p-7 rounded-xl shadow-xs">
-            <h2 className="text-lg font-bold font-sans text-editorial-ink dark:text-[#FBF9F5]">4. Intellectual Property &amp; Handover</h2>
+            <h2 className="text-lg font-bold font-sans text-editorial-ink dark:text-[#FBF9F5] flex items-center gap-2">
+              <AlertCircle className="w-5 h-5 text-[#C25E38]" />
+              <span>4. Limitation of Liability</span>
+            </h2>
             <p>
-              Upon final milestone payment, full ownership and repository rights of custom deliverables authored specifically for the client transfer to the client. Pre-existing proprietary utilities, shared open-source libraries, and reusable scripts remain licensed under standard commercial or open-source terms.
+              To the maximum extent permitted by applicable Indian law, in no event shall Primeora Solutions, its founders, or contractors be liable for indirect, punitive, incidental, special, or consequential damages, including loss of profits, data corruption, or business interruption arising out of the use or inability to use this website.
+            </p>
+            <p>
+              For formal client engagements, liability is strictly limited to the total fees actually received by Primeora Solutions under the specific Statement of Work giving rise to the claim during the preceding six (6) month period.
             </p>
           </section>
 
+          {/* Section 5: Governing Law & Dispute Resolution */}
           <section className="space-y-3 bg-white dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#2C2926] p-6 sm:p-7 rounded-xl shadow-xs">
-            <h2 className="text-lg font-bold font-sans text-editorial-ink dark:text-[#FBF9F5]">5. Governing Law &amp; Jurisdiction</h2>
+            <h2 className="text-lg font-bold font-sans text-editorial-ink dark:text-[#FBF9F5] flex items-center gap-2">
+              <Landmark className="w-5 h-5 text-[#C25E38]" />
+              <span>5. Governing Law &amp; Exclusive Jurisdiction</span>
+            </h2>
             <p>
-              These terms are governed by the laws of India. Any disputes arising out of the use of this website or formal engagements shall be subject to the exclusive jurisdiction of the competent courts in Bangalore, Karnataka, India.
+              These Terms, all commercial disclosures, and website operations are governed by and construed in accordance with the laws of the <strong>Republic of India</strong>, including the Indian Contract Act, 1872, the Information Technology Act, 2000, and the Digital Personal Data Protection Act, 2023.
+            </p>
+            <p>
+              Any disputes, controversies, or claims arising out of or in connection with website use or services shall first be submitted to mutual amicable consultation for thirty (30) days. In the event mutual resolution cannot be achieved, the dispute shall be subject to the exclusive territorial jurisdiction of the competent courts of <strong>Bengaluru (Urban), Karnataka, India</strong>.
             </p>
           </section>
         </div>

@@ -12,6 +12,10 @@ export const BRAND_CONFIG = {
   legalEntity: 'Primeora Solutions',
   udyamRegistrationNumber: 'UDYAM-KR-03-0732181',
   udyamStatus: 'Udyam Registered MSME (Micro Enterprise, NIC 62011)',
+  registeredAddress:
+    '1st Floor, #11, Affan Ahmed Shariff Building, Bangalore North, Bengaluru (Urban), Karnataka 560023, India',
+  officialEmail: 'PrimeoraSolutions.in@gmail.com',
+  contactPhone: '+91 94807 51817',
   legalNotice:
     'Primeora Solutions (Udyam Registered MSME: UDYAM-KR-03-0732181). All client contracts, service agreements, and formal proposals are executed directly by Primeora Solutions.',
   location: 'Bangalore, Karnataka, India (PIN 560023)',
@@ -529,7 +533,7 @@ export const INITIAL_FOUNDERS: TeamMember[] = [
       'Performance optimization & security auditing',
       'Continuous deployment & cloud infrastructure',
     ],
-    photoUrl: undefined,
+    photoUrl: '/team/akarsh-thodaskar.jpg',
     linkedinUrl: 'https://www.linkedin.com/in/akarsh-p-6963b5397?utm_source=share_via&utm_content=profile&utm_medium=member_android',
     displayOrder: 2,
     status: 'published',
@@ -547,7 +551,7 @@ export const INITIAL_FOUNDERS: TeamMember[] = [
       'Workflow & operations automation architecture',
       'Internal system optimization & QA standards',
     ],
-    photoUrl: undefined,
+    photoUrl: '/team/dhananjaya-gr.jpg',
     linkedinUrl: 'https://www.linkedin.com/in/dhananjaya-gr',
     displayOrder: 3,
     status: 'published',
