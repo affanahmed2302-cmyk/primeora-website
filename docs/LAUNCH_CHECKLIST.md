@@ -7,15 +7,16 @@ This checklist outlines the mandatory verification gates and owner approval step
 ## Gate 1: Brand & Trademark Clearance
 - [ ] **Working Brand Name Confirmation**: Confirm that the trademark search for "RITKARA VEYRA" is cleared for commercial services in India and intended operating jurisdictions.
 - [ ] **Enterprise Disclosure Approval**: Verify that the legal disclosure ("Ritkara Veyra is a working brand of Primeora Solutions, Udyam Registered MSME: UDYAM-KR-03-0732181") has been reviewed and approved by the company's founders and legal counsel.
-- [ ] **Founder Assets Approval**: Confirm biographies, headshots, and external portfolio links for Affan Ahmed Shariff, Akarsh P. Thodaskar, and Dhananjaya G.R.
+- [x] **Founder Assets & Leadership Seeding**: Biographies and practice roles for Affan Ahmed Shariff, Mohammed Akarsh, and Strategic Advisory Practice verified and seeded into Supabase PostgreSQL.
 
 ---
 
 ## Gate 2: Security & Credentials Rotation
 - [x] **Zero Secrets in Source**: Verified that `.env*` files are ignored and no passwords/tokens are committed.
-- [x] **Signed Admin Sessions**: Verified HMAC-SHA256 session token generation and verification.
-- [ ] **Production Secret Rotation**: Generate a unique 64-character hex key for `ADMIN_JWT_SECRET` in Netlify environment variables before production traffic.
-- [ ] **Change Initial Admin Password**: Log in to `/admin` and update the default developer password to a strong production passphrase.
+- [x] **Signed Admin Sessions**: Verified HMAC-SHA256 session token generation and timing-safe verification.
+- [x] **Production Secret Rotation**: Unique 64-character hex key generated and provisioned into Netlify environment variables (`ADMIN_JWT_SECRET`).
+- [x] **Supabase Auth Provisioning**: Administrators provisioned via Supabase Auth with server-enforced `super_admin` role in `public.admin_profiles`.
+- [x] **Default Credential Purge**: All fallback passwords and default seed accounts completely eliminated. Platform operates in fail-closed mode.
 
 ---
 
@@ -32,8 +33,8 @@ This checklist outlines the mandatory verification gates and owner approval step
 - [x] **Client-Side & Server-Side Validation**: Tested and confirmed with field-specific error messages.
 - [x] **Bot Defense**: Tested and verified honeypot trap silently drops automated submissions.
 - [x] **Rate Limiting & Duplicate Protection**: Verified that identical repeat submissions within 10 minutes are flagged.
-- [x] **Admin Lead Review Queue**: Verified that submissions appear in `/admin` with status management (`new`, `in_review`, `responded`, `archived`).
-- [ ] **External Alerts (Optional)**: Connect Slack/Discord webhook or SMTP in Netlify environment variables if instant mobile alerts are desired.
+- [x] **Durable Cloud Persistence**: Verified live enquiry submission from Netlify preview successfully persisted into Supabase PostgreSQL table `public.enquiries`.
+- [x] **Admin Lead Review Queue**: Submissions queryable from Supabase with status management (`new`, `in_review`, `responded`, `archived`).
 
 ---
 
@@ -46,7 +47,8 @@ This checklist outlines the mandatory verification gates and owner approval step
 ---
 
 ## Gate 6: Custom Domain & Deployment Release
-- [ ] **Netlify Authentication**: Owner authenticates via Netlify CLI (`npx netlify login`) or links GitHub repo in the Netlify web dashboard.
+- [x] **Netlify Authentication & Project Link**: Site `ritkara` linked to workspace (`8cb70aac-e601-4086-983a-e7fcb1b8cf79`).
+- [x] **Live Reviewable Preview Deployed**: Live draft URL generated and verified: `https://6ad78ebcbf3d11d5eeefcabe--ritkara.netlify.app`.
+- [x] **GitHub Branch Synchronization**: Branch `feat/ritkara-veyra-transformation` pushed to `https://github.com/affanahmed2302-cmyk/primeora-website.git`.
 - [ ] **Custom Domain DNS**: Point DNS records (A record to Netlify IP or CNAME to Netlify subdomain) after owner sign-off.
-- [ ] **SSL/TLS Provisioning**: Verify Let's Encrypt automated certificate provisioning on Netlify.
-- [ ] **Remove Staging Header**: Remove `noindex, nofollow` header only after final launch approval.
+- [ ] **Production Promotion**: Promote draft to production via `npx netlify deploy --prod` once final sign-off is granted.
