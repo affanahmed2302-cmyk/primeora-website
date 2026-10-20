@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTeamMembers, saveTeamMember, deleteTeamMember } from '@/lib/cms-store';
-import { verifySession, isSuperAdmin } from '@/lib/auth';
+import { verifySession, isSuperAdmin, requiresPasswordChange } from '@/lib/auth';
 import { TeamMember } from '@/types';
 
 // Helper: Require authenticated admin session
@@ -14,6 +14,13 @@ export async function GET(req: NextRequest) {
   const session = getAuthenticatedAdmin(req);
   if (!session) {
     return NextResponse.json({ success: false, error: 'Unauthorized: Valid administrative session required.' }, { status: 401 });
+  }
+
+  if (requiresPasswordChange(session)) {
+    return NextResponse.json(
+      { success: false, error: 'Password change required before accessing administrative operations.', mustChangePassword: true },
+      { status: 403 }
+    );
   }
 
   try {
@@ -31,6 +38,13 @@ export async function POST(req: NextRequest) {
   const session = getAuthenticatedAdmin(req);
   if (!session) {
     return NextResponse.json({ success: false, error: 'Unauthorized: Valid administrative session required.' }, { status: 401 });
+  }
+
+  if (requiresPasswordChange(session)) {
+    return NextResponse.json(
+      { success: false, error: 'Password change required before accessing administrative operations.', mustChangePassword: true },
+      { status: 403 }
+    );
   }
 
   try {
@@ -88,6 +102,13 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ success: false, error: 'Unauthorized: Valid administrative session required.' }, { status: 401 });
   }
 
+  if (requiresPasswordChange(session)) {
+    return NextResponse.json(
+      { success: false, error: 'Password change required before accessing administrative operations.', mustChangePassword: true },
+      { status: 403 }
+    );
+  }
+
   try {
     const body = await req.json();
     const { id, ...updates } = body;
@@ -121,6 +142,13 @@ export async function DELETE(req: NextRequest) {
   const session = getAuthenticatedAdmin(req);
   if (!session) {
     return NextResponse.json({ success: false, error: 'Unauthorized: Valid administrative session required.' }, { status: 401 });
+  }
+
+  if (requiresPasswordChange(session)) {
+    return NextResponse.json(
+      { success: false, error: 'Password change required before accessing administrative operations.', mustChangePassword: true },
+      { status: 403 }
+    );
   }
 
   // Strict role check: Only super_admin can permanently delete records

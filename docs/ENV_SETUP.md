@@ -1,66 +1,133 @@
-# Environment Setup & Secret Management Guide — RITKARA VEYRA
+# Environment Setup & Secrets Management Guide — PRIMEORA SOLUTIONS
 
-This document specifies the environment variables, configuration procedures, and strict secret-handling standards for both local development and Netlify production deployments.
+This document specifies the authoritative environment variables, security configuration procedures, and transactional email (SMTP) setup required for local development and Netlify production deployments.
 
 ---
 
-## 1. Zero Secrets in Version Control Policy
+## 1. Zero Plaintext Secrets Policy
 
-- **No Secrets in Source Code**: Do not hardcode database connection strings, JWT signing keys, service-role tokens, or credentials anywhere in the repository.
-- **Git Protection**: `.gitignore` strictly protects `.env`, `.env.local`, `.env.production`, and `.env.staging`.
-- **Framework Variable Prefixes**: Any variable prefixed with `NEXT_PUBLIC_` is baked into the client JavaScript bundle and is publicly visible in the browser. Only public endpoints (e.g. site URL, anon keys, GA measurement ID) may carry this prefix.
-- **Server-Only Secrets**: Variables without `NEXT_PUBLIC_` (e.g. `ADMIN_JWT_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`) are accessible solely in Next.js Server Components, API Route Handlers, and serverless edge functions.
+- **No Secrets in Source Code:** Do not hardcode database connection strings, JWT signing secrets, service-role tokens, or passwords anywhere in the repository.
+- **Git Protection:** `.gitignore` strictly protects `.env`, `.env.local`, `.env.production`, `.env.staging`, and temporary credential slips.
+- **Framework Variable Scoping:** Any variable prefixed with `NEXT_PUBLIC_` is included in the client JavaScript bundle and is publicly visible in the browser. Only public endpoints (site URL, anon keys, GA measurement ID) may carry this prefix.
+- **Server-Only Secrets:** Variables without `NEXT_PUBLIC_` (e.g. `ADMIN_JWT_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`) are accessible solely in Next.js Server Components, API Route Handlers, and serverless edge functions.
 
 ---
 
 ## 2. Environment Variables Specification
 
-| Variable Name | Environment | Required? | Purpose & Description | Safe Example / Format |
+| Variable Name | Scope | Required? | Purpose & Description | Safe Format / Production Setting |
 | :--- | :--- | :--- | :--- | :--- |
-| `NEXT_PUBLIC_SITE_URL` | Public | Yes | Canonical base URL used for Open Graph, XML sitemap, and redirects. | `http://localhost:3000` (dev) / `https://ritkaraveyra.netlify.app` (preview) |
-| `NEXT_PUBLIC_SITE_NAME` | Public | Yes | Brand display name. | `RITKARA VEYRA` |
-| `NEXT_PUBLIC_SITE_TAGLINE` | Public | Yes | Working brand tagline. | `MAKE COMPLEXITY WORK.` |
-| `ADMIN_JWT_SECRET` | Server-only | Yes | 32+ character high-entropy key for HMAC-SHA256 signing of admin session cookies. | `openssl rand -base64 32` |
-| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Public | Optional | Google Analytics 4 Measurement ID. Gated by user cookie consent. | `G-XXXXXXXXXX` |
-| `NEXT_PUBLIC_SUPABASE_URL` | Public | Optional | Supabase Project URL if connecting cloud database. | `https://xyzproject.supabase.co` |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public | Optional | Supabase Anonymous Client Key (governed by Row Level Security). | `eyJhbGciOi...` |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server-only | Optional | Supabase Service Role Key for privileged server-side administrative queries. | `eyJhbGciOi...` |
-| `ENQUIRY_NOTIFICATION_EMAIL` | Server-only | Optional | Target email to receive instant alerts when a lead submits the form. | `hello@primeorasolutions.com` |
-| `DISCORD_LEAD_WEBHOOK_URL` | Server-only | Optional | Instant notification webhook for inbound project enquiries. | `https://discord.com/api/webhooks/...` |
+| `NEXT_PUBLIC_SITE_URL` | Client & Server | **Yes** | Canonical base URL used for Open Graph, XML sitemap, and redirects. | `https://primeora-solutions.netlify.app` |
+| `NEXT_PUBLIC_SITE_NAME` | Client & Server | **Yes** | Brand display name. | `PRIMEORA SOLUTIONS` |
+| `NEXT_PUBLIC_SITE_TAGLINE` | Client & Server | **Yes** | Brand positioning tagline. | `ARCHITECTURE. INTEGRATION. SCALE.` |
+| `ADMIN_JWT_SECRET` | Server-Only | **Yes** | 32+ character high-entropy key for HMAC-SHA256 signing of admin session cookies. | `openssl rand -base64 32` |
+| `NEXT_PUBLIC_SUPABASE_URL` | Client & Server | **Yes** | Dedicated Supabase Project API URL. | `https://dvhxcukgxgoptzprolfe.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Client & Server | **Yes** | Supabase Anonymous Client Key (governed by Row Level Security). | `eyJhbGciOi...` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-Only | **Yes** | Supabase Service Role Key for privileged server-side administrative actions. | `eyJhbGciOi...` |
+| `ALLOW_LOCAL_STORAGE_FALLBACK` | Server-Only | Dev/Test | Fallback mode allowing in-memory/mock storage if Supabase is temporarily unreachable. | `false` (in production) |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Client-Only | Optional | Google Analytics 4 Measurement ID (gated by user cookie consent). | `G-XXXXXXXXXX` |
+| `ENQUIRY_NOTIFICATION_EMAIL` | Server-Only | Optional | Internal email recipient for new customer lead alerts. | `contact@primeorasolutions.com` |
+| `DISCORD_LEAD_WEBHOOK_URL` | Server-Only | Optional | Discord or Slack webhook URL for real-time lead alerts. | `https://discord.com/api/webhooks/...` |
 
 ---
 
-## 3. Local Development Setup
+## 3. Production Transactional Email Setup (Supabase Custom SMTP)
 
-1. Copy `.env.example` to create your local environment file:
+By default, Supabase Auth utilizes a shared built-in email service with strict rate limits (30 emails/hour) suitable only for initial testing. For reliable production delivery of password recovery codes and onboarding invites from `@primeorasolutions.com`, a dedicated custom SMTP provider is required.
+
+### 3.1 Recommended Providers & Settings
+
+#### Option A: Resend (Recommended for Next.js / Developer Ecosystems)
+1. Register a verified domain at [resend.com](https://resend.com) for `primeorasolutions.com`.
+2. Generate an API Key with sending permissions.
+3. In Supabase Dashboard: **Authentication > Email Settings > Custom SMTP**:
+   - **Sender Email:** `auth@primeorasolutions.com` or `no-reply@primeorasolutions.com`
+   - **Sender Name:** `Primeora Solutions Security`
+   - **Host:** `smtp.resend.com`
+   - **Port:** `465` (SSL) or `587` (TLS)
+   - **Username:** `resend`
+   - **Password:** `[Your Resend API Key: re_...]`
+
+#### Option B: Amazon Simple Email Service (AWS SES) — Mumbai Region
+1. Verify `primeorasolutions.com` in AWS SES console in the `ap-south-1` (Mumbai) region.
+2. In Supabase Dashboard: **Authentication > Email Settings > Custom SMTP**:
+   - **Sender Email:** `security@primeorasolutions.com`
+   - **Host:** `email-smtp.ap-south-1.amazonaws.com`
+   - **Port:** `587` (STARTTLS)
+   - **Username:** `[AWS SES SMTP Username]`
+   - **Password:** `[AWS SES SMTP Password]`
+
+---
+
+### 3.2 DNS Authentication Records (Mandatory for Inbox Deliverability)
+
+Add the following DNS records with your domain registrar (e.g. Cloudflare, Namecheap, Google Domains) to prevent email spoofing, spam filtering, and guarantee delivery to Gmail / Google Workspace:
+
+| Record Type | Name / Host | Target / Value | Purpose |
+|---|---|---|---|
+| **TXT** | `@` | `v=spf1 include:amazonses.com include:_spf.google.com ~all` | **SPF Record:** Authorizes SES and Google Workspace to send on behalf of the domain. |
+| **CNAME** | `[token]._domainkey` | `[token].dkim.amazonses.com` | **DKIM Record:** Cryptographically signs email headers to prevent tampering. |
+| **TXT** | `_dmarc` | `v=DMARC1; p=quarantine; pct=100; rua=mailto:dmarc@primeorasolutions.com` | **DMARC Policy:** Instructs receiving MTAs to quarantine unauthenticated messages. |
+
+---
+
+### 3.3 Supabase Auth Recovery Template Configuration
+
+In **Supabase Dashboard > Authentication > Email Templates > Reset Password**:
+
+- **Subject Line:** `Reset Your Primeora Solutions Administrator Password`
+- **Body HTML:**
+  ```html
+  <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 540px; margin: 0 auto; padding: 32px 24px; color: #191817; background-color: #FBF9F5; border: 1px solid #E5DDD0; border-radius: 12px;">
+    <div style="margin-bottom: 24px;">
+      <h2 style="margin: 0; font-size: 20px; font-weight: 700; color: #191817;">Primeora Solutions</h2>
+      <p style="margin: 4px 0 0 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #7C7469; font-family: monospace;">Administrative Security</p>
+    </div>
+    <p style="font-size: 14px; line-height: 1.6; color: #5A544E;">
+      A password reset request was initiated for your administrator account. Use the one-time 6-digit recovery code below to proceed:
+    </p>
+    <div style="background-color: #FFFFFF; border: 1px solid #DDD5C7; border-radius: 8px; padding: 16px; text-align: center; margin: 24px 0;">
+      <span style="font-size: 28px; font-weight: 700; letter-spacing: 0.2em; font-family: monospace; color: #C25E38;">{{ .Token }}</span>
+    </div>
+    <p style="font-size: 12px; color: #7C7469; line-height: 1.5;">
+      This code is valid for <strong>15 minutes</strong>. If you did not initiate this request, no action is required; your account remains secure.
+    </p>
+    <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #E5DDD0; font-size: 10px; color: #A0988C; font-family: monospace;">
+      Primeora Solutions &middot; Bangalore North, Karnataka 560023 &middot; UDYAM-KR-03-0732181
+    </div>
+  </div>
+  ```
+
+---
+
+## 4. Local Development Setup
+
+1. Copy `.env.example` to create your local development file:
    ```bash
    cp .env.example .env.local
    ```
-2. Generate a secure random string for `ADMIN_JWT_SECRET`:
-   ```bash
-   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+2. Populate required values:
+   ```env
+   NEXT_PUBLIC_SITE_URL=http://localhost:3000
+   NEXT_PUBLIC_SITE_NAME=PRIMEORA SOLUTIONS
+   NEXT_PUBLIC_SITE_TAGLINE=ARCHITECTURE. INTEGRATION. SCALE.
+   ADMIN_JWT_SECRET=[paste newly generated 32-byte secret]
+   NEXT_PUBLIC_SUPABASE_URL=https://dvhxcukgxgoptzprolfe.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=[your_anon_key]
+   SUPABASE_SERVICE_ROLE_KEY=[your_service_role_key]
    ```
-3. Set your `ADMIN_JWT_SECRET` in `.env.local`.
-4. Provision Administrative Credentials:
-   - **Recommended (Supabase Auth)**: Create an administrative user in your Supabase Auth dashboard, and insert a corresponding record into `public.admin_profiles` with `role = 'super_admin'`.
-   - **Alternative (Environment Provisioned)**: Set `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, and `ADMIN_PASSWORD_SALT` in `.env.local` using the generator below:
-     ```bash
-     node -e "const c=require('crypto'); const s=c.randomBytes(16).toString('hex'); const h=c.pbkdf2Sync('YOUR_CHOSEN_PASSWORD', s, 100000, 64, 'sha512').toString('hex'); console.log('ADMIN_PASSWORD_SALT=' + s); console.log('ADMIN_PASSWORD_HASH=' + h);"
-     ```
-   - Note: The platform operates with **zero default passwords**. Unconfigured environments fail closed.
+3. Install dependencies and start development server:
+   ```bash
+   npm install
+   npm run dev
+   ```
 
 ---
 
-## 4. Netlify Production Configuration
+## 5. Netlify Production Configuration
 
-To configure environment variables on Netlify:
-1. Log in to your Netlify Dashboard at https://app.netlify.com.
-2. Select the site `ritkara-veyra` (or current linked site).
-3. Navigate to **Site configuration > Environment variables**.
-4. Add the following variables:
-   - `NEXT_PUBLIC_SITE_URL`: `https://<your-custom-domain-or-subdomain>.netlify.app`
-   - `ADMIN_JWT_SECRET`: `[paste a newly generated 64-character hex key]`
-   - `NEXT_PUBLIC_GA_MEASUREMENT_ID`: `[optional: provide once GA4 property is created]`
-   - `SUPABASE_SERVICE_ROLE_KEY`: `[optional: provide once Supabase project is created]`
-5. Set scope to **All scopes** or separate **Production** from **Deploy Previews**.
-6. Trigger a new deployment to apply the environment changes.
+To deploy to Netlify:
+1. Navigate to Netlify Dashboard: **Site configuration > Environment variables**.
+2. Add all server and public environment variables listed in Section 2.
+3. Ensure `ADMIN_JWT_SECRET` is set to an independent 64-character hex secret for production.
+4. Set `ALLOW_LOCAL_STORAGE_FALLBACK=false` to guarantee fail-closed security.

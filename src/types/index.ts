@@ -97,4 +97,5 @@ export interface AdminUser {
   email: string;
   fullName: string;
   role: 'super_admin' | 'content_editor';
+  mustChangePassword?: boolean;
 }
