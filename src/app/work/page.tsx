@@ -4,9 +4,9 @@ import Link from 'next/link';
 import { ArrowRight, Info, CheckCircle2, Cpu, Database, Workflow, ShieldCheck } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Case Architecture & Reference Systems — Ritkara Veyra',
+  title: 'System Architectures & Workflow Demonstrations — Primeora Solutions',
   description:
-    'Explore reference system architectures demonstrating how Ritkara Veyra connects web presence, CRM pipelines, and operations automation for businesses.',
+    'Explore illustrative system architectures demonstrating how Primeora Solutions connects web platforms, CRM pipelines, and operations automation for businesses.',
 };
 
 const CASE_MODELS = [
@@ -14,7 +14,8 @@ const CASE_MODELS = [
     id: 'healthcare-clinic',
     category: 'Healthcare & Specialized Practice',
     title: 'Multi-Channel Patient Triage & Appointment Automation',
-    badge: 'Reference Model',
+    badge: 'Illustrative Workflow Demonstration',
+    scenarioNote: 'Hypothetical Operational Scenario for Multi-Doctor Clinics',
     challenge:
       'High enquiry abandonment due to simultaneous phone calls and unstructured Instagram DMs. Reception staff manually logged patient records in paper ledgers, causing missed consultations and delayed follow-ups.',
     solution:
@@ -30,7 +31,8 @@ const CASE_MODELS = [
     id: 'b2b-engineering-consultancy',
     category: 'Professional Services & Consulting',
     title: 'High-Authority Presence & Structured RFP Lead Pipeline',
-    badge: 'Reference Model',
+    badge: 'Illustrative Workflow Demonstration',
+    scenarioNote: 'Hypothetical Operational Scenario for Engineering Firms',
     challenge:
       'A boutique civil engineering practice suffered from a legacy slow-loading website that failed to showcase technical credentials or capture commercial project specifications.',
     solution:
@@ -46,7 +48,8 @@ const CASE_MODELS = [
     id: 'specialized-manufacturing',
     category: 'Wholesale & Specialized Manufacturing',
     title: 'B2B Product Catalogue & Automated GST Invoicing Pipeline',
-    badge: 'Reference Model',
+    badge: 'Illustrative Workflow Demonstration',
+    scenarioNote: 'Hypothetical Operational Scenario for Wholesale Distributors',
     challenge:
       'Distributors ordered via scattered phone messages. Office clerks spent 15+ hours each week manually calculating GST slabs, generating PDF invoices, and emailing confirmations.',
     solution:
@@ -62,28 +65,30 @@ const CASE_MODELS = [
 
 export default function WorkPage() {
   return (
-    <div className="pt-28 pb-20">
+    <div className="pt-28 pb-20 bg-[#07090F] min-h-screen">
       {/* Header */}
-      <div className="bg-architectural-grid py-16 md:py-24 border-b border-border-subtle">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-forest/5 text-forest rounded-full text-xs font-semibold tracking-wider uppercase font-mono mb-3">
-            <span>Systems & Architecture</span>
+      <div className="bg-[#0B0F1A]/60 py-16 md:py-24 border-b border-white/10 relative overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-azure/5 blur-[120px] rounded-full pointer-events-none" />
+        
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-azure/10 text-azure-bright border border-azure/20 rounded-full text-xs font-semibold tracking-wider uppercase font-mono mb-3">
+            <span>Systems &amp; Architecture</span>
           </div>
-          <h1 className="font-serif text-4xl sm:text-5xl font-bold text-forest tracking-tight">
-            Reference System Architectures
+          <h1 className="font-['Space_Grotesk'] text-4xl sm:text-5xl font-bold text-white tracking-tight">
+            System Architecture Demonstrations
           </h1>
-          <p className="mt-4 text-base sm:text-lg text-charcoal-muted leading-relaxed">
-            In accordance with our strict claims policy, we do not fabricate client logos, customer counts, or revenue metrics. Below are verified reference architectures illustrating how we solve concrete operational bottlenecks.
+          <p className="mt-4 text-base sm:text-lg text-slate-400 leading-relaxed">
+            In accordance with our strict claims policy, we do not fabricate client logos, customer counts, or unsubstantiated metrics. Below are verified reference architectures illustrating how we solve concrete operational bottlenecks.
           </p>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
         {/* Compliance Notice */}
-        <div className="p-4 bg-ivory-light border border-border-medium rounded-lg flex items-start gap-3 max-w-4xl mx-auto">
-          <Info className="w-5 h-5 text-teal flex-shrink-0 mt-0.5" />
-          <p className="text-xs text-charcoal leading-relaxed">
-            <strong>Demonstration Transparency:</strong> These case models represent actual technical architectures and system integration workflows engineered by our team. They are formatted as reference models to respect client confidentiality agreements and our strict ban on invented endorsements.
+        <div className="p-4 bg-[#101524] border border-azure/30 rounded-xl flex items-start gap-3 max-w-4xl mx-auto shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
+          <Info className="w-5 h-5 text-azure-bright flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-slate-300 leading-relaxed">
+            <strong className="text-white">Demonstration Transparency:</strong> These workflow models represent actual technical architectures and system integration workflows engineered by our team. They are formatted as illustrative workflow demonstrations with hypothetical operational scenarios to respect client confidentiality agreements and our strict ban on unverified claims.
           </p>
         </div>
 
@@ -92,44 +97,55 @@ export default function WorkPage() {
           {CASE_MODELS.map((model) => (
             <div
               key={model.id}
-              className="bg-white rounded-xl border border-border-medium p-7 sm:p-8 shadow-card flex flex-col justify-between hover:border-forest/40 transition-all hover:-translate-y-1"
+              className="bg-[#0B0F1A]/80 backdrop-blur-xl rounded-2xl border border-white/10 p-7 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.5)] flex flex-col justify-between hover:border-azure/40 transition-all duration-300 hover:-translate-y-1 group"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-copper font-semibold">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-violet-light font-semibold">
                     {model.category}
                   </span>
-                  <span className="text-[10px] font-mono bg-forest/5 text-forest px-2 py-0.5 rounded border border-forest/10">
+                  <span className="text-[10px] font-mono px-2 py-0.5 bg-azure/10 text-azure-bright border border-azure/20 rounded">
                     {model.badge}
                   </span>
                 </div>
 
-                <h2 className="font-serif text-xl font-bold text-forest mb-4 leading-tight">
+                <h3 className="font-['Space_Grotesk'] text-xl font-bold text-white mb-1 group-hover:text-azure-light transition-colors">
                   {model.title}
-                </h2>
+                </h3>
+                <p className="text-[11px] font-mono text-slate-400 mb-4">
+                  {model.scenarioNote}
+                </p>
 
-                <div className="space-y-4 mb-6 text-xs sm:text-sm">
-                  <div className="p-3 bg-ivory-light rounded border border-border-subtle">
-                    <span className="font-bold text-forest block mb-1">Challenge:</span>
-                    <p className="text-charcoal-muted leading-relaxed">{model.challenge}</p>
+                <div className="space-y-4 mb-6">
+                  <div>
+                    <h4 className="text-xs font-mono font-semibold uppercase text-slate-400 mb-1">
+                      Operational Friction:
+                    </h4>
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                      {model.challenge}
+                    </p>
                   </div>
 
-                  <div className="p-3 bg-white rounded border border-border-subtle">
-                    <span className="font-bold text-teal block mb-1">Engineered Architecture:</span>
-                    <p className="text-charcoal leading-relaxed">{model.solution}</p>
+                  <div>
+                    <h4 className="text-xs font-mono font-semibold uppercase text-slate-400 mb-1">
+                      Engineered Solution:
+                    </h4>
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                      {model.solution}
+                    </p>
                   </div>
                 </div>
 
-                {/* Stack */}
-                <div className="mb-6">
-                  <span className="text-[11px] font-mono uppercase font-semibold text-charcoal-muted block mb-2">
-                    Technology Stack:
-                  </span>
+                {/* Architecture Stack */}
+                <div className="mb-6 pt-4 border-t border-white/10">
+                  <h4 className="text-[11px] font-mono uppercase font-semibold text-slate-400 mb-2">
+                    Integrated Stack:
+                  </h4>
                   <div className="flex flex-wrap gap-1.5">
                     {model.stack.map((tech, i) => (
                       <span
                         key={i}
-                        className="text-[11px] font-mono bg-ivory text-forest px-2 py-0.5 rounded border border-border-subtle"
+                        className="text-[11px] font-mono px-2 py-0.5 bg-white/5 border border-white/10 text-slate-300 rounded"
                       >
                         {tech}
                       </span>
@@ -137,28 +153,28 @@ export default function WorkPage() {
                   </div>
                 </div>
 
-                {/* Outcomes */}
-                <div className="pt-4 border-t border-border-subtle mb-6">
-                  <span className="text-[11px] font-mono uppercase font-semibold text-forest block mb-2">
+                {/* Verifiable Outcomes */}
+                <div className="mb-6 pt-4 border-t border-white/10">
+                  <h4 className="text-[11px] font-mono uppercase font-semibold text-azure-bright mb-2">
                     Key Architectural Capabilities:
-                  </span>
-                  <ul className="space-y-1.5 text-xs text-charcoal">
-                    {model.outcomes.map((out, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-teal flex-shrink-0 mt-0.5" />
-                        <span>{out}</span>
+                  </h4>
+                  <ul className="space-y-2">
+                    {model.outcomes.map((outcome, i) => (
+                      <li key={i} className="flex items-start gap-2 text-xs text-slate-300">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-azure-bright flex-shrink-0 mt-0.5" />
+                        <span>{outcome}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-4 border-t border-white/10">
                 <Link
-                  href={`/contact?notes=${encodeURIComponent(`Interested in architecture model: ${model.title}`)}`}
-                  className="w-full inline-flex items-center justify-center px-4 py-2 text-xs font-semibold text-ivory bg-forest rounded hover:bg-forest-light transition-colors"
+                  href="/contact"
+                  className="w-full inline-flex items-center justify-center px-4 py-2 text-xs font-semibold text-white bg-white/5 hover:bg-azure/20 border border-white/10 hover:border-azure/40 rounded-lg transition-colors group-hover:bg-azure/20"
                 >
-                  <span>Discuss Similar Implementation</span>
+                  <span>Inquire About Similar Architecture</span>
                   <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
                 </Link>
               </div>

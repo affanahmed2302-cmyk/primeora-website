@@ -6,16 +6,17 @@ import Footer from '@/components/Footer';
 import CookieBanner from '@/components/CookieBanner';
 import AnalyticsLoader from '@/components/AnalyticsLoader';
 import StructuredData from '@/components/StructuredData';
+import SmoothScrollProvider from '@/components/motion/SmoothScrollProvider';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://ritkaraveyra.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://primeorasolutions.com'),
   title: {
     default: `${BRAND_CONFIG.name} — ${BRAND_CONFIG.tagline}`,
     template: `%s | ${BRAND_CONFIG.name}`,
   },
   description: BRAND_CONFIG.description,
   keywords: [
-    'Ritkara Veyra',
+    'Primeora Solutions',
     'Strategy and Technology Consultancy',
     'Digital A-Z',
     'Business Website Development',
@@ -35,6 +36,7 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
+      { url: '/brand/primeora-emblem.svg', type: 'image/svg+xml' },
       { url: '/brand/emblem-transparent.png', type: 'image/png' },
       { url: '/favicon.ico', sizes: 'any' },
     ],
@@ -52,7 +54,7 @@ export const metadata: Metadata = {
         url: BRAND_CONFIG.assets.logoMaster,
         width: 1200,
         height: 630,
-        alt: `${BRAND_CONFIG.name} Master Logo & Geometric Emblem`,
+        alt: `${BRAND_CONFIG.name} Master Logo & Brand Emblem`,
       },
     ],
   },
@@ -81,23 +83,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth dark">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Space+Grotesk:wght@500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
           rel="stylesheet"
         />
         <StructuredData type="Organization" />
         <StructuredData type="WebSite" />
       </head>
-      <body className="min-h-screen flex flex-col bg-ivory text-charcoal font-sans antialiased">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <CookieBanner />
-        <AnalyticsLoader />
+      <body className="min-h-screen flex flex-col bg-[#07090F] text-[#F0F2F7] font-sans antialiased selection:bg-azure selection:text-white">
+        <SmoothScrollProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <CookieBanner />
+          <AnalyticsLoader />
+        </SmoothScrollProvider>
       </body>
     </html>
   );

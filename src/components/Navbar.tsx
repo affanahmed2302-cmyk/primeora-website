@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { BRAND_CONFIG } from '@/config/brand';
+import PrimeoraLogo from '@/components/brand/PrimeoraLogo';
 import { Menu, X, ArrowRight } from 'lucide-react';
 
 export default function Navbar() {
@@ -29,7 +29,7 @@ export default function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-ivory/90 backdrop-blur-md border-b border-border-subtle shadow-subtle py-3.5'
+          ? 'bg-[#07090F]/85 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.5)] py-3.5'
           : 'bg-transparent py-5'
       }`}
     >
@@ -38,27 +38,10 @@ export default function Navbar() {
           {/* Brand Logo */}
           <Link
             href="/"
-            className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-teal"
+            className="flex items-center group focus:outline-none focus-visible:ring-2 focus-visible:ring-azure-bright rounded-lg"
             aria-label={`${BRAND_CONFIG.name} — Home`}
           >
-            <div className="relative w-10 h-10 overflow-hidden flex-shrink-0">
-              <Image
-                src={BRAND_CONFIG.assets.emblem}
-                alt=""
-                width={40}
-                height={40}
-                className="object-contain w-full h-full transform transition-transform group-hover:scale-105"
-                priority
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-serif text-lg font-bold tracking-tight text-forest leading-none">
-                {BRAND_CONFIG.name}
-              </span>
-              <span className="text-[10px] uppercase font-semibold tracking-widest text-charcoal-muted mt-0.5">
-                Strategy & Tech
-              </span>
-            </div>
+            <PrimeoraLogo variant="full" size="md" showSubtitle={true} />
           </Link>
 
           {/* Desktop Navigation Links */}
@@ -69,10 +52,10 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-sm font-medium transition-colors ${
+                  className={`text-sm font-medium transition-all duration-200 ${
                     isActive
-                      ? 'text-forest font-semibold border-b-2 border-forest pb-0.5'
-                      : 'text-charcoal-muted hover:text-forest'
+                      ? 'text-white font-semibold border-b-2 border-azure-bright pb-0.5 shadow-[0_2px_10px_rgba(77,124,255,0.5)]'
+                      : 'text-slate hover:text-white'
                   }`}
                 >
                   {link.label}
@@ -85,10 +68,12 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-ivory bg-forest rounded-md hover:bg-forest-light transition-all shadow-subtle hover:shadow-card group"
+              className="relative inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-azure to-violet rounded-lg shadow-[0_4px_20px_rgba(61,110,245,0.35)] hover:shadow-[0_6px_25px_rgba(61,110,245,0.55)] hover:scale-[1.02] transition-all duration-200 group overflow-hidden"
             >
-              <span>Discuss a Project</span>
-              <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-0.5" />
+              <span className="relative z-10 flex items-center">
+                Discuss a Project
+                <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
+              </span>
             </Link>
           </div>
 
@@ -97,7 +82,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-forest hover:text-forest-light focus:outline-none focus-visible:ring-2 focus-visible:ring-teal rounded-md"
+              className="p-2 text-slate hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-azure rounded-md"
               aria-expanded={mobileMenuOpen}
               aria-label="Toggle navigation menu"
             >
@@ -107,36 +92,36 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Dropdown Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-ivory border-b border-border-medium px-4 pt-3 pb-6 shadow-dropdown transition-all animate-in fade-in slide-in-from-top-2">
-          <nav className="flex flex-col space-y-3" aria-label="Mobile Navigation">
+        <div className="md:hidden bg-[#0B0F1A]/95 backdrop-blur-2xl border-b border-white/10 px-4 pt-3 pb-6 space-y-3 animate-in slide-in-from-top-2 duration-200">
+          <nav className="flex flex-col space-y-2" aria-label="Mobile Navigation">
             {BRAND_CONFIG.navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-3 py-2 text-base rounded-md font-medium ${
+                  className={`px-3 py-2 rounded-md text-base font-medium transition-colors ${
                     isActive
-                      ? 'bg-forest/10 text-forest font-semibold'
-                      : 'text-charcoal-muted hover:bg-forest/5 hover:text-forest'
+                      ? 'bg-azure/15 text-azure-bright font-semibold'
+                      : 'text-slate hover:text-white hover:bg-white/5'
                   }`}
                 >
                   {link.label}
                 </Link>
               );
             })}
-            <div className="pt-3 border-t border-border-subtle mt-2">
-              <Link
-                href="/contact"
-                className="w-full flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-ivory bg-forest rounded-md hover:bg-forest-light transition-colors"
-              >
-                <span>Discuss a Project</span>
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Link>
-            </div>
           </nav>
+          <div className="pt-3 border-t border-white/10">
+            <Link
+              href="/contact"
+              className="w-full inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-azure to-violet rounded-lg shadow-md hover:scale-[1.01] transition-transform"
+            >
+              <span>Discuss a Project</span>
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Link>
+          </div>
         </div>
       )}
     </header>

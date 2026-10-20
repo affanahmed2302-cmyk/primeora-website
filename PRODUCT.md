@@ -1,11 +1,11 @@
-# Product Specification — RITKARA VEYRA
+# Product Specification — PRIMEORA SOLUTIONS
 
 ## Product Overview
-**RITKARA VEYRA** is a premium strategy and technology consultancy serving local businesses and growing startups across India and beyond. The firm acts as an integrated digital partner, coordinating digital presence, customer acquisition, lead and sales workflows, business automation, analytics, and ongoing technical management.
+**PRIMEORA SOLUTIONS** is a strategy and technology engineering consultancy serving ambitious enterprises, local businesses, and growing startups across India and beyond. The firm acts as an integrated digital partner, coordinating digital presence, customer acquisition, lead and sales workflows, business automation, analytics, and ongoing technical management.
 
-- **Working Brand**: RITKARA VEYRA
-- **Tagline**: MAKE COMPLEXITY WORK.
-- **Operating Entity / Legal Notice**: Primeora Solutions (Udyam Registered MSME: `UDYAM-KR-03-0732181`). Ritkara Veyra is the working brand under which client engagements and new service propositions are introduced.
+- **Brand**: PRIMEORA SOLUTIONS
+- **Tagline**: Digital Systems Engineered for Measurable Growth
+- **Operating Entity / Legal Notice**: Primeora Solutions (Udyam Registered MSME: `UDYAM-KR-03-0732181`, Bangalore, Karnataka). All commercial client contracts, service agreements, and formal proposals are executed directly by Primeora Solutions.
 
 ---
 
@@ -18,7 +18,7 @@
 
 ## Six Service Pillars
 1. **Digital Presence**
-   - High-performance business websites & web applications
+   - High-performance business websites & web applications (Next.js 15)
    - E-commerce website development
    - Brand identity essentials & typography systems
    - Domain, DNS, and business email infrastructure
@@ -26,7 +26,7 @@
    - UI/UX research and responsive interface design
 2. **Customer Acquisition**
    - Local SEO & technical search optimization
-   - Answer Engine Optimization (AEO) for AI search visibility
+   - Answer Engine Optimization (AEO) for AI search visibility (Perplexity, ChatGPT, Google AI Overviews)
    - Content marketing & social publishing workflows
    - Targeted email & WhatsApp communication workflows
    - Performance advertising setup and measurement (where explicitly scoped)
@@ -78,16 +78,20 @@
 ## Founders & Core Leadership
 - **Affan Ahmed Shariff — Founder, Business Development**
   - Focus: Client acquisition, strategic partnerships, revenue growth, and qualified project consultations.
-  - Profile features external portfolio link placeholder for verified destination.
+  - LinkedIn: `https://www.linkedin.com/in/affan-ahmed-shariff`
+  - Portfolio: `https://affanahmed2302-cmyk.github.io/`
 - **Akarsh P. Thodaskar — Founder, Technology & Development**
   - Focus: Full-stack architecture, software engineering, third-party API integrations, automated testing, and cloud infrastructure.
+  - LinkedIn: `https://www.linkedin.com/in/akarsh-p-6963b5397?utm_source=share_via&utm_content=profile&utm_medium=member_android`
 - **Dhananjaya G.R. — Founder, Business Strategy & Systems**
   - Focus: Enterprise business strategy, data analytics, operational workflow automation, client proposals, and system optimization.
+  - LinkedIn: `https://www.linkedin.com/in/dhananjaya-gr`
 
 ---
 
-## Core System Requirements
-- **CMS & Directory**: Secure, database-backed team management system with role-based permissions (`super_admin`, `content_editor`), draft/publish workflows, and profile editing.
-- **Enquiry Pipeline**: High-accessibility enquiry form with CSRF/honeypot bot rejection, rate limiting, data sanitization, and administrative review queue.
+## Core System Architecture & Motion Stack
+- **Framework**: Next.js 15 App Router with React 19, TypeScript, and Tailwind CSS.
+- **Motion Engineering**: Lenis smooth scrolling (synchronized with GSAP ScrollTrigger), React Bits cyber/text reveal (`DecryptedText`), GSAP `@gsap/react` timelines with full cleanup and reduced-motion handling, interactive WebGL hero particle network (`HeroCanvas`).
+- **Database & Persistence**: Supabase PostgreSQL with Row Level Security (RLS) for published team profiles, administrative access, and secure enquiry logging.
+- **Enquiry Pipeline**: High-accessibility enquiry form with honeypot bot rejection, client timestamp verification, server-side sanitization, and administrative review queue.
 - **SEO/AEO**: Semantic HTML5, JSON-LD structured data, dynamic XML sitemap, canonical links, robots controls, and AEO-targeted FAQs.
-- **Privacy & Security**: Granular cookie consent banner (Accept / Reject / Preferences), GDPR/DPDP-aligned Privacy Policy, strict Content Security Policy, zero committed secrets.

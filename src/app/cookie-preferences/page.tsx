@@ -5,7 +5,7 @@ import { Shield, Check, Save } from 'lucide-react';
 import { CookiePreferences } from '@/components/CookieBanner';
 import Link from 'next/link';
 
-const STORAGE_KEY = 'ritkara_cookie_consent_v1';
+const STORAGE_KEY = 'primeora_cookie_consent_v1';
 
 export default function CookiePreferencesPage() {
   const [mounted, setMounted] = useState(false);
@@ -39,106 +39,114 @@ export default function CookiePreferencesPage() {
   if (!mounted) return null;
 
   return (
-    <div className="pt-28 pb-20">
+    <div className="pt-28 pb-20 bg-[#07090F] min-h-screen">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex items-center gap-2 px-3 py-1 bg-forest/5 text-forest rounded-full text-xs font-semibold tracking-wider uppercase font-mono mb-4 w-fit">
-          <Shield className="w-3.5 h-3.5 text-teal" />
+        <div className="flex items-center gap-2 px-3 py-1 bg-azure/10 text-azure-bright border border-azure/20 rounded-full text-xs font-semibold tracking-wider uppercase font-mono mb-4 w-fit">
+          <Shield className="w-3.5 h-3.5 text-azure-bright" />
           <span>Privacy Management</span>
         </div>
-        <h1 className="font-serif text-3xl sm:text-4xl font-bold text-forest mb-4">
-          Cookie & Data Preferences
+        <h1 className="font-['Space_Grotesk'] text-3xl sm:text-4xl font-bold text-white mb-4">
+          Cookie &amp; Data Preferences
         </h1>
-        <p className="text-sm text-charcoal-muted leading-relaxed mb-8">
-          Manage how cookies and tracking technologies are used on your browser when visiting Ritkara Veyra. Strictly essential cookies are required for basic site stability, while optional cookies require your affirmative consent.
+        <p className="text-sm text-slate-400 leading-relaxed mb-8">
+          Manage how cookies and tracking technologies are used on your browser when visiting Primeora Solutions. Strictly essential cookies are required for basic site stability, while optional cookies require your affirmative consent.
         </p>
 
         {savedMessage && (
-          <div className="p-4 mb-6 bg-teal/10 border border-teal/30 text-teal-dark rounded-md text-xs sm:text-sm font-semibold flex items-center gap-2 animate-in fade-in">
-            <Check className="w-4 h-4 text-teal" />
+          <div className="p-4 mb-6 bg-azure/20 border border-azure/40 text-azure-bright rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 animate-in fade-in">
+            <Check className="w-4 h-4 text-azure-bright" />
             <span>Your preferences have been saved successfully.</span>
           </div>
         )}
 
-        <div className="bg-white rounded-xl border border-border-medium p-6 sm:p-8 shadow-card space-y-6">
+        <div className="space-y-6">
           {/* Strictly Necessary */}
-          <div className="p-4 bg-ivory-light border border-border-subtle rounded-lg flex items-start justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-sm text-charcoal">Strictly Necessary Cookies</span>
-                <span className="text-[10px] font-mono uppercase bg-forest/10 text-forest px-1.5 py-0.5 rounded font-bold">
-                  Always Active
-                </span>
-              </div>
-              <p className="text-xs text-charcoal-muted mt-1 leading-relaxed">
-                These cookies are necessary for core security, session state, rate limiting, and honeypot bot defense. They do not store personally identifiable data.
-              </p>
+          <div className="bg-[#0B0F1A]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-['Space_Grotesk'] font-bold text-white text-base">
+                Strictly Necessary Cookies
+              </h3>
+              <span className="text-[11px] font-mono px-2 py-0.5 bg-azure/15 text-azure-bright border border-azure/30 rounded font-semibold">
+                Always Active
+              </span>
             </div>
-            <input type="checkbox" checked disabled className="w-4 h-4 text-forest rounded cursor-not-allowed opacity-50 mt-1" />
+            <p className="text-xs text-slate-300 leading-relaxed mb-2">
+              Essential for security, rate limiting, and preserving your cookie preferences across sessions. These cannot be switched off.
+            </p>
+            <span className="text-[11px] font-mono text-slate-500">
+              Provider: First-party (Primeora Solutions) &middot; Duration: Session / 1 Year
+            </span>
           </div>
 
-          {/* Analytics */}
-          <div className="p-4 bg-white border border-border-medium rounded-lg flex items-start justify-between gap-4">
-            <div>
-              <span className="font-semibold text-sm text-charcoal">Analytics & Page Performance</span>
-              <p className="text-xs text-charcoal-muted mt-1 leading-relaxed">
-                Helps us measure traffic patterns and page load times via Google Analytics 4. IP addresses are anonymized and data is never used for third-party advertising.
-              </p>
+          {/* Performance & Analytics */}
+          <div className="bg-[#0B0F1A]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-['Space_Grotesk'] font-bold text-white text-base">
+                Performance &amp; Analytics
+              </h3>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={preferences.analytics}
+                  onChange={(e) =>
+                    setPreferences({ ...preferences, analytics: e.target.checked })
+                  }
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-azure"></div>
+              </label>
             </div>
-            <input
-              type="checkbox"
-              id="pref-analytics"
-              checked={preferences.analytics}
-              onChange={(e) => setPreferences({ ...preferences, analytics: e.target.checked })}
-              className="w-4 h-4 text-teal focus:ring-teal rounded cursor-pointer mt-1"
-            />
+            <p className="text-xs text-slate-300 leading-relaxed mb-2">
+              Help us understand how visitors interact with our website by measuring page views, load speed, and visitor flows via Google Analytics 4. IP addresses are anonymized.
+            </p>
+            <span className="text-[11px] font-mono text-slate-500">
+              Provider: Google LLC &middot; Duration: 2 Years
+            </span>
           </div>
 
-          {/* Marketing */}
-          <div className="p-4 bg-white border border-border-medium rounded-lg flex items-start justify-between gap-4">
-            <div>
-              <span className="font-semibold text-sm text-charcoal">Attribution & Campaign Tracking</span>
-              <p className="text-xs text-charcoal-muted mt-1 leading-relaxed">
-                Allows us to determine which marketing sources yield genuine customer enquiries and measure advertising effectiveness without cross-site tracking.
-              </p>
+          {/* Marketing & Attribution */}
+          <div className="bg-[#0B0F1A]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-['Space_Grotesk'] font-bold text-white text-base">
+                Marketing &amp; Attribution
+              </h3>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={preferences.marketing}
+                  onChange={(e) =>
+                    setPreferences({ ...preferences, marketing: e.target.checked })
+                  }
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-azure"></div>
+              </label>
             </div>
-            <input
-              type="checkbox"
-              id="pref-marketing"
-              checked={preferences.marketing}
-              onChange={(e) => setPreferences({ ...preferences, marketing: e.target.checked })}
-              className="w-4 h-4 text-teal focus:ring-teal rounded cursor-pointer mt-1"
-            />
+            <p className="text-xs text-slate-300 leading-relaxed mb-2">
+              Used to measure referral source channels from search ads and third-party partner directories. We do not run third-party programmatic retargeting networks.
+            </p>
+            <span className="text-[11px] font-mono text-slate-500">
+              Provider: Marketing Partners &middot; Duration: 90 Days
+            </span>
           </div>
+        </div>
 
-          <div className="pt-4 border-t border-border-subtle flex flex-col sm:flex-row items-center justify-between gap-4">
-            <Link href="/privacy" className="text-xs text-teal hover:underline font-medium">
-              Review Full Privacy Policy
-            </Link>
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() =>
-                  handleSave({
-                    essential: true,
-                    analytics: false,
-                    marketing: false,
-                    timestamp: '',
-                  })
-                }
-                className="px-4 py-2 text-xs font-semibold text-charcoal bg-ivory border border-border-medium rounded hover:bg-ivory-dark transition-colors"
-              >
-                Reject Non-Essential
-              </button>
-              <button
-                type="button"
-                onClick={() => handleSave(preferences)}
-                className="inline-flex items-center gap-1.5 px-5 py-2 text-xs font-semibold text-white bg-forest rounded hover:bg-forest-light transition-colors shadow-subtle"
-              >
-                <Save className="w-3.5 h-3.5" />
-                <span>Save Preferences</span>
-              </button>
-            </div>
-          </div>
+        <div className="mt-8 flex items-center justify-between pt-6 border-t border-white/10">
+          <Link
+            href="/privacy"
+            className="text-xs text-slate-400 hover:text-white transition-colors"
+          >
+            &larr; Read Full Privacy Policy
+          </Link>
+
+          <button
+            type="button"
+            onClick={() => handleSave(preferences)}
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-azure to-violet text-white text-xs font-semibold rounded-xl hover:shadow-[0_4px_20px_rgba(61,110,245,0.4)] transition-all"
+          >
+            <Save className="w-3.5 h-3.5" />
+            <span>Save Preferences</span>
+          </button>
         </div>
       </div>
     </div>

@@ -11,9 +11,9 @@ interface FaqItem {
 
 const GENERAL_FAQS: FaqItem[] = [
   {
-    question: 'What does Ritkara Veyra do?',
+    question: 'What does Primeora Solutions do?',
     answer:
-      'Ritkara Veyra acts as a strategy and technology consultancy providing a connected "Digital A-Z" practice for businesses. We design and engineer websites, establish technical SEO and Answer Engine Optimization (AEO), set up sales CRMs and WhatsApp routing, automate operations, and implement business intelligence dashboards.',
+      'Primeora Solutions acts as a strategy and technology engineering consultancy providing a connected "Digital A-Z" practice for businesses. We design and engineer websites, establish technical SEO and Answer Engine Optimization (AEO), set up sales CRMs and WhatsApp routing, automate operations, and implement business intelligence dashboards.',
   },
   {
     question: 'How does an engagement typically start?',
@@ -36,9 +36,9 @@ const GENERAL_FAQS: FaqItem[] = [
       'Yes. We connect web enquiry forms directly to your CRM, WhatsApp Business account, team Slack/email, and GST-compliant invoicing software with error handling so no data is dropped silently.',
   },
   {
-    question: 'What is the relationship between Ritkara Veyra and Primeora Solutions?',
+    question: 'What legal business entity and registration backs Primeora Solutions?',
     answer:
-      `Ritkara Veyra is the working trade brand of Primeora Solutions (Udyam Registered MSME: ${BRAND_CONFIG.udyamRegistrationNumber}). Formal commercial agreements, tax invoices, and legal governance are executed under Primeora Solutions.`,
+      `Primeora Solutions is a recognized Udyam-registered MSME (Registration No: ${BRAND_CONFIG.udyamRegistrationNumber}) based in Bangalore, Karnataka. All client contracts, service agreements, and tax invoices are executed directly under Primeora Solutions.`,
   },
 ];
 
@@ -50,16 +50,16 @@ export default function FaqSection() {
   };
 
   return (
-    <section id="faq" className="py-20 md:py-28 bg-white border-b border-border-subtle">
+    <section id="faq" className="py-20 md:py-28 bg-[#07090F] border-b border-white/10">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-forest/5 text-forest rounded-full text-xs font-semibold tracking-wider uppercase font-mono mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-azure/10 text-azure-bright border border-azure/20 rounded-full text-xs font-semibold tracking-wider uppercase font-mono mb-3">
             <span>Direct Answers</span>
           </div>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-forest tracking-tight">
+          <h2 className="font-['Space_Grotesk'] text-3xl sm:text-4xl font-bold text-white tracking-tight">
             Frequently Asked Questions
           </h2>
-          <p className="mt-3 text-base text-charcoal-muted leading-relaxed">
+          <p className="mt-3 text-base text-slate-400 leading-relaxed">
             Transparent explanations of how we operate, scope boundaries, and client responsibilities.
           </p>
         </div>
@@ -70,26 +70,26 @@ export default function FaqSection() {
             return (
               <div
                 key={idx}
-                className="border border-border-medium rounded-lg overflow-hidden transition-all bg-white"
+                className="border border-white/10 rounded-2xl overflow-hidden transition-all bg-[#0B0F1A]/80 backdrop-blur-xl shadow-[0_4px_20px_rgb(0,0,0,0.4)] hover:border-azure/30"
               >
                 <button
                   type="button"
                   onClick={() => toggle(idx)}
-                  className="w-full text-left p-5 sm:p-6 flex items-center justify-between gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal"
+                  className="w-full text-left p-5 sm:p-6 flex items-center justify-between gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-azure-bright"
                   aria-expanded={isOpen}
                 >
-                  <span className="font-serif text-base sm:text-lg font-bold text-forest">
+                  <span className="font-['Space_Grotesk'] text-base sm:text-lg font-bold text-white">
                     {faq.question}
                   </span>
                   <ChevronDown
-                    className={`w-5 h-5 text-charcoal-muted flex-shrink-0 transition-transform duration-200 ${
-                      isOpen ? 'rotate-180 text-forest' : ''
+                    className={`w-5 h-5 text-slate-400 flex-shrink-0 transition-transform duration-200 ${
+                      isOpen ? 'rotate-180 text-azure-bright' : ''
                     }`}
                   />
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-6 sm:px-6 text-sm text-charcoal-muted leading-relaxed border-t border-border-subtle pt-4 animate-in fade-in">
+                  <div className="px-5 pb-6 sm:px-6 text-sm text-slate-300 leading-relaxed border-t border-white/10 pt-4 animate-in fade-in">
                     {faq.answer}
                   </div>
                 )}

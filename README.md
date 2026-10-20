@@ -1,16 +1,21 @@
-# RITKARA VEYRA — Strategy & Technology Consultancy
+# PRIMEORA SOLUTIONS — Digital Systems Engineering & Technology Consultancy
 
-> **MAKE COMPLEXITY WORK.**  
+> **Digital Systems Engineered for Measurable Growth**  
 > A premium, production-minded website, secure database-backed Team CMS, Digital Readiness Diagnostic, and technical SEO/AEO platform.
 
-Ritkara Veyra is the working brand of **Primeora Solutions** (Udyam Registered MSME: `UDYAM-KR-03-0732181`, Bangalore, Karnataka).
+Primeora Solutions (Udyam Registered MSME: `UDYAM-KR-03-0732181`, Bangalore, Karnataka, India).
 
 ---
 
 ## 1. Key Architectural Features
 
-- **Next.js 15+ App Router**: High-performance static site generation (SSG) and server-side route handlers with TypeScript.
-- **Architectural Design System**: Clean typography, bespoke brand tokens (`#183B35` Forest Green, `#0F827A` Muted Teal, `#F4EFE3` Warm Ivory, `#B77B4B` Muted Copper, `#24252B` Charcoal), and high WCAG AAA contrast (12.4:1).
+- **Next.js 15+ App Router**: High-performance static site generation (SSG) and server-side route handlers with TypeScript and React 19.
+- **Deep Tech Design System**: Authentic Primeora brand identity featuring obsidian background (`#07090F`), electric azure (`#3D6EF5` / `#4D7CFF`), vibrant violet (`#7C5CFF`), and high WCAG AAA contrast (17.8:1).
+- **Motion Engineering Stack**:
+  - `lenis`: High-performance smooth scrolling synchronized with GSAP ScrollTrigger.
+  - `HeroCanvas`: Custom 60fps WebGL particle constellation engine with interactive pointer acceleration and reduced-motion fallback.
+  - `@gsap/react` `useGSAP`: Staggered timeline sequencing for hero entrance and process steps.
+  - React Bits `DecryptedText`: Character decryption reveal animation for key brand headings.
 - **Six Connected Service Pillars**:
   1. *Digital Presence* (Bespoke websites, e-commerce, digital identity, GBP setup)
   2. *Customer Acquisition* (Local SEO, Answer Engine Optimization, content workflows, scoped ads)
@@ -22,6 +27,7 @@ Ritkara Veyra is the working brand of **Primeora Solutions** (Udyam Registered M
   - Add, edit, reorder, preview, and publish team profiles in real time without writing code.
   - Role-based access control (`super_admin` vs `content_editor`) with server-side validation.
   - Supabase PostgreSQL schema with Row Level Security (RLS) + built-in local persistent store fallback.
+  - Pre-seeded with confirmed founding partners: **Affan Ahmed Shariff**, **Akarsh P. Thodaskar**, and **Dhananjaya G.R.**
 - **Accessible Project Enquiry Pipeline (`/api/enquiry`)**:
   - Client-side & server-side validation, input sanitization, honeypot bot trap, rate limiting, and duplicate submission prevention.
   - Inbound submissions review queue in `/admin`.
@@ -46,7 +52,7 @@ Ritkara Veyra is the working brand of **Primeora Solutions** (Udyam Registered M
 
 ### Installation
 ```bash
-# Clone the repository (if not already cloned)
+# Clone the repository
 git clone https://github.com/affanahmed2302-cmyk/primeora-website.git
 cd primeora-website
 
@@ -77,8 +83,8 @@ npm run build
 # Start production server
 npm run start
 
-# Run end-to-end automated test harness (24 tests)
-python scratch_test.py
+# Run end-to-end automated test harness
+python tests/e2e_verify.py
 ```
 
 ---
@@ -90,7 +96,7 @@ python scratch_test.py
 - **Team Directory CMS**: `http://localhost:3000/admin/team`
 
 **Security & Credential Provisioning**:
-- Zero default passwords: In accordance with production security standards, all administrative access is strictly managed via Supabase Auth (invitation-only) or provisioned via secure server environment variables (`ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `ADMIN_PASSWORD_SALT`).
+- Zero default passwords: All administrative access is strictly managed via Supabase Auth (invitation-only) or provisioned via secure server environment variables (`ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `ADMIN_PASSWORD_SALT`).
 - Privileged operations fail closed if authentication or durable database storage is unconfigured.
 - See [`docs/ENV_SETUP.md`](./docs/ENV_SETUP.md) for full configuration instructions.
 
@@ -99,10 +105,12 @@ python scratch_test.py
 ## 5. Comprehensive Documentation
 
 Detailed specifications and compliance guides are maintained in the [`docs/`](./docs) directory:
-- [`docs/TOOL_AUDIT.md`](./docs/TOOL_AUDIT.md) — Official tool documentation, license checks, and verification outcomes.
-- [`docs/BUILD_PLAN.md`](./docs/BUILD_PLAN.md) — Phased architectural roadmap and audit findings.
 - [`DESIGN.md`](./DESIGN.md) — Visual tokens, typography scale, spatial grid, motion, and accessibility rules.
 - [`PRODUCT.md`](./PRODUCT.md) — Durable product specification, six pillars, packages, and methodology.
+- [`docs/VISUAL_AUDIT.md`](./docs/VISUAL_AUDIT.md) — Visual audit and brand correction baseline.
+- [`docs/MOTION_SPEC.md`](./docs/MOTION_SPEC.md) — Motion engineering architecture (Lenis, React Bits, GSAP, Canvas).
+- [`docs/IMPLEMENTATION_MAP.md`](./docs/IMPLEMENTATION_MAP.md) — Implementation mapping across all components and routes.
+- [`docs/TOOL_AUDIT.md`](./docs/TOOL_AUDIT.md) — Official tool documentation, license checks, and verification outcomes.
 - [`docs/ENV_SETUP.md`](./docs/ENV_SETUP.md) — Environment variables, secrets policy, and setup guides.
 - [`docs/TEST_REPORT.md`](./docs/TEST_REPORT.md) — Automated test results and evidence verification.
 - [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) — Netlify deployment, plugins, and rollback procedures.
@@ -113,4 +121,4 @@ Detailed specifications and compliance guides are maintained in the [`docs/`](./
 
 ## 6. Legal & Enterprise Governance
 
-Ritkara Veyra is a working brand of **Primeora Solutions** (Udyam Registered MSME: `UDYAM-KR-03-0732181`, NIC Code: 62011). All formal client proposals, master services agreements, and invoices are executed under Primeora Solutions.
+**Primeora Solutions** is a registered Micro Enterprise (Udyam Registration Number: `UDYAM-KR-03-0732181`, NIC Code: 62011) located in Bangalore, Karnataka, India. All formal client proposals, master services agreements, and invoices are executed under Primeora Solutions.

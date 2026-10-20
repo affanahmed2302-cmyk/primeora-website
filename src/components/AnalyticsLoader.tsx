@@ -12,7 +12,7 @@ export default function AnalyticsLoader() {
     // Check initial stored consent
     const checkConsent = () => {
       try {
-        const stored = localStorage.getItem('ritkara_cookie_consent_v1');
+        const stored = localStorage.getItem('primeora_cookie_consent_v1');
         if (stored) {
           const parsed: CookiePreferences = JSON.parse(stored);
           setConsentGranted(Boolean(parsed.analytics));
