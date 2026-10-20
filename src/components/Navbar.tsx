@@ -27,35 +27,35 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
         scrolled
-          ? 'bg-[#07090F]/85 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.5)] py-3.5'
-          : 'bg-transparent py-5'
+          ? 'bg-[#040D1A]/95 backdrop-blur-md border-b border-white/[0.08] shadow-lg py-3'
+          : 'bg-[#040D1A]/80 backdrop-blur-sm border-b border-transparent py-4'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          {/* Brand Logo */}
+          {/* Authentic Brand Logo */}
           <Link
             href="/"
-            className="flex items-center group focus:outline-none focus-visible:ring-2 focus-visible:ring-azure-bright rounded-lg"
+            className="flex items-center group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#166CFF] rounded-md"
             aria-label={`${BRAND_CONFIG.name} — Home`}
           >
-            <PrimeoraLogo variant="full" size="md" showSubtitle={true} />
+            <PrimeoraLogo variant="full" size="md" />
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-7" aria-label="Main Navigation">
+          <nav className="hidden lg:flex items-center space-x-6" aria-label="Main Navigation">
             {BRAND_CONFIG.navLinks.map((link) => {
-              const isActive = pathname === link.href;
+              const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-sm font-medium transition-all duration-200 ${
+                  className={`text-xs font-medium tracking-wide uppercase transition-colors ${
                     isActive
-                      ? 'text-white font-semibold border-b-2 border-azure-bright pb-0.5 shadow-[0_2px_10px_rgba(77,124,255,0.5)]'
-                      : 'text-slate hover:text-white'
+                      ? 'text-white font-semibold border-b border-[#166CFF] pb-0.5'
+                      : 'text-slate-400 hover:text-white'
                   }`}
                 >
                   {link.label}
@@ -65,24 +65,22 @@ export default function Navbar() {
           </nav>
 
           {/* Desktop Primary CTA */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden sm:flex items-center space-x-3">
             <Link
               href="/contact"
-              className="relative inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-azure to-violet rounded-lg shadow-[0_4px_20px_rgba(61,110,245,0.35)] hover:shadow-[0_6px_25px_rgba(61,110,245,0.55)] hover:scale-[1.02] transition-all duration-200 group overflow-hidden"
+              className="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white bg-[#166CFF] hover:bg-[#1055CC] rounded-md transition-colors group"
             >
-              <span className="relative z-10 flex items-center">
-                Discuss a Project
-                <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
-              </span>
+              <span>Discuss a Project</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </div>
 
           {/* Mobile Menu Toggle Button */}
-          <div className="flex md:hidden items-center">
+          <div className="flex lg:hidden items-center">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-slate hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-azure rounded-md"
+              className="p-2 text-slate-300 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#166CFF] rounded-md"
               aria-expanded={mobileMenuOpen}
               aria-label="Toggle navigation menu"
             >
@@ -94,18 +92,19 @@ export default function Navbar() {
 
       {/* Mobile Dropdown Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#0B0F1A]/95 backdrop-blur-2xl border-b border-white/10 px-4 pt-3 pb-6 space-y-3 animate-in slide-in-from-top-2 duration-200">
+        <div className="lg:hidden bg-[#08152B] border-b border-white/[0.08] px-4 pt-4 pb-6 space-y-3 animate-in slide-in-from-top-2 duration-150">
           <nav className="flex flex-col space-y-2" aria-label="Mobile Navigation">
             {BRAND_CONFIG.navLinks.map((link) => {
-              const isActive = pathname === link.href;
+              const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     isActive
-                      ? 'bg-azure/15 text-azure-bright font-semibold'
-                      : 'text-slate hover:text-white hover:bg-white/5'
+                      ? 'bg-[#166CFF]/15 text-[#3B82F6] font-semibold'
+                      : 'text-slate-300 hover:text-white hover:bg-white/5'
                   }`}
                 >
                   {link.label}
@@ -113,13 +112,15 @@ export default function Navbar() {
               );
             })}
           </nav>
-          <div className="pt-3 border-t border-white/10">
+
+          <div className="pt-3 border-t border-white/[0.08]">
             <Link
               href="/contact"
-              className="w-full inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-azure to-violet rounded-lg shadow-md hover:scale-[1.01] transition-transform"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full inline-flex items-center justify-center px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#166CFF] hover:bg-[#1055CC] rounded-md transition-colors"
             >
               <span>Discuss a Project</span>
-              <ArrowRight className="w-4 h-4 ml-2" />
+              <ArrowRight className="w-3.5 h-3.5 ml-2" />
             </Link>
           </div>
         </div>

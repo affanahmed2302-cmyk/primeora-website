@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { TeamMember } from '@/types';
 import { INITIAL_FOUNDERS } from '@/config/brand';
-import { User, Linkedin, Globe, CheckCircle2, ArrowUpRight } from 'lucide-react';
+import { Linkedin, Globe, ArrowRight, ArrowUpRight } from 'lucide-react';
 
 interface FoundersSectionProps {
   initialMembers?: TeamMember[];
@@ -27,72 +28,63 @@ export default function FoundersSection({ initialMembers }: FoundersSectionProps
   }, []);
 
   return (
-    <section id="team" className="py-20 md:py-28 bg-[#07090F] border-b border-white/10">
+    <section id="team" className="py-20 md:py-28 bg-[#040D1A] border-b border-white/[0.08]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-azure/10 text-azure-bright border border-azure/20 rounded-full text-xs font-semibold tracking-wider uppercase font-mono mb-3">
-            <span>Leadership &amp; Practice</span>
+        <div className="max-w-3xl mb-14">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#08152B] text-slate-300 border border-white/10 rounded-md text-xs font-mono mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#166CFF]" />
+            <span>PARTNERS &amp; LEADERSHIP</span>
           </div>
-          <h2 className="font-['Space_Grotesk'] text-3xl sm:text-4xl font-bold text-white tracking-tight">
-            Founders &amp; Leadership Team
+          <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight font-sans">
+            Direct Founder Engineering
           </h2>
-          <p className="mt-3 text-base sm:text-lg text-slate-400 leading-relaxed">
-            Direct access to senior practitioners across commercial growth, full-stack software engineering, and enterprise systems strategy.
+          <p className="mt-3 text-base text-slate-400 leading-relaxed max-w-2xl">
+            Primeora operates with zero account-manager layers. Every engagement is scoped, architected, and directly reviewed by the founding partners.
           </p>
         </div>
 
-        {/* Dynamic Team Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {members.map((person) => (
+        {/* 3 Founders Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {members.slice(0, 3).map((person) => (
             <div
               key={person.id}
-              className="bg-[#0B0F1A]/80 backdrop-blur-xl rounded-2xl p-7 sm:p-8 border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.5)] flex flex-col justify-between hover:border-azure/40 transition-all duration-300 hover:-translate-y-1 group"
+              className="bg-[#08152B] border border-white/[0.08] rounded-xl p-7 flex flex-col justify-between hover:border-[#166CFF]/40 transition-colors group"
             >
               <div>
                 {/* Person Header */}
                 <div className="flex items-start gap-4 mb-5">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-azure/20 to-violet/20 border border-azure/30 flex items-center justify-center flex-shrink-0 text-azure-bright overflow-hidden shadow-inner">
-                    {person.photoUrl && !person.photoUrl.includes('.jpg') ? (
-                      <img
-                        src={person.photoUrl}
-                        alt={person.fullName}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <span className="font-['Space_Grotesk'] font-bold text-lg text-azure-bright">
-                        {person.fullName.split(' ').map((n) => n[0]).join('')}
-                      </span>
-                    )}
+                  <div className="w-12 h-12 rounded-lg bg-[#040D1A] border border-white/10 flex items-center justify-center flex-shrink-0 text-[#3B82F6] font-mono font-bold text-base">
+                    {person.fullName.split(' ').map((n) => n[0]).join('')}
                   </div>
                   <div>
-                    <h3 className="font-['Space_Grotesk'] text-xl font-bold text-white group-hover:text-azure-light transition-colors">
+                    <h3 className="text-base font-bold text-white font-sans group-hover:text-[#3B82F6] transition-colors">
                       {person.fullName}
                     </h3>
-                    <p className="text-xs font-medium text-azure-bright font-mono mt-0.5">
+                    <p className="text-xs font-mono text-[#3B82F6] mt-0.5">
                       {person.publicTitle}
                     </p>
-                    <span className="text-[11px] text-slate-400 block">
+                    <span className="text-[11px] text-slate-500 block">
                       {person.department}
                     </span>
                   </div>
                 </div>
 
-                {/* Bio */}
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-6">
+                {/* Concise Bio */}
+                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed mb-6">
                   {person.bio}
                 </p>
 
-                {/* Responsibilities */}
+                {/* Direct Responsibilities */}
                 {person.responsibilities && person.responsibilities.length > 0 && (
-                  <div className="mb-6 pt-4 border-t border-white/10">
-                    <span className="text-[11px] font-mono uppercase font-semibold text-slate-400 block mb-2.5">
-                      Direct Responsibilities:
+                  <div className="pt-4 border-t border-white/[0.06] mb-6">
+                    <span className="text-[11px] font-mono uppercase text-slate-500 block mb-2">
+                      Core Responsibilities:
                     </span>
-                    <ul className="space-y-2">
-                      {person.responsibilities.map((resp, i) => (
-                        <li key={i} className="flex items-start gap-2 text-xs text-slate-300">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-azure-bright flex-shrink-0 mt-0.5" />
+                    <ul className="space-y-1.5">
+                      {person.responsibilities.slice(0, 3).map((resp, i) => (
+                        <li key={i} className="text-xs text-slate-300 flex items-start gap-2">
+                          <span className="text-[#166CFF]">•</span>
                           <span>{resp}</span>
                         </li>
                       ))}
@@ -101,44 +93,46 @@ export default function FoundersSection({ initialMembers }: FoundersSectionProps
                 )}
               </div>
 
-              {/* Verified Links: LinkedIn & Portfolio */}
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-3">
-                  {person.linkedinUrl && (
-                    <a
-                      href={person.linkedinUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-slate-300 hover:text-white bg-white/5 hover:bg-azure/20 px-3 py-1.5 rounded-lg border border-white/10 hover:border-azure/40 transition-all font-medium"
-                      aria-label={`${person.fullName} on LinkedIn`}
-                    >
-                      <Linkedin className="w-3.5 h-3.5 text-azure-bright" />
-                      <span>LinkedIn</span>
-                      <ArrowUpRight className="w-3 h-3 text-slate-400" />
-                    </a>
-                  )}
-
-                  {person.portfolioUrl && (
-                    <a
-                      href={person.portfolioUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-slate-300 hover:text-white bg-white/5 hover:bg-violet/20 px-3 py-1.5 rounded-lg border border-white/10 hover:border-violet/40 transition-all font-medium"
-                      aria-label={`${person.fullName} Portfolio`}
-                    >
-                      <Globe className="w-3.5 h-3.5 text-violet-light" />
-                      <span>Portfolio</span>
-                      <ArrowUpRight className="w-3 h-3 text-slate-400" />
-                    </a>
-                  )}
-                </div>
-
-                <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider">
-                  Partner
-                </span>
+              {/* Verified Links */}
+              <div className="pt-4 border-t border-white/[0.06] flex items-center gap-3">
+                {person.linkedinUrl && (
+                  <a
+                    href={person.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#040D1A] hover:bg-[#0E1F3D] border border-white/10 rounded-md text-xs text-slate-300 hover:text-white transition-colors"
+                  >
+                    <Linkedin className="w-3.5 h-3.5 text-[#3B82F6]" />
+                    <span>LinkedIn</span>
+                    <ArrowUpRight className="w-3 h-3 text-slate-500" />
+                  </a>
+                )}
+                {person.portfolioUrl && (
+                  <a
+                    href={person.portfolioUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#040D1A] hover:bg-[#0E1F3D] border border-white/10 rounded-md text-xs text-slate-300 hover:text-white transition-colors"
+                  >
+                    <Globe className="w-3.5 h-3.5 text-[#3B82F6]" />
+                    <span>Portfolio</span>
+                    <ArrowUpRight className="w-3 h-3 text-slate-500" />
+                  </a>
+                )}
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Link to Dedicated Team & About Page */}
+        <div className="mt-10 flex justify-end">
+          <Link
+            href="/team"
+            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#3B82F6] hover:text-white transition-colors group"
+          >
+            <span>View Full Founding Team &amp; Governance Structure</span>
+            <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
+          </Link>
         </div>
       </div>
     </section>

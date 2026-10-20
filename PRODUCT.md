@@ -91,7 +91,14 @@
 
 ## Core System Architecture & Motion Stack
 - **Framework**: Next.js 15 App Router with React 19, TypeScript, and Tailwind CSS.
-- **Motion Engineering**: Lenis smooth scrolling (synchronized with GSAP ScrollTrigger), React Bits cyber/text reveal (`DecryptedText`), GSAP `@gsap/react` timelines with full cleanup and reduced-motion handling, interactive WebGL hero particle network (`HeroCanvas`).
+- **Brand Assets**: Authentic Primeora identity files from `Logo_assets` (faceted cobalt geometric "P" mark `#1065FF`, dark/light horizontal lockups, app icon).
+- **Motion Engineering**: Lenis smooth scrolling (synchronized with GSAP), React Bits text reveal (`DecryptedText`), GSAP `@gsap/react` non-blocking entrance timelines with full cleanup, Three.js + Vanta.js ambient FOG background mesh with strict `prefers-reduced-motion` CSS radial gradient fallback.
+- **Dedicated Route Structure**: 
+  - Concise 9-section homepage (`/`)
+  - Practice portfolio overview and packages (`/services`)
+  - 6 dedicated static service pillar routes (`/services/[slug]`)
+  - Dedicated leadership directory (`/team`)
+  - Methodology (`/process`), About (`/about`), Case studies (`/work`), Interactive diagnostic (`/readiness`), AEO Knowledge Base (`/insights`), Consultation (`/contact`), Legal disclosures (`/privacy`, `/terms`, `/cookie-preferences`)
 - **Database & Persistence**: Supabase PostgreSQL with Row Level Security (RLS) for published team profiles, administrative access, and secure enquiry logging.
-- **Enquiry Pipeline**: High-accessibility enquiry form with honeypot bot rejection, client timestamp verification, server-side sanitization, and administrative review queue.
-- **SEO/AEO**: Semantic HTML5, JSON-LD structured data, dynamic XML sitemap, canonical links, robots controls, and AEO-targeted FAQs.
+- **Enquiry Pipeline**: High-accessibility enquiry form with immediate SSR rendering (no loading spinners), honeypot bot trap, sub-second bot timing traps, payload limits (32KB), and 10-minute duplicate suppression.
+- **SEO/AEO**: Semantic HTML5, JSON-LD structured data, dynamic XML sitemap (all 20+ routes), canonical links, robots controls, and AEO-targeted FAQs.

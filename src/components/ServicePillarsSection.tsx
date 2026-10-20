@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { SERVICE_PILLARS } from '@/config/brand';
-import { Globe, Search, UserCheck, Zap, BarChart3, Wrench, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Globe, Search, UserCheck, Zap, BarChart3, Wrench, ArrowRight } from 'lucide-react';
 
 const iconMap = {
   'digital-presence': Globe,
@@ -15,140 +15,91 @@ const iconMap = {
 };
 
 export default function ServicePillarsSection() {
-  const [activeTab, setActiveTab] = useState(SERVICE_PILLARS[0].id);
-  const activePillar = SERVICE_PILLARS.find((p) => p.id === activeTab) || SERVICE_PILLARS[0];
-  const ActiveIcon = iconMap[activePillar.id] || Globe;
-
   return (
-    <section id="services" className="py-20 md:py-28 bg-[#07090F] border-b border-white/10 relative">
+    <section id="services" className="py-20 md:py-28 bg-[#040D1A] border-b border-white/[0.08] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="max-w-3xl mx-auto text-center mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-azure/10 text-azure-bright border border-azure/20 rounded-full text-xs font-semibold tracking-wider uppercase font-mono mb-3">
-            <span>Portfolio Architecture</span>
+        <div className="max-w-3xl mb-14">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#08152B] text-slate-300 border border-white/10 rounded-md text-xs font-mono mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#166CFF]" />
+            <span>PRACTICE PORTFOLIO</span>
           </div>
-          <h2 className="font-['Space_Grotesk'] text-3xl sm:text-4xl font-bold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight font-sans">
             Six Connected Service Pillars
           </h2>
-          <p className="mt-3 text-base sm:text-lg text-slate-400 leading-relaxed">
-            Rather than isolated tasks, our services integrate into a unified system that supports every stage of client acquisition and daily operations.
+          <p className="mt-3 text-base text-slate-400 leading-relaxed max-w-2xl">
+            Primeora does not sell fragmented deliverables. We engineer an interconnected business system where each pillar reinforces your customer acquisition and daily operations.
           </p>
         </div>
 
-        {/* Pillar Selection Tabs */}
-        <div className="flex items-center justify-start sm:justify-center overflow-x-auto pb-4 mb-10 no-scrollbar gap-2 sm:gap-3">
-          {SERVICE_PILLARS.map((pillar) => {
+        {/* 6-Pillar Structured Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {SERVICE_PILLARS.map((pillar, idx) => {
             const Icon = iconMap[pillar.id] || Globe;
-            const isActive = pillar.id === activeTab;
             return (
-              <button
+              <div
                 key={pillar.id}
-                type="button"
-                onClick={() => setActiveTab(pillar.id)}
-                className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                  isActive
-                    ? 'bg-gradient-to-r from-azure to-violet text-white shadow-[0_4px_20px_rgba(61,110,245,0.4)] border border-azure-bright/50'
-                    : 'bg-[#0B0F1A] text-slate-400 hover:text-white hover:bg-[#121829] border border-white/10'
-                }`}
+                className="bg-[#08152B] border border-white/[0.08] rounded-xl p-7 flex flex-col justify-between hover:border-[#166CFF]/40 transition-colors group"
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-500'}`} />
-                <span>{pillar.title}</span>
-              </button>
+                <div>
+                  <div className="flex items-center justify-between mb-5">
+                    <div className="w-10 h-10 rounded-lg bg-[#040D1A] border border-white/10 flex items-center justify-center text-[#3B82F6] group-hover:border-[#166CFF]/40 transition-colors">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <span className="text-xs font-mono text-slate-500">
+                      0{idx + 1} / {pillar.badge}
+                    </span>
+                  </div>
+
+                  <h3 className="text-lg font-bold text-white mb-2.5 font-sans group-hover:text-[#3B82F6] transition-colors">
+                    {pillar.title}
+                  </h3>
+
+                  <p className="text-sm text-slate-400 leading-relaxed mb-6">
+                    {pillar.shortDescription}
+                  </p>
+
+                  <div className="pt-4 border-t border-white/[0.06]">
+                    <p className="text-xs font-mono uppercase text-slate-500 mb-2.5">Key Deliverables:</p>
+                    <ul className="space-y-1.5 mb-6">
+                      {pillar.deliverablesSummary.slice(0, 3).map((item, i) => (
+                        <li key={i} className="text-xs text-slate-300 flex items-start gap-2">
+                          <span className="text-[#166CFF] mt-0.5">•</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <Link
+                  href={`/services/${pillar.id}`}
+                  className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#3B82F6] hover:text-white transition-colors pt-2"
+                >
+                  <span>Explore Practice Specs</span>
+                  <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </div>
             );
           })}
         </div>
 
-        {/* Detailed Pillar Card */}
-        <div className="bg-[#0B0F1A]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-            {/* Left: Pillar Overview & Deliverables Summary */}
-            <div className="lg:col-span-5 space-y-6">
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-gradient-to-br from-azure/20 to-violet/20 border border-azure/30 text-azure-bright rounded-xl">
-                  <ActiveIcon className="w-6 h-6" />
-                </div>
-                <div>
-                  <span className="text-xs uppercase tracking-wider font-mono font-semibold text-violet-light">
-                    {activePillar.badge}
-                  </span>
-                  <h3 className="font-['Space_Grotesk'] text-2xl font-bold text-white">
-                    {activePillar.title}
-                  </h3>
-                </div>
-              </div>
-
-              <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-                {activePillar.shortDescription}
-              </p>
-
-              <div className="p-4 bg-[#101524] border border-white/10 rounded-xl">
-                <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-400 mb-2">
-                  Target Friction Addressed:
-                </h4>
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                  {activePillar.targetProblem}
-                </p>
-              </div>
-
-              <div>
-                <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-white mb-3">
-                  Key Scope Deliverables:
-                </h4>
-                <ul className="space-y-2">
-                  {activePillar.deliverablesSummary.map((item, idx) => (
-                    <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-300">
-                      <CheckCircle2 className="w-4 h-4 text-azure-bright flex-shrink-0 mt-0.5" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="pt-2">
-                <Link
-                  href={`/services#${activePillar.id}`}
-                  className="inline-flex items-center text-sm font-semibold text-azure-bright hover:text-white transition-colors group"
-                >
-                  <span>Read full specifications &amp; boundaries</span>
-                  <ArrowRight className="w-4 h-4 ml-1.5 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Right: Concrete Services in Pillar */}
-            <div className="lg:col-span-7 space-y-4">
-              <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-400 mb-3">
-                Included Service Modules:
-              </h4>
-
-              <div className="space-y-4">
-                {activePillar.services.map((service, idx) => (
-                  <div
-                    key={idx}
-                    className="p-5 bg-[#101524] border border-white/10 rounded-xl hover:border-azure/30 transition-colors"
-                  >
-                    <h5 className="font-['Space_Grotesk'] text-base font-bold text-white mb-1.5">
-                      {service.title}
-                    </h5>
-                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-3">
-                      {service.description}
-                    </p>
-
-                    <div className="flex flex-wrap gap-1.5">
-                      {service.deliverables.map((deliv, dIdx) => (
-                        <span
-                          key={dIdx}
-                          className="px-2.5 py-1 bg-white/5 border border-white/10 rounded-md text-[11px] font-mono text-slate-300"
-                        >
-                          {deliv}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+        {/* Bottom Banner */}
+        <div className="mt-12 p-6 bg-[#08152B] border border-white/[0.08] rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <p className="text-sm font-semibold text-white font-sans">
+              Need a tailored combination across multiple practice areas?
+            </p>
+            <p className="text-xs text-slate-400 mt-0.5">
+              We structure custom implementation scopes or turnkey retainer partnerships based on your operational bottlenecks.
+            </p>
           </div>
+          <Link
+            href="/services"
+            className="inline-flex items-center justify-center px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#040D1A] hover:bg-[#0E1F3D] border border-white/10 rounded-md transition-colors flex-shrink-0"
+          >
+            <span>Compare Package Tiers →</span>
+          </Link>
         </div>
       </div>
     </section>

@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/services',
     '/process',
     '/about',
+    '/team',
     '/work',
     '/readiness',
     '/insights',
@@ -25,9 +26,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: route === '' ? 1.0 : route === '/services' || route === '/contact' ? 0.9 : 0.7,
   }));
 
-  // Service pillar anchors
+  // Dedicated individual service practice routes
   const pillarRoutes = SERVICE_PILLARS.map((p) => ({
-    url: `${siteUrl}/services#${p.id}`,
+    url: `${siteUrl}/services/${p.id}`,
     lastModified: currentDate,
     changeFrequency: 'monthly' as const,
     priority: 0.8,

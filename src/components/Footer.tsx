@@ -12,30 +12,30 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#040509] text-slate-400 pt-16 pb-12 border-t border-white/10">
+    <footer className="bg-[#02070E] text-slate-400 pt-16 pb-12 border-t border-white/[0.08]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/[0.08]">
           {/* Brand Column */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="inline-block">
               <PrimeoraLogo variant="full" size="md" />
             </Link>
 
-            <p className="text-sm text-slate max-w-sm leading-relaxed">
-              {BRAND_CONFIG.tagline}. An integrated strategy and technology engineering consultancy delivering high-speed web platforms, structured lead systems, workflow automation, and business intelligence.
+            <p className="text-sm text-slate-400 max-w-sm leading-relaxed">
+              {BRAND_CONFIG.tagline}. An engineering consultancy helping businesses design high-performance websites, connected enquiry pipelines, workflow automation, and actionable business intelligence.
             </p>
 
             <div className="pt-2 space-y-2 text-xs text-slate-400">
               <div className="flex items-center gap-2">
-                <Shield className="w-3.5 h-3.5 text-azure-bright flex-shrink-0" />
+                <Shield className="w-3.5 h-3.5 text-[#3B82F6] flex-shrink-0" />
                 <span>{BRAND_CONFIG.udyamStatus}</span>
               </div>
               <div className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-azure-bright flex-shrink-0" />
+                <MapPin className="w-3.5 h-3.5 text-[#3B82F6] flex-shrink-0" />
                 <span>{BRAND_CONFIG.location}</span>
               </div>
               <div className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-azure-bright flex-shrink-0" />
+                <Mail className="w-3.5 h-3.5 text-[#3B82F6] flex-shrink-0" />
                 <a
                   href={`mailto:${BRAND_CONFIG.contactEmail}`}
                   className="hover:text-white transition-colors"
@@ -50,9 +50,9 @@ export default function Footer() {
                 href={BRAND_CONFIG.gbpUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs text-azure-light hover:text-white transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs text-[#3B82F6] hover:text-white transition-colors"
               >
-                <span>Google Business Profile & Reviews</span>
+                <span>Google Business Profile &amp; Reviews</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
             </div>
@@ -61,13 +61,13 @@ export default function Footer() {
           {/* Service Pillars Column */}
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-white mb-4 font-mono">
-              Service Pillars
+              Practice Areas
             </h3>
             <ul className="space-y-2.5 text-sm">
               {SERVICE_PILLARS.map((pillar) => (
                 <li key={pillar.id}>
                   <Link
-                    href={`/services#${pillar.id}`}
+                    href={`/services/${pillar.id}`}
                     className="hover:text-white transition-colors"
                   >
                     {pillar.title}
@@ -80,17 +80,32 @@ export default function Footer() {
           {/* Company & Methodology Column */}
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-white mb-4 font-mono">
-              Methodology & Firm
+              Firm &amp; Method
             </h3>
             <ul className="space-y-2.5 text-sm">
+              <li>
+                <Link href="/services" className="hover:text-white transition-colors">
+                  All Practices &amp; Packages
+                </Link>
+              </li>
               <li>
                 <Link href="/process" className="hover:text-white transition-colors">
                   Four-Step Methodology
                 </Link>
               </li>
               <li>
+                <Link href="/work" className="hover:text-white transition-colors">
+                  Selected Work &amp; Architecture
+                </Link>
+              </li>
+              <li>
                 <Link href="/about" className="hover:text-white transition-colors">
-                  About & Leadership
+                  About the Firm
+                </Link>
+              </li>
+              <li>
+                <Link href="/team" className="hover:text-white transition-colors">
+                  Partners &amp; Leadership
                 </Link>
               </li>
               <li>
@@ -99,24 +114,24 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/work" className="hover:text-white transition-colors">
-                  System Architecture
-                </Link>
-              </li>
-              <li>
                 <Link href="/insights" className="hover:text-white transition-colors">
-                  Field Insights
+                  Knowledge Base &amp; Insights
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Governance & Contact Column */}
+          {/* Legal & Governance Column */}
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-white mb-4 font-mono">
-              Governance & Legal
+              Governance &amp; Contact
             </h3>
             <ul className="space-y-2.5 text-sm">
+              <li>
+                <Link href="/contact" className="hover:text-white transition-colors">
+                  Project Consultation
+                </Link>
+              </li>
               <li>
                 <Link href="/privacy" className="hover:text-white transition-colors">
                   Privacy Policy
@@ -124,7 +139,12 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/terms" className="hover:text-white transition-colors">
-                  Terms & Conditions
+                  Terms &amp; Conditions
+                </Link>
+              </li>
+              <li>
+                <Link href="/cookie-preferences" className="hover:text-white transition-colors">
+                  Cookie Preferences
                 </Link>
               </li>
               <li>
@@ -133,12 +153,15 @@ export default function Footer() {
                   onClick={openCookiePreferences}
                   className="hover:text-white transition-colors text-left"
                 >
-                  Cookie Preferences
+                  Manage Consent
                 </button>
               </li>
-              <li>
-                <Link href="/admin/login" className="hover:text-white transition-colors text-xs text-slate-500 hover:text-slate-300">
-                  Staff Portal
+              <li className="pt-2">
+                <Link
+                  href="/admin"
+                  className="text-xs text-slate-500 hover:text-slate-300 transition-colors"
+                >
+                  Admin Portal
                 </Link>
               </li>
             </ul>
@@ -146,12 +169,10 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>
-            &copy; {new Date().getFullYear()} {BRAND_CONFIG.legalEntity}. All rights reserved.
-          </p>
-          <p className="text-center sm:text-right text-[11px]">
-            Engineered with Next.js, TypeScript &amp; PostgreSQL. Bangalore, Karnataka.
+        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+          <p>© {new Date().getFullYear()} Primeora Solutions. All rights reserved.</p>
+          <p className="text-center md:text-right font-mono">
+            Udyam Registered MSME: {BRAND_CONFIG.udyamRegistrationNumber} • Bangalore, India
           </p>
         </div>
       </div>

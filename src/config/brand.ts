@@ -22,38 +22,52 @@ export const BRAND_CONFIG = {
   gbpUrl: 'https://g.page/r/CX12e6eETsn3EBM/review',
   instagramUrl: 'https://instagram.com/primeorasolutions',
 
-  // Master Brand Visual Assets
+  // Master Brand Visual Assets (Extracted directly from authentic Logo_assets)
   assets: {
-    logo: '/brand/primeora-logo.svg',
-    logoCropped: '/brand/primeora-logo.svg',
-    logoMaster: '/brand/primeora-master.png',
-    emblem: '/brand/primeora-emblem.svg',
-    emblemSolid: '/brand/emblem.png',
+    logo: '/brand/primeora-logo-dark.png',
+    logoDark: '/brand/primeora-logo-dark.png',
+    logoLight: '/brand/primeora-logo-light.png',
+    logoMaster: '/brand/primeora-logo-dark.png',
+    logoCropped: '/brand/primeora-logo-dark.png',
+    emblem: '/brand/primeora-emblem.png',
+    emblemSolid: '/brand/primeora-emblem.png',
+    appIcon: '/brand/primeora-app-icon.png',
   },
 
-  // Brand Color Palette (Authentic Primeora Deep Tech Identity)
+  // Brand Color Palette (Derived strictly from authentic Logo_assets)
   colors: {
-    obsidian: '#07090F',
-    navy: '#0D1222',
-    azure: '#3D6EF5',
-    azureLight: '#4D7CFF',
-    violet: '#7C5CFF',
-    platinum: '#F0F2F7',
-    slate: '#94A3B8',
-    // Backwards-compatible aliases for transition
-    forest: '#0D1222',
-    teal: '#3D6EF5',
-    ivory: '#07090F',
-    copper: '#7C5CFF',
-    charcoal: '#F0F2F7',
+    canvas: '#040D1A',          // Deep midnight navy canvas
+    surface: '#08152B',         // Architectural surface
+    surfaceElevated: '#0E1F3D', // Elevated card surface
+    border: 'rgba(255, 255, 255, 0.08)',
+    blue: '#166CFF',            // Authentic Primeora cobalt royal blue
+    blueHover: '#1055CC',
+    blueLight: '#3B82F6',
+    white: '#F8FAFC',           // Optical crisp white
+    slate: '#94A3B8',           // Supporting slate neutral
+    slateMuted: '#64748B',
+    // Backwards-compatible aliases
+    obsidian: '#040D1A',
+    navy: '#08152B',
+    azure: '#166CFF',
+    azureLight: '#3B82F6',
+    violet: '#166CFF',
+    platinum: '#F8FAFC',
+    forest: '#08152B',
+    teal: '#166CFF',
+    ivory: '#040D1A',
+    copper: '#166CFF',
+    charcoal: '#F8FAFC',
   },
 
-  // Navigation Links
+  // Primary Navigation Links (Actual routes)
   navLinks: [
     { label: 'Services', href: '/services' },
     { label: 'Process', href: '/process' },
-    { label: 'About & Team', href: '/about' },
-    { label: 'Readiness Tool', href: '/readiness' },
+    { label: 'Work', href: '/work' },
+    { label: 'About', href: '/about' },
+    { label: 'Team', href: '/team' },
+    { label: 'Readiness', href: '/readiness' },
     { label: 'Insights', href: '/insights' },
     { label: 'Contact', href: '/contact' },
   ],
