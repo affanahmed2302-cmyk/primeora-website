@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { saveEnquiry, getEnquiries, checkEnquiryRateLimit } from '@/lib/cms-store';
+import { sendEnquiryNotification } from '@/lib/notifications';
 import crypto from 'crypto';
 
 // In-memory rate limiting tracker (per-instance defense)
@@ -144,7 +145,12 @@ export async function POST(req: NextRequest) {
       ipHash,
     });
 
-    // 11. Operational Audit Logging (ZERO PII — strictly non-identifiable metrics)
+    // 11. Trigger email notification (non-blocking for client responsiveness)
+    sendEnquiryNotification(saved).catch((err) => {
+      console.warn('[Notification Error]', err);
+    });
+
+    // 12. Operational Audit Logging (ZERO PII — strictly non-identifiable metrics)
     if (process.env.NODE_ENV !== 'production') {
       console.info(`[Enquiry Audit] ID: ${saved.id} | IP Hash: ${ipHash} | Status: Received`);
     }

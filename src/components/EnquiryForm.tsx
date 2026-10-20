@@ -99,30 +99,35 @@ export default function EnquiryForm() {
 
       if (!res.ok || !data.success) {
         setStatus('error');
-        setErrorMessage(data.error || 'Failed to submit enquiry. Please check your inputs or try again.');
-        return;
+        setErrorMessage(data.message || 'We could not submit your request. Please try again or email us directly.');
+      } else {
+        setStatus('success');
       }
-
-      setStatus('success');
     } catch {
       setStatus('error');
-      setErrorMessage('Network error. Please verify your connection and try again.');
+      setErrorMessage('Network error during transmission. Please email contact@primeorasolutions.com directly.');
     }
   };
 
   if (status === 'success') {
     return (
-      <div className="bg-[#08152B] rounded-xl border border-[#166CFF]/40 p-8 sm:p-10 text-center animate-in fade-in">
-        <div className="w-14 h-14 bg-[#166CFF]/15 text-[#3B82F6] border border-[#166CFF]/30 rounded-xl flex items-center justify-center mx-auto mb-4">
-          <CheckCircle2 className="w-7 h-7" />
+      <div className="bg-white dark:bg-[#1C1A18] rounded-xl border border-[#E5DDD0] dark:border-[#2C2926] p-8 sm:p-12 text-center max-w-2xl mx-auto shadow-sm">
+        <div className="w-16 h-16 rounded-full bg-[#EBF5EE] dark:bg-[#172E20] text-[#1E7E34] dark:text-[#4ADE80] flex items-center justify-center mx-auto mb-6">
+          <CheckCircle2 className="w-8 h-8" />
         </div>
-        <h3 className="text-2xl font-bold text-white mb-2 font-sans">Enquiry Received</h3>
-        <p className="text-slate-300 max-w-lg mx-auto text-sm leading-relaxed mb-6">
-          Thank you, <span className="text-white font-medium">{formData.fullName}</span>. Your enquiry for{' '}
-          <span className="text-white font-medium">{formData.businessName}</span> has been securely stored. A partner
-          from Primeora Solutions will review your requirements and respond within 1 business day.
+        <h3 className="text-2xl font-bold text-editorial-ink dark:text-[#FBF9F5] mb-3 font-sans">
+          Enquiry Received
+        </h3>
+        <p className="text-sm text-[#5A544E] dark:text-[#A8A196] leading-relaxed mb-6 font-serif">
+          Thank you, <strong className="text-editorial-ink dark:text-[#FBF9F5]">{formData.fullName}</strong>. Your project brief has been routed to our founding partners. We review client requirements and respond within one business day.
         </p>
+        <div className="p-4 bg-[#FBF9F5] dark:bg-[#22201D] rounded-lg border border-[#DDD5C7] dark:border-[#33302B] text-xs font-mono text-[#7C7469] dark:text-[#8E867C] mb-8 text-left space-y-1">
+          <div><strong className="text-[#3D3833] dark:text-[#DDD6CC]">Business:</strong> {formData.businessName}</div>
+          <div><strong className="text-[#3D3833] dark:text-[#DDD6CC]">Target Practice:</strong> {formData.serviceInterest}</div>
+          <div><strong className="text-[#3D3833] dark:text-[#DDD6CC]">Confirmation Email:</strong> {formData.contactEmail}</div>
+        </div>
         <button
+          type="button"
           onClick={() => {
             setStatus('idle');
             setFormData({
@@ -138,7 +143,7 @@ export default function EnquiryForm() {
               _ts: Date.now(),
             });
           }}
-          className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#3B82F6] hover:text-white transition-colors"
+          className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] hover:text-editorial-ink dark:hover:text-white transition-colors"
         >
           Submit Another Request →
         </button>
@@ -155,7 +160,7 @@ export default function EnquiryForm() {
 
       <form
         onSubmit={handleSubmit}
-        className="bg-[#08152B] rounded-xl border border-white/[0.08] p-6 sm:p-10 relative overflow-hidden"
+        className="bg-white dark:bg-[#1C1A18] rounded-xl border border-[#E5DDD0] dark:border-[#2C2926] p-6 sm:p-10 relative overflow-hidden shadow-sm transition-colors duration-200"
         noValidate
       >
         {/* Honeypot field (hidden from genuine users, catches bots) */}
@@ -173,11 +178,11 @@ export default function EnquiryForm() {
         </div>
 
         {status === 'error' && (
-          <div className="mb-6 p-4 bg-red-950/40 border border-red-500/30 rounded-lg flex items-start gap-3 text-red-200 text-sm">
-            <AlertCircle className="w-5 h-5 flex-shrink-0 text-red-400 mt-0.5" />
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-500/30 rounded-lg flex items-start gap-3 text-red-800 dark:text-red-200 text-sm">
+            <AlertCircle className="w-5 h-5 flex-shrink-0 text-red-600 dark:text-red-400 mt-0.5" />
             <div>
-              <p className="font-semibold text-red-100">Unable to submit enquiry</p>
-              <p className="text-xs text-red-300/90 mt-0.5">{errorMessage}</p>
+              <p className="font-semibold">Unable to submit enquiry</p>
+              <p className="text-xs text-red-700 dark:text-red-300/90 mt-0.5">{errorMessage}</p>
             </div>
           </div>
         )}
@@ -186,8 +191,8 @@ export default function EnquiryForm() {
           {/* Row 1: Name & Business */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label htmlFor="fullName" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
-                Full Name <span className="text-[#166CFF]">*</span>
+              <label htmlFor="fullName" className="block text-xs font-semibold uppercase tracking-wider text-[#3D3833] dark:text-[#DDD6CC] mb-2 font-mono">
+                Full Name <span className="text-[#C25E38] dark:text-[#E07A5F]">*</span>
               </label>
               <input
                 id="fullName"
@@ -196,16 +201,16 @@ export default function EnquiryForm() {
                 value={formData.fullName}
                 onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                 placeholder="e.g. Ramesh Patel"
-                className={`w-full px-4 py-3 bg-[#040D1A] border ${
-                  errors.fullName ? 'border-red-500' : 'border-white/10'
-                } rounded-lg text-white placeholder-slate-500 text-sm focus:outline-none focus:border-[#166CFF] focus:ring-1 focus:ring-[#166CFF] transition-colors`}
+                className={`w-full px-4 py-3 bg-[#FBF9F5] dark:bg-[#121110] border ${
+                  errors.fullName ? 'border-red-500' : 'border-[#DDD5C7] dark:border-[#2C2926]'
+                } rounded-lg text-editorial-ink dark:text-[#FBF9F5] placeholder-[#9C948A] text-sm focus:outline-none focus:border-[#C25E38] dark:focus:border-[#E07A5F] focus:ring-1 focus:ring-[#C25E38] dark:focus:ring-[#E07A5F] transition-colors`}
               />
-              {errors.fullName && <p className="text-xs text-red-400 mt-1">{errors.fullName}</p>}
+              {errors.fullName && <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.fullName}</p>}
             </div>
 
             <div>
-              <label htmlFor="businessName" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
-                Business / Entity Name <span className="text-[#166CFF]">*</span>
+              <label htmlFor="businessName" className="block text-xs font-semibold uppercase tracking-wider text-[#3D3833] dark:text-[#DDD6CC] mb-2 font-mono">
+                Business / Entity Name <span className="text-[#C25E38] dark:text-[#E07A5F]">*</span>
               </label>
               <input
                 id="businessName"
@@ -214,19 +219,19 @@ export default function EnquiryForm() {
                 value={formData.businessName}
                 onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
                 placeholder="e.g. Vertex Retail Pvt Ltd"
-                className={`w-full px-4 py-3 bg-[#040D1A] border ${
-                  errors.businessName ? 'border-red-500' : 'border-white/10'
-                } rounded-lg text-white placeholder-slate-500 text-sm focus:outline-none focus:border-[#166CFF] focus:ring-1 focus:ring-[#166CFF] transition-colors`}
+                className={`w-full px-4 py-3 bg-[#FBF9F5] dark:bg-[#121110] border ${
+                  errors.businessName ? 'border-red-500' : 'border-[#DDD5C7] dark:border-[#2C2926]'
+                } rounded-lg text-editorial-ink dark:text-[#FBF9F5] placeholder-[#9C948A] text-sm focus:outline-none focus:border-[#C25E38] dark:focus:border-[#E07A5F] focus:ring-1 focus:ring-[#C25E38] dark:focus:ring-[#E07A5F] transition-colors`}
               />
-              {errors.businessName && <p className="text-xs text-red-400 mt-1">{errors.businessName}</p>}
+              {errors.businessName && <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.businessName}</p>}
             </div>
           </div>
 
           {/* Row 2: Email & Phone */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label htmlFor="contactEmail" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
-                Work Email Address <span className="text-[#166CFF]">*</span>
+              <label htmlFor="contactEmail" className="block text-xs font-semibold uppercase tracking-wider text-[#3D3833] dark:text-[#DDD6CC] mb-2 font-mono">
+                Work Email Address <span className="text-[#C25E38] dark:text-[#E07A5F]">*</span>
               </label>
               <input
                 id="contactEmail"
@@ -235,15 +240,15 @@ export default function EnquiryForm() {
                 value={formData.contactEmail}
                 onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
                 placeholder="ramesh@vertexretail.com"
-                className={`w-full px-4 py-3 bg-[#040D1A] border ${
-                  errors.contactEmail ? 'border-red-500' : 'border-white/10'
-                } rounded-lg text-white placeholder-slate-500 text-sm focus:outline-none focus:border-[#166CFF] focus:ring-1 focus:ring-[#166CFF] transition-colors`}
+                className={`w-full px-4 py-3 bg-[#FBF9F5] dark:bg-[#121110] border ${
+                  errors.contactEmail ? 'border-red-500' : 'border-[#DDD5C7] dark:border-[#2C2926]'
+                } rounded-lg text-editorial-ink dark:text-[#FBF9F5] placeholder-[#9C948A] text-sm focus:outline-none focus:border-[#C25E38] dark:focus:border-[#E07A5F] focus:ring-1 focus:ring-[#C25E38] dark:focus:ring-[#E07A5F] transition-colors`}
               />
-              {errors.contactEmail && <p className="text-xs text-red-400 mt-1">{errors.contactEmail}</p>}
+              {errors.contactEmail && <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.contactEmail}</p>}
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+              <label htmlFor="phone" className="block text-xs font-semibold uppercase tracking-wider text-[#3D3833] dark:text-[#DDD6CC] mb-2 font-mono">
                 Phone Number (Optional)
               </label>
               <input
@@ -252,7 +257,7 @@ export default function EnquiryForm() {
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 placeholder="+91 98765 43210"
-                className="w-full px-4 py-3 bg-[#040D1A] border border-white/10 rounded-lg text-white placeholder-slate-500 text-sm focus:outline-none focus:border-[#166CFF] focus:ring-1 focus:ring-[#166CFF] transition-colors"
+                className="w-full px-4 py-3 bg-[#FBF9F5] dark:bg-[#121110] border border-[#DDD5C7] dark:border-[#2C2926] rounded-lg text-editorial-ink dark:text-[#FBF9F5] placeholder-[#9C948A] text-sm focus:outline-none focus:border-[#C25E38] dark:focus:border-[#E07A5F] focus:ring-1 focus:ring-[#C25E38] dark:focus:ring-[#E07A5F] transition-colors"
               />
             </div>
           </div>
@@ -260,55 +265,55 @@ export default function EnquiryForm() {
           {/* Row 3: Service Pillar & Target Timeline */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label htmlFor="serviceInterest" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
-                Primary Practice Area <span className="text-[#166CFF]">*</span>
+              <label htmlFor="serviceInterest" className="block text-xs font-semibold uppercase tracking-wider text-[#3D3833] dark:text-[#DDD6CC] mb-2 font-mono">
+                Primary Practice Area <span className="text-[#C25E38] dark:text-[#E07A5F]">*</span>
               </label>
               <select
                 id="serviceInterest"
                 value={formData.serviceInterest}
                 onChange={(e) => setFormData({ ...formData, serviceInterest: e.target.value })}
-                className="w-full px-4 py-3 bg-[#040D1A] border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-[#166CFF] focus:ring-1 focus:ring-[#166CFF] transition-colors"
+                className="w-full px-4 py-3 bg-[#FBF9F5] dark:bg-[#121110] border border-[#DDD5C7] dark:border-[#2C2926] rounded-lg text-editorial-ink dark:text-[#FBF9F5] text-sm focus:outline-none focus:border-[#C25E38] dark:focus:border-[#E07A5F] focus:ring-1 focus:ring-[#C25E38] dark:focus:ring-[#E07A5F] transition-colors"
               >
                 {SERVICE_PILLARS.map((pillar) => (
-                  <option key={pillar.id} value={pillar.title} className="bg-[#08152B] text-white">
+                  <option key={pillar.id} value={pillar.title} className="bg-white dark:bg-[#1C1A18] text-editorial-ink dark:text-[#FBF9F5]">
                     {pillar.title}
                   </option>
                 ))}
-                <option value="Package Tier: LAUNCH" className="bg-[#08152B] text-white">
+                <option value="Package Tier: LAUNCH" className="bg-white dark:bg-[#1C1A18] text-editorial-ink dark:text-[#FBF9F5]">
                   Package Tier: Launch (Foundation)
                 </option>
-                <option value="Package Tier: GROW" className="bg-[#08152B] text-white">
+                <option value="Package Tier: GROW" className="bg-white dark:bg-[#1C1A18] text-editorial-ink dark:text-[#FBF9F5]">
                   Package Tier: Grow (Growth System)
                 </option>
-                <option value="Package Tier: COMPLETE PARTNER" className="bg-[#08152B] text-white">
+                <option value="Package Tier: COMPLETE PARTNER" className="bg-white dark:bg-[#1C1A18] text-editorial-ink dark:text-[#FBF9F5]">
                   Package Tier: Complete Partner (Custom Architecture)
                 </option>
-                <option value="General Consultation" className="bg-[#08152B] text-white">
+                <option value="General Consultation" className="bg-white dark:bg-[#1C1A18] text-editorial-ink dark:text-[#FBF9F5]">
                   General Consultation / Multi-Service
                 </option>
               </select>
             </div>
 
             <div>
-              <label htmlFor="targetTimeline" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+              <label htmlFor="targetTimeline" className="block text-xs font-semibold uppercase tracking-wider text-[#3D3833] dark:text-[#DDD6CC] mb-2 font-mono">
                 Implementation Target
               </label>
               <select
                 id="targetTimeline"
                 value={formData.targetTimeline}
                 onChange={(e) => setFormData({ ...formData, targetTimeline: e.target.value })}
-                className="w-full px-4 py-3 bg-[#040D1A] border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-[#166CFF] focus:ring-1 focus:ring-[#166CFF] transition-colors"
+                className="w-full px-4 py-3 bg-[#FBF9F5] dark:bg-[#121110] border border-[#DDD5C7] dark:border-[#2C2926] rounded-lg text-editorial-ink dark:text-[#FBF9F5] text-sm focus:outline-none focus:border-[#C25E38] dark:focus:border-[#E07A5F] focus:ring-1 focus:ring-[#C25E38] dark:focus:ring-[#E07A5F] transition-colors"
               >
-                <option value="Immediate (< 3 weeks)" className="bg-[#08152B] text-white">
+                <option value="Immediate (< 3 weeks)" className="bg-white dark:bg-[#1C1A18] text-editorial-ink dark:text-[#FBF9F5]">
                   Immediate (Under 3 weeks)
                 </option>
-                <option value="Within 1-2 months" className="bg-[#08152B] text-white">
+                <option value="Within 1-2 months" className="bg-white dark:bg-[#1C1A18] text-editorial-ink dark:text-[#FBF9F5]">
                   Within 1-2 months
                 </option>
-                <option value="Planning / Next Quarter" className="bg-[#08152B] text-white">
+                <option value="Planning / Next Quarter" className="bg-white dark:bg-[#1C1A18] text-editorial-ink dark:text-[#FBF9F5]">
                   Planning for next quarter
                 </option>
-                <option value="Ongoing advisory" className="bg-[#08152B] text-white">
+                <option value="Ongoing advisory" className="bg-white dark:bg-[#1C1A18] text-editorial-ink dark:text-[#FBF9F5]">
                   Ongoing management partnership
                 </option>
               </select>
@@ -317,8 +322,8 @@ export default function EnquiryForm() {
 
           {/* Row 4: Problem Summary */}
           <div>
-            <label htmlFor="problemSummary" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
-              Problem Description & Desired Outcome <span className="text-[#166CFF]">*</span>
+            <label htmlFor="problemSummary" className="block text-xs font-semibold uppercase tracking-wider text-[#3D3833] dark:text-[#DDD6CC] mb-2 font-mono">
+              Problem Description &amp; Desired Outcome <span className="text-[#C25E38] dark:text-[#E07A5F]">*</span>
             </label>
             <textarea
               id="problemSummary"
@@ -327,16 +332,16 @@ export default function EnquiryForm() {
               value={formData.problemSummary}
               onChange={(e) => setFormData({ ...formData, problemSummary: e.target.value })}
               placeholder="Outline your current business bottleneck (e.g. website does not convert, manual WhatsApp enquiry follow-ups, fragmented inventory, or no marketing analytics)."
-              className={`w-full px-4 py-3 bg-[#040D1A] border ${
-                errors.problemSummary ? 'border-red-500' : 'border-white/10'
-              } rounded-lg text-white placeholder-slate-500 text-sm focus:outline-none focus:border-[#166CFF] focus:ring-1 focus:ring-[#166CFF] transition-colors`}
+              className={`w-full px-4 py-3 bg-[#FBF9F5] dark:bg-[#121110] border ${
+                errors.problemSummary ? 'border-red-500' : 'border-[#DDD5C7] dark:border-[#2C2926]'
+              } rounded-lg text-editorial-ink dark:text-[#FBF9F5] placeholder-[#9C948A] text-sm focus:outline-none focus:border-[#C25E38] dark:focus:border-[#E07A5F] focus:ring-1 focus:ring-[#C25E38] dark:focus:ring-[#E07A5F] transition-colors`}
             />
-            {errors.problemSummary && <p className="text-xs text-red-400 mt-1">{errors.problemSummary}</p>}
+            {errors.problemSummary && <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.problemSummary}</p>}
           </div>
 
           {/* Row 5: Current Website */}
           <div>
-            <label htmlFor="websiteUrl" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+            <label htmlFor="websiteUrl" className="block text-xs font-semibold uppercase tracking-wider text-[#3D3833] dark:text-[#DDD6CC] mb-2 font-mono">
               Existing Website or Online Presence (Optional)
             </label>
             <input
@@ -345,17 +350,17 @@ export default function EnquiryForm() {
               value={formData.websiteUrl}
               onChange={(e) => setFormData({ ...formData, websiteUrl: e.target.value })}
               placeholder="https://yourcompany.com"
-              className="w-full px-4 py-3 bg-[#040D1A] border border-white/10 rounded-lg text-white placeholder-slate-500 text-sm focus:outline-none focus:border-[#166CFF] focus:ring-1 focus:ring-[#166CFF] transition-colors"
+              className="w-full px-4 py-3 bg-[#FBF9F5] dark:bg-[#121110] border border-[#DDD5C7] dark:border-[#2C2926] rounded-lg text-editorial-ink dark:text-[#FBF9F5] placeholder-[#9C948A] text-sm focus:outline-none focus:border-[#C25E38] dark:focus:border-[#E07A5F] focus:ring-1 focus:ring-[#C25E38] dark:focus:ring-[#E07A5F] transition-colors"
             />
           </div>
         </div>
 
         {/* Submit Button & Privacy Notice */}
-        <div className="mt-8 pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="mt-8 pt-6 border-t border-[#E5DDD0] dark:border-[#2C2926] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <button
             type="submit"
             disabled={status === 'submitting'}
-            className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-white bg-[#166CFF] hover:bg-[#1055CC] rounded-lg transition-colors disabled:opacity-50"
+            className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-white bg-[#C25E38] hover:bg-[#A84F2E] rounded-lg transition-colors shadow-sm disabled:opacity-50"
           >
             {status === 'submitting' ? (
               <>
@@ -370,8 +375,8 @@ export default function EnquiryForm() {
             )}
           </button>
 
-          <div className="flex items-center gap-2 text-xs text-slate-400">
-            <Shield className="w-4 h-4 text-[#3B82F6] flex-shrink-0" />
+          <div className="flex items-center gap-2 text-xs text-[#7C7469] dark:text-[#8E867C]">
+            <Shield className="w-4 h-4 text-[#C25E38] dark:text-[#E07A5F] flex-shrink-0" />
             <span>
               Direct founder review. Strictly confidential. No spam.
             </span>

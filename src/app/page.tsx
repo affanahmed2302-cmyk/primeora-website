@@ -6,13 +6,12 @@ import FoundersSection from '@/components/FoundersSection';
 import FaqSection from '@/components/FaqSection';
 import EnquiryForm from '@/components/EnquiryForm';
 import Link from 'next/link';
-import { ArrowRight, Compass, ShieldCheck } from 'lucide-react';
-import { BRAND_CONFIG } from '@/config/brand';
+import { ArrowRight } from 'lucide-react';
 
 export default function HomePage() {
   return (
     <>
-      {/* 1 & 2. Hero Section with authentic Vanta ambient mesh, studio headline, and primary CTA */}
+      {/* 1 & 2. Hero Section with Day/Night editorial palette, tactile system schematic, and primary CTA */}
       <HeroSection />
 
       {/* 4. Six Service Pillars Concise Overview */}
@@ -25,63 +24,63 @@ export default function HomePage() {
       <FoundersSection />
 
       {/* 7. Clearly Labelled Illustrative Architecture Demonstration */}
-      <section className="py-20 md:py-24 bg-[#040D1A] border-b border-white/[0.08] relative">
+      <section className="py-20 md:py-24 bg-editorial-canvas dark:bg-[#121110] border-b border-[#E5DDD0] dark:border-[#2C2926] relative transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#08152B] text-slate-300 border border-white/10 rounded-md text-xs font-mono mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#166CFF]" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#F4EFEA] dark:bg-[#22201D] text-[#5A544E] dark:text-[#B8B0A5] border border-[#DDD5C7] dark:border-[#33302B] rounded-md text-xs font-mono mb-3 shadow-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#C25E38] dark:bg-[#E07A5F]" />
               <span>SOLUTION ARCHITECTURE</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight font-sans">
+            <h2 className="text-3xl sm:text-4xl font-bold text-editorial-ink dark:text-[#FBF9F5] tracking-tight font-sans">
               Illustrative Workflow Demonstration
             </h2>
-            <p className="mt-3 text-base text-slate-400 leading-relaxed max-w-2xl">
+            <p className="mt-3 text-base text-[#5A544E] dark:text-[#A8A196] leading-relaxed max-w-2xl font-serif">
               An architectural blueprint demonstrating how a specialized professional practice unifies customer discovery, enquiry triage, automated notifications, and reporting into a single system.
             </p>
           </div>
 
-          <div className="bg-[#08152B] rounded-xl border border-white/[0.08] p-6 sm:p-10 max-w-5xl">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-6 border-b border-white/[0.06] gap-2">
-              <span className="text-xs font-mono font-semibold uppercase text-white tracking-wider">
+          <div className="bg-white dark:bg-[#1C1A18] rounded-xl border border-[#E5DDD0] dark:border-[#2C2926] p-6 sm:p-10 max-w-5xl shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-6 border-b border-[#E5DDD0] dark:border-[#2C2926] gap-2">
+              <span className="text-xs font-mono font-semibold uppercase text-editorial-ink dark:text-[#FBF9F5] tracking-wider">
                 Hypothetical Scenario: Multi-Specialist Healthcare Clinic
               </span>
-              <span className="text-[11px] font-mono text-[#3B82F6] bg-[#166CFF]/10 border border-[#166CFF]/20 px-2.5 py-0.5 rounded w-fit">
+              <span className="text-[11px] font-mono text-[#C25E38] dark:text-[#E07A5F] bg-[#C25E38]/10 dark:bg-[#E07A5F]/10 border border-[#C25E38]/20 dark:border-[#E07A5F]/20 px-2.5 py-0.5 rounded w-fit font-medium">
                 Sample Systems Blueprint
               </span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              <div className="p-5 bg-[#040D1A] rounded-lg border border-white/[0.06]">
-                <span className="text-xs font-mono uppercase text-[#3B82F6] font-semibold block mb-1.5">
+              <div className="p-5 bg-[#FBF9F5] dark:bg-[#22201E] rounded-lg border border-[#E5DDD0] dark:border-[#2C2926]">
+                <span className="text-xs font-mono uppercase text-[#C25E38] dark:text-[#E07A5F] font-semibold block mb-1.5">
                   01. Operational Bottleneck
                 </span>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-[#5A544E] dark:text-[#A8A196] leading-relaxed">
                   Patient enquiries arrived simultaneously across social accounts, telephone calls, and paper logs, creating delayed response times and lost consultations during peak operational hours.
                 </p>
               </div>
 
-              <div className="p-5 bg-[#040D1A] rounded-lg border border-white/[0.06]">
-                <span className="text-xs font-mono uppercase text-white font-semibold block mb-1.5">
+              <div className="p-5 bg-[#FBF9F5] dark:bg-[#22201E] rounded-lg border border-[#E5DDD0] dark:border-[#2C2926]">
+                <span className="text-xs font-mono uppercase text-editorial-ink dark:text-[#FBF9F5] font-semibold block mb-1.5">
                   02. Engineered Architecture
                 </span>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-[#5A544E] dark:text-[#A8A196] leading-relaxed">
                   A high-speed Next.js web application integrated with official WhatsApp Business API routing, calendar appointment synchronization, and automated confirmation dispatches.
                 </p>
               </div>
 
-              <div className="p-5 bg-[#040D1A] rounded-lg border border-white/[0.06]">
-                <span className="text-xs font-mono uppercase text-[#3B82F6] font-semibold block mb-1.5">
+              <div className="p-5 bg-[#FBF9F5] dark:bg-[#22201E] rounded-lg border border-[#E5DDD0] dark:border-[#2C2926]">
+                <span className="text-xs font-mono uppercase text-[#C25E38] dark:text-[#E07A5F] font-semibold block mb-1.5">
                   03. Operational Outcome
                 </span>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-[#5A544E] dark:text-[#A8A196] leading-relaxed">
                   Lead triage automated 24/7; zero unhandled enquiries between operational shifts; unified executive reporting for weekly appointments and patient acquisition costs.
                 </p>
               </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+            <div className="mt-6 pt-4 border-t border-[#E5DDD0] dark:border-[#2C2926] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#7C7469] dark:text-[#8E867C]">
               <span>* Illustrative workflow model with hypothetical operational data presented in accordance with our claims policy.</span>
-              <Link href="/work" className="text-[#3B82F6] font-semibold hover:text-white inline-flex items-center gap-1.5 transition-colors">
+              <Link href="/work" className="text-[#C25E38] dark:text-[#E07A5F] font-semibold hover:text-editorial-ink dark:hover:text-white inline-flex items-center gap-1.5 transition-colors">
                 <span>View Full Case Architecture</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
@@ -91,21 +90,21 @@ export default function HomePage() {
       </section>
 
       {/* Digital Readiness Assessment Teaser (Preview linking to dedicated /readiness page) */}
-      <section className="py-20 md:py-24 bg-[#040D1A] border-b border-white/[0.08] relative">
+      <section className="py-20 md:py-24 bg-[#F4EFEA] dark:bg-[#181715] border-b border-[#E5DDD0] dark:border-[#2C2926] relative transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-[#08152B] border border-white/[0.08] rounded-xl p-8 sm:p-12 max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="bg-white dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#2C2926] rounded-xl p-8 sm:p-12 max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm">
             <div className="max-w-xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#040D1A] text-slate-300 border border-white/10 rounded-md text-xs font-mono mb-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#166CFF]" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FBF9F5] dark:bg-[#22201D] text-[#5A544E] dark:text-[#B8B0A5] border border-[#DDD5C7] dark:border-[#33302B] rounded-md text-xs font-mono mb-3 shadow-xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C25E38] dark:bg-[#E07A5F]" />
                 <span>INTERACTIVE DIAGNOSTIC</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight font-sans">
+              <h2 className="text-2xl sm:text-3xl font-bold text-editorial-ink dark:text-[#FBF9F5] tracking-tight font-sans">
                 Evaluate Your Digital Readiness
               </h2>
-              <p className="mt-2 text-sm text-slate-400 leading-relaxed">
+              <p className="mt-2 text-sm text-[#5A544E] dark:text-[#A8A196] leading-relaxed font-serif">
                 Take our 2-minute diagnostic assessment to identify high-friction bottlenecks across your digital presence, sales pipeline, and internal operations.
               </p>
-              <div className="mt-4 flex flex-wrap gap-4 text-xs font-mono text-slate-400">
+              <div className="mt-4 flex flex-wrap gap-4 text-xs font-mono text-[#7C7469] dark:text-[#8E867C]">
                 <span>• 5 Strategic Questions</span>
                 <span>• Instant Readiness Score</span>
                 <span>• Tailored Recommendations</span>
@@ -115,7 +114,7 @@ export default function HomePage() {
             <div className="flex-shrink-0">
               <Link
                 href="/readiness"
-                className="inline-flex items-center justify-center px-6 py-3.5 text-sm font-semibold text-white bg-[#166CFF] hover:bg-[#1055CC] rounded-lg transition-colors group shadow-sm"
+                className="inline-flex items-center justify-center px-6 py-3.5 text-sm font-semibold text-white bg-[#C25E38] hover:bg-[#A84F2E] rounded-lg transition-colors group shadow-sm"
               >
                 <span>Launch Diagnostic Tool</span>
                 <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
@@ -129,17 +128,17 @@ export default function HomePage() {
       <FaqSection />
 
       {/* 9. Final Project Enquiry Section */}
-      <section id="contact" className="py-20 md:py-28 bg-[#040D1A] relative">
+      <section id="contact" className="py-20 md:py-28 bg-editorial-canvas dark:bg-[#121110] relative transition-colors duration-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#08152B] text-slate-300 border border-white/10 rounded-md text-xs font-mono mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#166CFF]" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#F4EFEA] dark:bg-[#22201D] text-[#5A544E] dark:text-[#B8B0A5] border border-[#DDD5C7] dark:border-[#33302B] rounded-md text-xs font-mono mb-3 shadow-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#C25E38] dark:bg-[#E07A5F]" />
               <span>PROJECT INITIATION</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight font-sans">
+            <h2 className="text-3xl sm:text-4xl font-bold text-editorial-ink dark:text-[#FBF9F5] tracking-tight font-sans">
               Discuss a Project
             </h2>
-            <p className="mt-3 text-base text-slate-400 leading-relaxed">
+            <p className="mt-3 text-base text-[#5A544E] dark:text-[#A8A196] leading-relaxed font-serif">
               Tell us about your business, the bottlenecks you want to remove, and your target timeline. A founding partner will review your requirements and provide an initial perspective within 1 business day.
             </p>
           </div>

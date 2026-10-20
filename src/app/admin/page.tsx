@@ -5,17 +5,18 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { AdminUser, EnquirySubmission } from '@/types';
 import { BRAND_CONFIG } from '@/config/brand';
+import PrimeoraLogo from '@/components/brand/PrimeoraLogo';
 import {
   Users,
   Inbox,
   LogOut,
   ExternalLink,
-  Shield,
-  Clock,
-  CheckCircle2,
-  AlertCircle,
-  Archive,
+  ShieldCheck,
   RefreshCw,
+  Mail,
+  ChevronRight,
+  Database,
+  ArrowRight,
 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
@@ -23,11 +24,9 @@ export default function AdminDashboardPage() {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [enquiries, setEnquiries] = useState<EnquirySubmission[]>([]);
   const [loading, setLoading] = useState(true);
-  const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   const fetchSessionAndData = async () => {
     try {
-      // 1. Check session
       const sessionRes = await fetch('/api/admin/session');
       if (!sessionRes.ok) {
         router.push('/admin/login');
@@ -36,7 +35,6 @@ export default function AdminDashboardPage() {
       const sessionData = await sessionRes.json();
       setUser(sessionData.user);
 
-      // 2. Fetch enquiries
       const enqRes = await fetch('/api/admin/enquiries');
       if (enqRes.ok) {
         const enqData = await enqRes.json();
@@ -58,29 +56,11 @@ export default function AdminDashboardPage() {
     router.push('/admin/login');
   };
 
-  const handleStatusChange = async (id: string, newStatus: EnquirySubmission['status']) => {
-    setUpdatingId(id);
-    try {
-      const res = await fetch('/api/admin/enquiries', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, status: newStatus }),
-      });
-      if (res.ok) {
-        setEnquiries((prev) =>
-          prev.map((e) => (e.id === id ? { ...e, status: newStatus } : e))
-        );
-      }
-    } finally {
-      setUpdatingId(null);
-    }
-  };
-
   if (loading) {
     return (
-      <div className="min-h-screen bg-ivory flex items-center justify-center">
-        <div className="text-center space-y-3 font-mono text-xs text-charcoal-muted">
-          <RefreshCw className="w-6 h-6 text-forest animate-spin mx-auto" />
+      <div className="min-h-screen bg-[#FBF9F5] dark:bg-[#121110] flex items-center justify-center">
+        <div className="text-center space-y-3 font-mono text-xs text-[#6E6862] dark:text-[#A8A29A]">
+          <RefreshCw className="w-6 h-6 text-[#C25E38] animate-spin mx-auto" />
           <p>Verifying admin permissions...</p>
         </div>
       </div>
@@ -90,22 +70,21 @@ export default function AdminDashboardPage() {
   const newCount = enquiries.filter((e) => e.status === 'new').length;
 
   return (
-    <div className="min-h-screen bg-ivory pt-24 pb-16">
+    <div className="min-h-screen bg-[#FBF9F5] dark:bg-[#121110] text-[#191817] dark:text-[#F5F2EB] pt-20 pb-16 transition-colors">
       {/* Top Admin Bar */}
-      <div className="bg-forest text-ivory py-4 px-4 sm:px-6 lg:px-8 border-b border-forest-dark mb-8">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-ivory font-serif font-bold">
-              RV
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-serif font-bold text-base">{BRAND_CONFIG.name}</span>
-                <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-teal/20 text-teal-light border border-teal/30">
-                  {user?.role}
-                </span>
-              </div>
-              <p className="text-xs text-ivory/70">{user?.email}</p>
+      <header className="bg-white dark:bg-[#1A1917] border-b border-[#E6DFD5] dark:border-[#2C2926] sticky top-0 z-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="inline-flex items-center">
+              <PrimeoraLogo variant="horizontal" width={140} height={42} />
+            </Link>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-mono px-2 py-0.5 rounded font-bold uppercase bg-[#C25E38]/10 text-[#C25E38] border border-[#C25E38]/20">
+                {user?.role === 'super_admin' ? 'Super Administrator' : 'Content Editor'}
+              </span>
+              <span className="text-xs text-[#6E6862] dark:text-[#A8A29A] hidden sm:inline">
+                {user?.email}
+              </span>
             </div>
           </div>
 
@@ -113,197 +92,129 @@ export default function AdminDashboardPage() {
             <Link
               href="/"
               target="_blank"
-              className="inline-flex items-center gap-1 text-xs text-ivory/80 hover:text-white px-2.5 py-1.5 rounded hover:bg-white/5 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#6E6862] dark:text-[#A8A29A] hover:text-[#191817] dark:hover:text-white bg-[#F7F4EE] dark:bg-[#242220] rounded-md transition-colors"
             >
-              <span>View Live Website</span>
               <ExternalLink className="w-3.5 h-3.5" />
+              <span>Public Site</span>
             </Link>
             <button
-              type="button"
               onClick={handleLogout}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-ivory bg-red-800/60 hover:bg-red-800 px-3 py-1.5 rounded transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-md transition-colors"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>Sign Out</span>
             </button>
           </div>
         </div>
-      </div>
+      </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        {/* Navigation & Stat Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Quick Nav: Team CMS */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-[#191817] dark:text-white font-sans">
+            Administrative Operations &amp; CMS
+          </h1>
+          <p className="text-sm text-[#6E6862] dark:text-[#A8A29A] mt-1">
+            Durable governance portal for customer enquiries, team publishing, and infrastructure telemetry.
+          </p>
+        </div>
+
+        {/* Primary Operational Hub Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Card 1: Enquiry Operations Inbox */}
           <Link
-            href="/admin/team"
-            className="bg-white p-6 rounded-xl border border-border-medium shadow-card hover:border-forest/40 transition-all hover:-translate-y-0.5 group flex items-start justify-between"
+            href="/admin/enquiries"
+            className="group bg-white dark:bg-[#1A1917] p-6 rounded-xl border border-[#E6DFD5] dark:border-[#2C2926] hover:border-[#C25E38] shadow-sm transition-all hover:-translate-y-0.5 flex flex-col justify-between"
           >
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Users className="w-5 h-5 text-forest" />
-                <span className="font-serif text-lg font-bold text-forest group-hover:text-teal transition-colors">
-                  Team Directory CMS
-                </span>
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-10 h-10 rounded-lg bg-[#C25E38]/10 text-[#C25E38] flex items-center justify-center">
+                  <Inbox className="w-5 h-5" />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#C25E38]/10 text-[#C25E38] border border-[#C25E38]/20">
+                    {newCount} New
+                  </span>
+                  <span className="text-xs text-[#8C867E]">
+                    {enquiries.length} Total
+                  </span>
+                </div>
               </div>
-              <p className="text-xs text-charcoal-muted leading-relaxed">
-                Add, edit, reorder, preview, and publish leadership profiles without writing code.
+
+              <h2 className="text-lg font-bold text-[#191817] dark:text-white group-hover:text-[#C25E38] transition-colors">
+                Enquiry Operations Inbox &rarr;
+              </h2>
+              <p className="text-xs text-[#6E6862] dark:text-[#A8A29A] mt-1.5 leading-relaxed">
+                Triage inbound customer submissions, search leads, filter by pipeline status, record private internal notes, and manage notifications.
               </p>
             </div>
-            <span className="text-xs font-mono font-bold text-forest bg-forest/5 px-2.5 py-1 rounded">
-              Manage &rarr;
-            </span>
+
+            <div className="mt-6 pt-4 border-t border-[#E6DFD5] dark:border-[#2C2926] flex items-center justify-between text-xs text-[#C25E38] font-semibold">
+              <span>Open Dedicated Inbox</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </div>
           </Link>
 
-          {/* Metric: Inbound Enquiries */}
-          <div className="bg-white p-6 rounded-xl border border-border-medium shadow-card">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <Inbox className="w-5 h-5 text-teal" />
-                <span className="font-serif text-lg font-bold text-forest">
-                  Inbound Enquiries
+          {/* Card 2: Team Directory CMS */}
+          <Link
+            href="/admin/team"
+            className="group bg-white dark:bg-[#1A1917] p-6 rounded-xl border border-[#E6DFD5] dark:border-[#2C2926] hover:border-[#C25E38] shadow-sm transition-all hover:-translate-y-0.5 flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                  <Users className="w-5 h-5" />
+                </div>
+                <span className="text-xs font-mono font-medium text-emerald-600 dark:text-emerald-400">
+                  Published Directory
                 </span>
               </div>
-              <span className="text-xs font-mono font-bold text-teal bg-teal/10 px-2.5 py-0.5 rounded-full">
-                {enquiries.length} Total
-              </span>
-            </div>
-            <p className="text-xs text-charcoal-muted leading-relaxed">
-              {newCount > 0 ? (
-                <span className="text-copper font-semibold">{newCount} new enquiries awaiting review.</span>
-              ) : (
-                'All logged enquiries have been triaged.'
-              )}
-            </p>
-          </div>
 
-          {/* Metric: Security & Compliance */}
-          <div className="bg-white p-6 rounded-xl border border-border-medium shadow-card">
-            <div className="flex items-center gap-2 mb-2">
-              <Shield className="w-5 h-5 text-copper" />
-              <span className="font-serif text-lg font-bold text-forest">
-                Security & RLS Guard
-              </span>
-            </div>
-            <p className="text-xs text-charcoal-muted leading-relaxed">
-              Session tokens HMAC-signed. Zero plain text secrets in client bundles.
-            </p>
-          </div>
-        </div>
-
-        {/* Inbound Enquiries Table */}
-        <div className="bg-white rounded-xl border border-border-medium shadow-card overflow-hidden">
-          <div className="p-6 border-b border-border-subtle flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h2 className="font-serif text-xl font-bold text-forest">
-                Recent Inbound Project Enquiries
+              <h2 className="text-lg font-bold text-[#191817] dark:text-white group-hover:text-[#C25E38] transition-colors">
+                Team Directory CMS &rarr;
               </h2>
-              <p className="text-xs text-charcoal-muted mt-0.5">
-                Structured enquiry records submitted via the public contact workflow.
+              <p className="text-xs text-[#6E6862] dark:text-[#A8A29A] mt-1.5 leading-relaxed">
+                Add, edit, reorder, preview, and publish leadership profiles with draft/published state control and Supabase sync.
               </p>
             </div>
-            <button
-              type="button"
-              onClick={fetchSessionAndData}
-              className="inline-flex items-center gap-1.5 text-xs text-forest hover:text-teal font-medium self-start sm:self-auto"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              <span>Refresh Queue</span>
-            </button>
+
+            <div className="mt-6 pt-4 border-t border-[#E6DFD5] dark:border-[#2C2926] flex items-center justify-between text-xs text-[#C25E38] font-semibold">
+              <span>Manage Team Profiles</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </div>
+          </Link>
+        </div>
+
+        {/* System & Compliance Status */}
+        <div className="bg-white dark:bg-[#1A1917] p-6 rounded-xl border border-[#E6DFD5] dark:border-[#2C2926] space-y-4">
+          <div className="flex items-center justify-between border-b border-[#E6DFD5] dark:border-[#2C2926] pb-3">
+            <div className="flex items-center gap-2">
+              <Database className="w-4 h-4 text-[#C25E38]" />
+              <h3 className="text-sm font-semibold text-[#191817] dark:text-white">
+                Durable Persistence &amp; Security State
+              </h3>
+            </div>
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-emerald-600 dark:text-emerald-400">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              Connected (Supabase PostgreSQL)
+            </span>
           </div>
 
-          {user?.role !== 'super_admin' ? (
-            <div className="p-12 text-center space-y-2 text-charcoal-muted">
-              <Shield className="w-8 h-8 mx-auto text-copper" />
-              <p className="text-sm font-semibold text-charcoal">Restricted Administrative Data</p>
-              <p className="text-xs max-w-md mx-auto">
-                Customer enquiries and private client leads are strictly restricted to Super Administrators. As a Content Editor, your permissions are focused on team and practice profile curation.
-              </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-mono">
+            <div className="bg-[#F7F4EE] dark:bg-[#201E1C] p-3 rounded-lg border border-[#E6DFD5] dark:border-[#2C2926]">
+              <span className="text-[#8C867E]">Primary Entity:</span>
+              <p className="font-semibold text-[#191817] dark:text-white mt-0.5">{BRAND_CONFIG.legalEntity}</p>
             </div>
-          ) : enquiries.length === 0 ? (
-            <div className="p-12 text-center space-y-2 text-charcoal-muted">
-              <Inbox className="w-8 h-8 mx-auto text-charcoal-muted/40" />
-              <p className="text-sm font-medium">No enquiries recorded yet.</p>
-              <p className="text-xs">Submissions through the public form will appear here in real time.</p>
+            <div className="bg-[#F7F4EE] dark:bg-[#201E1C] p-3 rounded-lg border border-[#E6DFD5] dark:border-[#2C2926]">
+              <span className="text-[#8C867E]">MSME Registration:</span>
+              <p className="font-semibold text-[#191817] dark:text-white mt-0.5">{BRAND_CONFIG.udyamRegistrationNumber}</p>
             </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-ivory-light border-b border-border-subtle font-mono text-[11px] text-charcoal-muted uppercase">
-                    <th className="py-3 px-4">Date</th>
-                    <th className="py-3 px-4">Contact</th>
-                    <th className="py-3 px-4">Service</th>
-                    <th className="py-3 px-4">Timeline</th>
-                    <th className="py-3 px-4">Problem Summary</th>
-                    <th className="py-3 px-4">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border-subtle">
-                  {enquiries.map((enq) => (
-                    <tr key={enq.id} className="hover:bg-ivory/30 transition-colors">
-                      <td className="py-3 px-4 text-charcoal-muted whitespace-nowrap font-mono text-[11px]">
-                        {new Date(enq.createdAt).toLocaleDateString('en-IN', {
-                          day: 'numeric',
-                          month: 'short',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="font-semibold text-charcoal">{enq.fullName}</div>
-                        <div className="text-charcoal-muted">{enq.businessName}</div>
-                        <a
-                          href={`mailto:${enq.contactEmail}`}
-                          className="text-teal hover:underline block text-[11px]"
-                        >
-                          {enq.contactEmail}
-                        </a>
-                        {enq.phone && <div className="text-charcoal-muted text-[11px]">{enq.phone}</div>}
-                      </td>
-                      <td className="py-3 px-4 whitespace-nowrap">
-                        <span className="font-mono text-[11px] bg-ivory text-forest px-2 py-0.5 rounded border border-border-subtle">
-                          {enq.serviceInterest}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-charcoal-muted whitespace-nowrap">
-                        {enq.targetTimeline || 'Not specified'}
-                      </td>
-                      <td className="py-3 px-4 max-w-xs text-charcoal leading-relaxed">
-                        <p className="line-clamp-3">{enq.problemSummary}</p>
-                        {enq.websiteUrl && (
-                          <a
-                            href={enq.websiteUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-copper hover:underline text-[11px] block mt-1"
-                          >
-                            {enq.websiteUrl}
-                          </a>
-                        )}
-                      </td>
-                      <td className="py-3 px-4 whitespace-nowrap">
-                        <select
-                          disabled={updatingId === enq.id}
-                          value={enq.status}
-                          onChange={(e) =>
-                            handleStatusChange(enq.id, e.target.value as EnquirySubmission['status'])
-                          }
-                          className="px-2 py-1 text-xs rounded border border-border-medium bg-white font-mono text-charcoal focus:ring-1 focus:ring-teal focus:outline-none"
-                        >
-                          <option value="new">🔴 New</option>
-                          <option value="in_review">🟡 In Review</option>
-                          <option value="responded">🟢 Responded</option>
-                          <option value="archived">⚪ Archived</option>
-                        </select>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="bg-[#F7F4EE] dark:bg-[#201E1C] p-3 rounded-lg border border-[#E6DFD5] dark:border-[#2C2926]">
+              <span className="text-[#8C867E]">Inbound Notification:</span>
+              <p className="font-semibold text-[#191817] dark:text-white mt-0.5">primeorasolutions.in@gmail.com</p>
             </div>
-          )}
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

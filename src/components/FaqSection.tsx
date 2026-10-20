@@ -41,17 +41,17 @@ export default function FaqSection() {
   };
 
   return (
-    <section id="faq" className="py-20 md:py-28 bg-[#040D1A] border-b border-white/[0.08]">
+    <section id="faq" className="py-20 md:py-28 bg-[#F4EFEA] dark:bg-[#171615] border-b border-[#E5DDD0] dark:border-[#2C2926] transition-colors duration-200">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#08152B] text-slate-300 border border-white/10 rounded-md text-xs font-mono mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#166CFF]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white dark:bg-[#22201D] text-[#5A544E] dark:text-[#B8B0A5] border border-[#DDD5C7] dark:border-[#33302B] rounded-md text-xs font-mono mb-3 shadow-xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#C25E38] dark:bg-[#E07A5F]" />
             <span>DIRECT ANSWERS</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight font-sans">
+          <h2 className="text-3xl sm:text-4xl font-bold text-editorial-ink dark:text-[#FBF9F5] tracking-tight font-sans">
             Frequently Asked Questions
           </h2>
-          <p className="mt-3 text-base text-slate-400 leading-relaxed">
+          <p className="mt-3 text-base text-[#5A544E] dark:text-[#A8A196] leading-relaxed font-serif">
             Honest, transparent guidance on scope boundaries, client input, and technical delivery.
           </p>
         </div>
@@ -62,26 +62,26 @@ export default function FaqSection() {
             return (
               <div
                 key={idx}
-                className="border border-white/[0.08] rounded-xl overflow-hidden bg-[#08152B] hover:border-[#166CFF]/30 transition-colors"
+                className="border border-[#E5DDD0] dark:border-[#2C2926] rounded-xl overflow-hidden bg-white dark:bg-[#1C1A18] hover:border-[#C25E38]/40 dark:hover:border-[#E07A5F]/30 transition-all duration-200 shadow-xs"
               >
                 <button
                   type="button"
                   onClick={() => toggle(idx)}
-                  className="w-full text-left p-5 sm:p-6 flex items-center justify-between gap-4 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#166CFF]"
+                  className="w-full text-left p-5 sm:p-6 flex items-center justify-between gap-4 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#C25E38]"
                   aria-expanded={isOpen}
                 >
-                  <span className="text-base font-bold text-white font-sans">
+                  <span className="text-base font-bold text-editorial-ink dark:text-[#FBF9F5] font-sans">
                     {faq.question}
                   </span>
                   <ChevronDown
-                    className={`w-5 h-5 text-slate-400 flex-shrink-0 transition-transform duration-200 ${
-                      isOpen ? 'rotate-180 text-[#3B82F6]' : ''
+                    className={`w-5 h-5 text-[#7C7469] dark:text-[#8E867C] flex-shrink-0 transition-transform duration-200 ${
+                      isOpen ? 'rotate-180 text-[#C25E38] dark:text-[#E07A5F]' : ''
                     }`}
                   />
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-6 sm:px-6 text-sm text-slate-300 leading-relaxed border-t border-white/[0.06] pt-4 animate-in fade-in duration-150">
+                  <div className="px-5 pb-6 sm:px-6 text-sm text-[#5A544E] dark:text-[#A8A196] leading-relaxed border-t border-[#E5DDD0] dark:border-[#2C2926] pt-4 animate-in fade-in duration-150">
                     {faq.answer}
                   </div>
                 )}
@@ -93,7 +93,7 @@ export default function FaqSection() {
         <div className="mt-8 flex justify-end">
           <Link
             href="/services"
-            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#3B82F6] hover:text-white transition-colors group"
+            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] hover:text-editorial-ink dark:hover:text-white transition-colors group"
           >
             <span>Have specific technical questions? Read Our Practice Inclusions &amp; Exclusions</span>
             <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />

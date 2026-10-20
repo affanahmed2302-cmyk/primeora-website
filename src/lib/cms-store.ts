@@ -249,7 +249,12 @@ interface DbEnquiryRow {
   website_url: string | null;
   status: EnquirySubmission['status'];
   ip_hash: string | null;
+  internal_notes?: string | null;
+  notification_status?: string | null;
+  notification_error?: string | null;
+  status_updated_at?: string | null;
   created_at: string;
+  updated_at?: string;
 }
 
 function mapDbToEnquiry(row: DbEnquiryRow): EnquirySubmission {
@@ -265,6 +270,10 @@ function mapDbToEnquiry(row: DbEnquiryRow): EnquirySubmission {
     websiteUrl: row.website_url || undefined,
     status: row.status,
     createdAt: row.created_at,
+    internalNotes: row.internal_notes || undefined,
+    notificationStatus: (row.notification_status as EnquirySubmission['notificationStatus']) || 'pending',
+    notificationError: row.notification_error || undefined,
+    statusUpdatedAt: row.status_updated_at || undefined,
   };
 }
 
@@ -327,6 +336,8 @@ export async function saveEnquiry(
         website_url: enquiry.websiteUrl || null,
         status: 'new',
         ip_hash: enquiry.ipHash || null,
+        notification_status: 'pending',
+        status_updated_at: now,
         created_at: now,
       };
 
@@ -351,6 +362,8 @@ export async function saveEnquiry(
     id: generatedId,
     status: 'new',
     createdAt: now,
+    notificationStatus: 'pending',
+    statusUpdatedAt: now,
   };
 
   inMemoryEnquiries.unshift(localEntry);
@@ -370,17 +383,41 @@ export async function saveEnquiry(
   return localEntry;
 }
 
-export async function updateEnquiryStatus(
+export async function updateEnquiry(
   id: string,
-  status: EnquirySubmission['status']
+  updates: {
+    status?: EnquirySubmission['status'];
+    internalNotes?: string;
+    notificationStatus?: EnquirySubmission['notificationStatus'];
+    notificationError?: string;
+  }
 ): Promise<boolean> {
+  const now = new Date().toISOString();
+
   if (isSupabaseConfigured()) {
     const supabase = getSupabaseAdminClient();
     if (!supabase) return false;
 
+    const payload: Record<string, unknown> = {
+      updated_at: now,
+    };
+    if (updates.status !== undefined) {
+      payload.status = updates.status;
+      payload.status_updated_at = now;
+    }
+    if (updates.internalNotes !== undefined) {
+      payload.internal_notes = updates.internalNotes;
+    }
+    if (updates.notificationStatus !== undefined) {
+      payload.notification_status = updates.notificationStatus;
+    }
+    if (updates.notificationError !== undefined) {
+      payload.notification_error = updates.notificationError;
+    }
+
     const { error } = await supabase
       .from('enquiries')
-      .update({ status, updated_at: new Date().toISOString() })
+      .update(payload)
       .eq('id', id);
 
     return !error;
@@ -388,7 +425,20 @@ export async function updateEnquiryStatus(
 
   const entry = inMemoryEnquiries.find((e) => e.id === id);
   if (entry) {
-    entry.status = status;
+    if (updates.status !== undefined) {
+      entry.status = updates.status;
+      entry.statusUpdatedAt = now;
+    }
+    if (updates.internalNotes !== undefined) {
+      entry.internalNotes = updates.internalNotes;
+    }
+    if (updates.notificationStatus !== undefined) {
+      entry.notificationStatus = updates.notificationStatus;
+    }
+    if (updates.notificationError !== undefined) {
+      entry.notificationError = updates.notificationError;
+    }
+
     if (shouldAllowLocalFallback()) {
       ensureDataDir();
       try {
@@ -401,6 +451,13 @@ export async function updateEnquiryStatus(
   }
 
   return false;
+}
+
+export async function updateEnquiryStatus(
+  id: string,
+  status: EnquirySubmission['status']
+): Promise<boolean> {
+  return updateEnquiry(id, { status });
 }
 
 // Durable cross-serverless rate limit check

@@ -15,18 +15,18 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="pt-28 pb-20 md:pt-36 md:pb-28 bg-[#040D1A] min-h-screen">
+    <div className="pt-28 pb-20 md:pt-36 md:pb-28 bg-editorial-canvas dark:bg-[#121110] min-h-screen text-editorial-ink dark:text-[#FBF9F5] transition-colors duration-200">
       {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
         <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#08152B] text-slate-300 border border-white/10 rounded-md text-xs font-mono mb-4">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#166CFF]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white dark:bg-[#22201D] text-[#5A544E] dark:text-[#B8B0A5] border border-[#DDD5C7] dark:border-[#33302B] rounded-md text-xs font-mono mb-4 shadow-xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#C25E38] dark:bg-[#E07A5F]" />
             <span>DIRECT PARTNER ACCESS</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight font-sans">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight font-sans text-editorial-ink dark:text-[#FBF9F5]">
             Discuss a Project
           </h1>
-          <p className="mt-4 text-base sm:text-lg text-slate-400 leading-relaxed">
+          <p className="mt-4 text-base sm:text-lg text-[#5A544E] dark:text-[#A8A196] leading-relaxed font-serif">
             Every partnership begins with understanding your commercial objectives. Complete the enquiry form below, and our leadership team will review and reply with initial thoughts.
           </p>
         </div>
@@ -37,58 +37,58 @@ export default function ContactPage() {
           {/* Left Column: Direct Contact & Enterprise Credentials */}
           <div className="lg:col-span-5 space-y-8">
             <div>
-              <h2 className="text-2xl font-bold text-white mb-3 font-sans">
+              <h2 className="text-2xl font-bold mb-3 font-sans text-editorial-ink dark:text-[#FBF9F5]">
                 How We Engage
               </h2>
-              <p className="text-sm text-slate-300 leading-relaxed">
+              <p className="text-sm text-[#5A544E] dark:text-[#A8A196] leading-relaxed">
                 We work directly with founders, commercial directors, and practice leaders who value clarity, rigorous engineering, and reliable digital systems.
               </p>
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-start gap-3 p-4 bg-[#08152B] border border-white/[0.08] rounded-xl">
-                <Mail className="w-5 h-5 text-[#3B82F6] flex-shrink-0 mt-0.5" />
+              <div className="flex items-start gap-3 p-4 bg-white dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#2C2926] rounded-xl shadow-xs">
+                <Mail className="w-5 h-5 text-[#C25E38] dark:text-[#E07A5F] flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-xs font-mono font-semibold uppercase text-slate-400 block mb-0.5">
+                  <span className="text-xs font-mono font-semibold uppercase text-[#7C7469] dark:text-[#8E867C] block mb-0.5">
                     Direct Email
                   </span>
                   <a
                     href={`mailto:${BRAND_CONFIG.contactEmail}`}
-                    className="text-sm font-semibold text-white hover:text-[#3B82F6] transition-colors"
+                    className="text-sm font-semibold text-editorial-ink dark:text-[#FBF9F5] hover:text-[#C25E38] dark:hover:text-[#E07A5F] transition-colors"
                   >
                     {BRAND_CONFIG.contactEmail}
                   </a>
-                  <p className="text-xs text-slate-400 mt-1">
+                  <p className="text-xs text-[#7C7469] dark:text-[#8E867C] mt-1">
                     Direct partner inbox · Replies within 1 business day
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 p-4 bg-[#08152B] border border-white/[0.08] rounded-xl">
-                <MapPin className="w-5 h-5 text-[#3B82F6] flex-shrink-0 mt-0.5" />
+              <div className="flex items-start gap-3 p-4 bg-white dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#2C2926] rounded-xl shadow-xs">
+                <MapPin className="w-5 h-5 text-[#C25E38] dark:text-[#E07A5F] flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-xs font-mono font-semibold uppercase text-slate-400 block mb-0.5">
+                  <span className="text-xs font-mono font-semibold uppercase text-[#7C7469] dark:text-[#8E867C] block mb-0.5">
                     Registered Location
                   </span>
-                  <span className="text-sm font-semibold text-white">
+                  <span className="text-sm font-semibold text-editorial-ink dark:text-[#FBF9F5]">
                     {BRAND_CONFIG.location}
                   </span>
-                  <p className="text-xs text-slate-400 mt-1">
+                  <p className="text-xs text-[#7C7469] dark:text-[#8E867C] mt-1">
                     Udyam MSME: {BRAND_CONFIG.udyamRegistrationNumber}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 p-4 bg-[#08152B] border border-white/[0.08] rounded-xl">
-                <Clock className="w-5 h-5 text-[#3B82F6] flex-shrink-0 mt-0.5" />
+              <div className="flex items-start gap-3 p-4 bg-white dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#2C2926] rounded-xl shadow-xs">
+                <Clock className="w-5 h-5 text-[#C25E38] dark:text-[#E07A5F] flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-xs font-mono font-semibold uppercase text-slate-400 block mb-0.5">
+                  <span className="text-xs font-mono font-semibold uppercase text-[#7C7469] dark:text-[#8E867C] block mb-0.5">
                     Consultation Window
                   </span>
-                  <span className="text-sm font-semibold text-white">
+                  <span className="text-sm font-semibold text-editorial-ink dark:text-[#FBF9F5]">
                     Monday – Saturday, 09:30 – 18:30 IST
                   </span>
-                  <p className="text-xs text-slate-400 mt-1">
+                  <p className="text-xs text-[#7C7469] dark:text-[#8E867C] mt-1">
                     Video discovery calls via Google Meet
                   </p>
                 </div>
@@ -96,18 +96,18 @@ export default function ContactPage() {
             </div>
 
             {/* Privacy & Anti-Spam Guarantee */}
-            <div className="p-5 bg-[#08152B] border border-white/[0.08] rounded-xl">
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#3B82F6] font-mono mb-2">
+            <div className="p-5 bg-[#F4EFEA] dark:bg-[#181715] border border-[#E5DDD0] dark:border-[#2C2926] rounded-xl shadow-xs">
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#C25E38] dark:text-[#E07A5F] font-mono mb-2">
                 <ShieldCheck className="w-4 h-4" />
-                <span>Zero Spam &amp; Confidentiality Guarantee</span>
+                <span>CONFIDENTIALITY ASSURANCE</span>
               </div>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Your submitted contact information and project details are kept strictly confidential. We never sell, share, or broadcast your email address. All discussions are covered by mutual confidentiality standards.
+              <p className="text-xs text-[#5A544E] dark:text-[#A8A196] leading-relaxed">
+                Your business details, current metrics, and architectural pain points are kept strictly confidential. We never resell client contacts or deploy unsolicited sales calls.
               </p>
             </div>
           </div>
 
-          {/* Right Column: Interactive Secure Enquiry Form */}
+          {/* Right Column: Actual Interactive Form */}
           <div className="lg:col-span-7">
             <EnquiryForm />
           </div>
