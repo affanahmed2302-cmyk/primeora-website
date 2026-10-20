@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-forest: #183B35;
+  --color-forest-dark: #0F2420;
+  --color-teal: #0F827A;
+  --color-ivory: #F4EFE3;
+  --color-ivory-light: #FAF7F0;
+  --color-copper: #B77B4B;
+  --color-charcoal: #24252B;
+  --color-charcoal-muted: #5C6068;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color: var(--color-charcoal);
+    background-color: var(--color-ivory);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* High-contrast focus state for accessibility */
+  :focus-visible {
+    outline: 2px solid var(--color-teal);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: rgba(15, 130, 122, 0.25);
+    color: var(--color-forest);
+  }
+}
+
+/* Reduced motion preference compliance */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Subtle architectural grid background accent */
+.bg-architectural-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(24, 59, 53, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(24, 59, 53, 0.04) 1px, transparent 1px);
+}
+
+.bg-architectural-grid-dark {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(244, 239, 227, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(244, 239, 227, 0.05) 1px, transparent 1px);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-ivory);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(24, 59, 53, 0.2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-forest);
+}

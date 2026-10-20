@@ -1,0 +1,33 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Security Headers for all routes
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), browsing-topics=()"
+    X-DNS-Prefetch-Control = "on"
+
+# Noindex protection for Deploy Previews and Branch Subdomains
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+  [context.deploy-preview.headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+  [context.branch-deploy.headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+# Admin section security
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store, no-cache, must-revalidate, proxy-revalidate"
