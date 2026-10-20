@@ -83,18 +83,34 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth dark">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var t = localStorage.getItem('primeora-theme');
+                  if (t === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500;600&display=swap"
           rel="stylesheet"
         />
         <StructuredData type="Organization" />
         <StructuredData type="WebSite" />
       </head>
-      <body className="min-h-screen flex flex-col bg-[#07090F] text-[#F0F2F7] font-sans antialiased selection:bg-azure selection:text-white">
+      <body className="min-h-screen flex flex-col bg-[#FBF9F5] dark:bg-[#121110] text-[#191817] dark:text-[#F5F2EB] font-sans antialiased selection:bg-[#C25E38]/20 selection:text-[#C25E38] transition-colors duration-200">
         <SmoothScrollProvider>
           <Navbar />
           <main className="flex-1">{children}</main>

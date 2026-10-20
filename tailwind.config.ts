@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -9,103 +10,82 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Authentic Primeora Solutions Palette (Derived strictly from Logo_assets)
+        // Primeora Solutions Warm Editorial Palette (Day/Night Theme)
         canvas: {
-          DEFAULT: '#040D1A',
-          pure: '#02070E',
-          surface: '#08152B',
-          card: '#0B172E',
-          elevated: '#0E1F3D',
+          DEFAULT: '#FBF9F5',
+          dark: '#121110',
+          surface: '#FFFFFF',
+          surfaceDark: '#1A1917',
+          elevated: '#F2EDE4',
+          elevatedDark: '#242220',
+          subtle: '#F7F4EE',
+          subtleDark: '#181716',
         },
-        obsidian: {
-          DEFAULT: '#040D1A',
-          pure: '#02070E',
-          surface: '#08152B',
-          card: '#0B172E',
-          elevated: '#0E1F3D',
+        ink: {
+          DEFAULT: '#191817',
+          dark: '#F5F2EB',
+          muted: '#5C5751',
+          mutedDark: '#A8A29A',
+          subtle: '#8C867E',
+          subtleDark: '#736E67',
         },
-        azure: {
-          DEFAULT: '#166CFF',
-          light: '#3B82F6',
-          bright: '#2563EB',
-          dark: '#1055CC',
-          subtle: 'rgba(22, 108, 255, 0.12)',
-        },
-        blue: {
-          DEFAULT: '#166CFF',
-          light: '#3B82F6',
-          dark: '#1055CC',
-          subtle: 'rgba(22, 108, 255, 0.12)',
-        },
-        violet: {
-          DEFAULT: '#166CFF', // Replaced purple with authentic brand blue
-          light: '#3B82F6',
-          dark: '#1055CC',
-          subtle: 'rgba(22, 108, 255, 0.12)',
-        },
-        platinum: {
-          DEFAULT: '#F8FAFC',
-          pure: '#FFFFFF',
-          muted: '#CBD5E1',
-        },
-        slate: {
-          DEFAULT: '#94A3B8',
-          light: '#CBD5E1',
-          dark: '#64748B',
-          deep: '#1E293B',
-        },
-        // Semantic border system
-        border: {
-          subtle: 'rgba(255, 255, 255, 0.08)',
-          medium: 'rgba(255, 255, 255, 0.14)',
-          strong: 'rgba(255, 255, 255, 0.22)',
-          glow: 'rgba(22, 108, 255, 0.25)',
-        },
-        // Backward-compatible mapping for existing component styling
-        forest: {
-          DEFAULT: '#08152B',
-          dark: '#040D1A',
-          light: '#0E1F3D',
-          subtle: 'rgba(22, 108, 255, 0.08)',
-        },
-        teal: {
-          DEFAULT: '#166CFF',
-          dark: '#1055CC',
-          light: '#3B82F6',
-          subtle: 'rgba(22, 108, 255, 0.12)',
-        },
-        ivory: {
-          DEFAULT: '#040D1A',
-          light: '#08152B',
-          dark: '#02070E',
-          pure: '#0B172E',
+        terracotta: {
+          DEFAULT: '#C25E38',
+          hover: '#A34520',
+          light: '#FDF3EE',
+          dark: '#D9774E',
+          darkHover: '#E28862',
+          glow: 'rgba(194, 94, 56, 0.2)',
         },
         copper: {
-          DEFAULT: '#166CFF',
-          dark: '#1055CC',
+          DEFAULT: '#C25E38',
+          dark: '#D9774E',
+          hover: '#A34520',
+          light: '#FDF3EE',
+          subtle: 'rgba(194, 94, 56, 0.12)',
+        },
+        // Authentic brand blue (reserved for official logo emblem)
+        'brand-blue': {
+          DEFAULT: '#1065FF',
+          dark: '#0C4ECE',
           light: '#3B82F6',
-          subtle: 'rgba(22, 108, 255, 0.12)',
+        },
+        azure: {
+          DEFAULT: '#1065FF',
+          light: '#3B82F6',
+          dark: '#0C4ECE',
+        },
+        border: {
+          subtle: '#E8E2D8',
+          subtleDark: '#2C2926',
+          medium: '#DDD5C7',
+          mediumDark: '#3D3935',
+          strong: '#C4BAA9',
+          strongDark: '#544F49',
+        },
+        ivory: {
+          DEFAULT: '#FBF9F5',
+          dark: '#121110',
+          surface: '#FFFFFF',
+          surfaceDark: '#1A1917',
         },
         charcoal: {
-          DEFAULT: '#F8FAFC',
-          muted: '#94A3B8',
-          subtle: '#64748B',
-          deep: '#040D1A',
+          DEFAULT: '#191817',
+          dark: '#F5F2EB',
+          muted: '#5C5751',
+          mutedDark: '#A8A29A',
         },
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'Inter', 'system-ui', 'sans-serif'],
         heading: ['var(--font-heading)', 'Space Grotesk', 'Inter', 'sans-serif'],
-        serif: ['var(--font-heading)', 'Space Grotesk', 'sans-serif'],
-        mono: ['var(--font-mono)', 'monospace'],
+        serif: ['Newsreader', 'Georgia', 'serif'],
+        mono: ['var(--font-mono)', 'JetBrains Mono', 'monospace'],
       },
       boxShadow: {
-        card: '0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06)',
-        'card-hover': '0 12px 35px -4px rgba(61, 110, 245, 0.2), 0 0 0 1px rgba(77, 124, 255, 0.35)',
-        glow: '0 0 30px rgba(61, 110, 245, 0.35)',
-        'glow-violet': '0 0 30px rgba(124, 92, 255, 0.35)',
-        dropdown: '0 16px 40px -10px rgba(0, 0, 0, 0.7)',
-        subtle: '0 2px 8px rgba(0, 0, 0, 0.3)',
+        card: '0 2px 8px rgba(28, 25, 23, 0.04), 0 1px 2px rgba(28, 25, 23, 0.02)',
+        'card-hover': '0 12px 28px -4px rgba(28, 25, 23, 0.08), 0 4px 8px -2px rgba(28, 25, 23, 0.04)',
+        terracotta: '0 4px 20px rgba(194, 94, 56, 0.25)',
       },
       borderRadius: {
         sm: '6px',

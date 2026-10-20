@@ -56,12 +56,22 @@ export interface TeamMember {
   bio: string;
   responsibilities: string[];
   photoUrl?: string;
+  avatarUrl?: string;
   linkedinUrl?: string;
   portfolioUrl?: string;
   displayOrder: number;
   status: 'draft' | 'published' | 'inactive';
   isFounder?: boolean;
 }
+
+export type EnquiryStatus =
+  | 'new'
+  | 'in_progress'
+  | 'contacted'
+  | 'qualified'
+  | 'won'
+  | 'closed'
+  | 'archived';
 
 export interface EnquirySubmission {
   id: string;
@@ -73,9 +83,13 @@ export interface EnquirySubmission {
   problemSummary: string;
   targetTimeline?: string;
   websiteUrl?: string;
-  status: 'new' | 'in_review' | 'responded' | 'archived';
+  status: EnquiryStatus;
   createdAt: string;
   ipHash?: string;
+  internalNotes?: string;
+  notificationStatus?: 'pending' | 'sent' | 'failed' | 'pending_config';
+  notificationError?: string;
+  statusUpdatedAt?: string;
 }
 
 export interface AdminUser {
