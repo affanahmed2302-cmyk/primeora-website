@@ -40,7 +40,14 @@ print("====================================================================")
 public_routes = [
     ('/', 'Homepage'),
     ('/services', 'Services Practice Overview'),
+    ('/services/digital-presence', 'Digital Presence Pillar Detail'),
+    ('/services/customer-acquisition', 'Customer Acquisition Pillar Detail'),
+    ('/services/lead-sales-systems', 'Lead & Sales Systems Pillar Detail'),
+    ('/services/operations-automation', 'Operations & Automation Pillar Detail'),
+    ('/services/analytics-insights', 'Analytics & Insights Pillar Detail'),
+    ('/services/ongoing-management', 'Ongoing Management Pillar Detail'),
     ('/about', 'Firm & Team Leadership'),
+    ('/team', 'Dedicated Leadership Directory'),
     ('/process', 'Strategic Methodology'),
     ('/work', 'Selected Case Studies'),
     ('/readiness', 'Interactive Diagnostic'),
@@ -60,6 +67,39 @@ for path, label in public_routes:
             record(f'Public Route: {path} ({label})', resp.status == 200, f'Status {resp.status}')
     except Exception as e:
         record(f'Public Route: {path} ({label})', False, str(e))
+
+# -------------------------------------------------------------------
+# 1b. BRAND ASSETS & CONTENT AUDIT
+# -------------------------------------------------------------------
+brand_assets = [
+    ('/brand/primeora-logo-dark.png', 'Authentic Horizontal Dark Logo'),
+    ('/brand/primeora-emblem.png', 'Authentic Cobalt Emblem Mark'),
+    ('/brand/primeora-app-icon.png', 'Authentic App Icon'),
+]
+for asset_path, label in brand_assets:
+    try:
+        req = urllib.request.Request(base + asset_path)
+        with urllib.request.urlopen(req) as resp:
+            record(f'Brand Asset: {asset_path} ({label})', resp.status == 200, f'Status {resp.status}')
+    except Exception as e:
+        record(f'Brand Asset: {asset_path} ({label})', False, str(e))
+
+# Verify Homepage content integrity
+try:
+    with urllib.request.urlopen(base + '/') as resp:
+        home_html = resp.read().decode('utf-8')
+        has_primeora = 'Primeora Solutions' in home_html
+        no_ritkara = 'Ritkara Veyra' not in home_html
+        no_loading_fallback = 'Loading enquiry interface...' not in home_html
+        has_logo_img = 'primeora-logo-dark.png' in home_html or 'primeora-emblem.png' in home_html
+        
+        record(
+            'Homepage Content: Brand Integrity & No Fallback',
+            has_primeora and no_ritkara and no_loading_fallback and has_logo_img,
+            f'Primeora: {has_primeora}, No Ritkara: {no_ritkara}, No SSG Fallback: {no_loading_fallback}, Authentic Logo: {has_logo_img}'
+        )
+except Exception as e:
+    record('Homepage Content: Brand Integrity & No Fallback', False, str(e))
 
 # -------------------------------------------------------------------
 # 2. PUBLIC TEAM API

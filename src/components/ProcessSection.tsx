@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useRef } from 'react';
+import Link from 'next/link';
 import { PROCESS_STEPS } from '@/config/brand';
-import { Compass, FileCode2, Rocket, TrendingUp, CheckCircle2 } from 'lucide-react';
+import { Compass, FileCode2, Rocket, TrendingUp, ArrowRight } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
@@ -19,13 +20,13 @@ export default function ProcessSection() {
 
       gsap.from(stepsRef.current?.children || [], {
         opacity: 0,
-        y: 30,
-        stagger: 0.15,
-        duration: 0.8,
+        y: 20,
+        stagger: 0.1,
+        duration: 0.6,
         ease: 'power3.out',
         scrollTrigger: {
           trigger: stepsRef.current,
-          start: 'top 80%',
+          start: 'top 85%',
         },
       });
     },
@@ -36,68 +37,77 @@ export default function ProcessSection() {
     <section
       ref={containerRef}
       id="process"
-      className="py-20 md:py-28 bg-[#07090F] border-b border-white/10 relative overflow-hidden"
+      className="py-20 md:py-28 bg-[#040D1A] border-b border-white/[0.08] relative overflow-hidden"
     >
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[500px] h-[300px] bg-azure/5 blur-[120px] rounded-full pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-azure/10 text-azure-bright border border-azure/20 rounded-full text-xs font-semibold tracking-wider uppercase font-mono mb-3">
-            <span>Execution Methodology</span>
+        <div className="max-w-3xl mb-14">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#08152B] text-slate-300 border border-white/10 rounded-md text-xs font-mono mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#166CFF]" />
+            <span>DELIVERY METHODOLOGY</span>
           </div>
-          <h2 className="font-['Space_Grotesk'] text-3xl sm:text-4xl font-bold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight font-sans">
             How We Work Together
           </h2>
-          <p className="mt-3 text-base sm:text-lg text-slate-400 leading-relaxed">
-            A structured four-step engineering lifecycle designed to eliminate ambiguity, deliver on schedule, and protect your commercial focus.
+          <p className="mt-3 text-base text-slate-400 leading-relaxed max-w-2xl">
+            A disciplined four-step engineering process designed to eliminate ambiguity, enforce milestone accountability, and deliver measurable operational outcomes.
           </p>
         </div>
 
         {/* Process Step Timeline */}
-        <div ref={stepsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+        <div ref={stepsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {PROCESS_STEPS.map((step, idx) => {
             const Icon = stepIcons[idx] || Compass;
             return (
               <div
                 key={step.step}
-                className="bg-[#0B0F1A]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-7 flex flex-col justify-between hover:border-azure/40 transition-all duration-300 hover:-translate-y-1 relative group shadow-[0_8px_30px_rgb(0,0,0,0.5)]"
+                className="bg-[#08152B] border border-white/[0.08] rounded-xl p-6 flex flex-col justify-between hover:border-[#166CFF]/40 transition-colors group"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="font-mono text-2xl font-bold bg-gradient-to-r from-azure-bright to-violet bg-clip-text text-transparent">
+                    <span className="font-mono text-xl font-bold text-[#166CFF]">
                       0{step.step}
                     </span>
-                    <div className="p-2.5 bg-gradient-to-br from-azure/20 to-violet/20 border border-azure/30 text-azure-bright rounded-xl group-hover:scale-110 transition-transform">
-                      <Icon className="w-5 h-5" />
+                    <div className="p-2 bg-[#040D1A] border border-white/10 text-[#3B82F6] rounded-lg group-hover:border-[#166CFF]/40 transition-colors">
+                      <Icon className="w-4 h-4" />
                     </div>
                   </div>
 
-                  <h3 className="font-['Space_Grotesk'] text-xl font-bold text-white mb-1 group-hover:text-azure-light transition-colors">
+                  <h3 className="text-base font-bold text-white mb-1 font-sans">
                     {step.title}
                   </h3>
-                  <p className="text-xs font-medium text-azure-bright mb-3 font-mono">
+                  <p className="text-xs font-mono text-[#3B82F6] mb-3">
                     {step.tagline}
                   </p>
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4">
+                  <p className="text-xs text-slate-400 leading-relaxed mb-4">
                     {step.description}
                   </p>
                 </div>
 
-                <div className="space-y-2 pt-4 border-t border-white/10 text-xs">
+                <div className="pt-4 border-t border-white/[0.06] text-xs space-y-2">
                   <div>
-                    <span className="font-semibold text-slate-200 block">Client Action:</span>
-                    <span className="text-slate-400">{step.clientActions}</span>
+                    <span className="text-slate-500 block uppercase font-mono text-[10px]">Client Input:</span>
+                    <span className="text-slate-300">{step.clientActions}</span>
                   </div>
-                  <div className="pt-1">
-                    <span className="font-semibold text-azure-bright block">Key Milestone:</span>
-                    <span className="text-slate-300">{step.deliverable}</span>
+                  <div>
+                    <span className="text-[#3B82F6] block uppercase font-mono text-[10px]">Milestone Output:</span>
+                    <span className="text-slate-200">{step.deliverable}</span>
                   </div>
                 </div>
               </div>
             );
           })}
+        </div>
+
+        {/* Link to Dedicated Process Page */}
+        <div className="mt-10 flex justify-end">
+          <Link
+            href="/process"
+            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#3B82F6] hover:text-white transition-colors group"
+          >
+            <span>Read Complete 4-Step Methodology &amp; Project Timelines</span>
+            <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
+          </Link>
         </div>
       </div>
     </section>

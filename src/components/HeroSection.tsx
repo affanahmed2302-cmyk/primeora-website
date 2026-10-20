@@ -3,9 +3,9 @@
 import React, { useRef } from 'react';
 import Link from 'next/link';
 import { BRAND_CONFIG } from '@/config/brand';
-import HeroCanvas from '@/components/motion/HeroCanvas';
+import HeroBackground from '@/components/motion/HeroBackground';
 import DecryptedText from '@/components/react-bits/DecryptedText';
-import { ArrowRight, Compass, Cpu, Layers, Zap, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Cpu, Layers, Zap, ShieldCheck } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
@@ -23,49 +23,31 @@ export default function HeroSection() {
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (prefersReducedMotion) return;
 
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      // Subtle, non-blocking entrance animation that never leaves content invisible
+      const tl = gsap.timeline({ defaults: { ease: 'power2.out', duration: 0.5 } });
 
-      tl.from(badgeRef.current, {
-        opacity: 0,
-        y: -16,
-        duration: 0.6,
-      })
-        .from(
+      tl.fromTo(
+        badgeRef.current,
+        { y: -6, opacity: 0.4 },
+        { y: 0, opacity: 1, duration: 0.4 }
+      )
+        .fromTo(
           headlineRef.current,
-          {
-            opacity: 0,
-            y: 28,
-            duration: 0.8,
-          },
-          '-=0.3'
+          { y: 10, opacity: 0.4 },
+          { y: 0, opacity: 1, duration: 0.5 },
+          '-=0.2'
         )
-        .from(
+        .fromTo(
           subtextRef.current,
-          {
-            opacity: 0,
-            y: 20,
-            duration: 0.7,
-          },
-          '-=0.4'
+          { y: 8, opacity: 0.4 },
+          { y: 0, opacity: 1, duration: 0.4 },
+          '-=0.25'
         )
-        .from(
+        .fromTo(
           ctaRef.current,
-          {
-            opacity: 0,
-            y: 18,
-            duration: 0.6,
-          },
-          '-=0.4'
-        )
-        .from(
-          cardsRef.current?.children || [],
-          {
-            opacity: 0,
-            y: 24,
-            stagger: 0.15,
-            duration: 0.8,
-          },
-          '-=0.3'
+          { y: 6, opacity: 0.4 },
+          { y: 0, opacity: 1, duration: 0.4 },
+          '-=0.2'
         );
     },
     { scope: containerRef }
@@ -74,61 +56,57 @@ export default function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative pt-32 pb-24 md:pt-44 md:pb-32 overflow-hidden bg-[#07090F] border-b border-white/10"
+      className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-[#040D1A] border-b border-white/[0.08]"
     >
-      {/* Dynamic Interactive WebGL / Particle Canvas */}
-      <HeroCanvas />
-
-      {/* Subtle ambient lighting flares */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-azure/10 blur-[140px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-[450px] h-[300px] bg-violet/10 blur-[130px] rounded-full pointer-events-none" />
+      {/* Restrained Vanta Ambient Mesh with Editorial Grid & Reduced-Motion Fallback */}
+      <HeroBackground />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-4xl mx-auto text-center space-y-7">
-          {/* Tagline / Tech Badge */}
+        <div className="max-w-4xl mx-auto text-center space-y-6">
+          {/* Studio Category Badge */}
           <div
             ref={badgeRef}
-            className="inline-flex items-center gap-2.5 px-3.5 py-1.5 bg-[#101524]/90 border border-azure/30 rounded-full text-xs font-semibold text-azure-light tracking-wider uppercase font-mono shadow-[0_0_20px_rgba(61,110,245,0.2)]"
+            className="inline-flex items-center gap-2.5 px-3 py-1 bg-[#08152B] border border-white/10 rounded-md text-xs font-medium text-slate-300 font-mono"
           >
-            <span className="w-2 h-2 rounded-full bg-azure-bright animate-ping" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#166CFF]" />
             <DecryptedText
               text={BRAND_CONFIG.name}
-              speed={40}
+              speed={35}
               sequential={true}
-              className="text-white font-bold"
-              encryptedClassName="text-azure-bright"
+              className="text-white font-semibold tracking-wider uppercase"
+              encryptedClassName="text-[#166CFF]"
             />
-            <span className="text-slate-500">•</span>
-            <span className="text-slate-300">Digital Systems Studio</span>
+            <span className="text-slate-600">/</span>
+            <span className="text-slate-400">Digital Systems & Architecture</span>
           </div>
 
           {/* Primary Editorial Headline */}
           <h1
             ref={headlineRef}
-            className="font-['Space_Grotesk',sans-serif] text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.12]"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.14] font-sans"
           >
-            Practical digital systems engineered for{' '}
-            <span className="bg-gradient-to-r from-azure-bright via-azure to-violet bg-clip-text text-transparent">
-              how your business actually works.
+            Digital systems engineered for{' '}
+            <span className="text-white border-b-2 border-[#166CFF] pb-0.5">
+              measurable business growth.
             </span>
           </h1>
 
-          {/* Subtitle / Positioning */}
+          {/* Subtitle / Honest Studio Positioning */}
           <p
             ref={subtextRef}
             className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed"
           >
-            Primeora Solutions synchronizes high-performance websites, local search visibility, automated WhatsApp &amp; CRM lead pipelines, and business intelligence into one accountable system.
+            Primeora Solutions partners with ambitious businesses to engineer bespoke web platforms, connected enquiry pipelines, practical workflow automations, and clear operational intelligence.
           </p>
 
           {/* Call-to-Action Buttons */}
           <div
             ref={ctaRef}
-            className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <Link
               href="/contact"
-              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 text-base font-semibold text-white bg-gradient-to-r from-azure to-violet rounded-xl shadow-[0_4px_25px_rgba(61,110,245,0.4)] hover:shadow-[0_6px_35px_rgba(61,110,245,0.6)] hover:scale-[1.02] transition-all duration-200 group"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 text-sm font-semibold text-white bg-[#166CFF] hover:bg-[#1055CC] rounded-lg transition-colors group shadow-sm"
             >
               <span>Discuss a Project</span>
               <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
@@ -136,16 +114,16 @@ export default function HeroSection() {
 
             <Link
               href="/services"
-              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 text-base font-semibold text-slate-200 bg-[#101524] hover:bg-[#171E33] border border-white/10 hover:border-azure/40 rounded-xl transition-all duration-200"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 text-sm font-medium text-slate-200 bg-[#08152B] hover:bg-[#0B172E] border border-white/10 hover:border-white/20 rounded-lg transition-colors"
             >
-              <span>Explore 6 Pillars</span>
+              <span>Explore 6 Practice Pillars</span>
             </Link>
 
             <Link
               href="/readiness"
-              className="w-full sm:w-auto inline-flex items-center justify-center px-5 py-3.5 text-sm font-semibold text-azure-light hover:text-white transition-colors"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-3.5 text-sm font-medium text-[#3B82F6] hover:text-white transition-colors"
             >
-              <span>Digital Readiness Assessment &rarr;</span>
+              <span>Digital Diagnostic &rarr;</span>
             </Link>
           </div>
         </div>
@@ -153,60 +131,60 @@ export default function HeroSection() {
         {/* Feature / Architecture Highlight Cards */}
         <div
           ref={cardsRef}
-          className="mt-16 sm:mt-24 grid grid-cols-1 md:grid-cols-3 gap-6"
+          className="mt-14 sm:mt-20 grid grid-cols-1 md:grid-cols-3 gap-5"
         >
           {/* Card 1 */}
-          <div className="bg-[#0B0F1A]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 hover:border-azure/40 transition-all duration-300 hover:-translate-y-1 group shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
-            <div className="w-12 h-12 rounded-xl bg-azure/15 border border-azure/30 flex items-center justify-center text-azure-bright mb-4 group-hover:scale-110 transition-transform">
-              <Zap className="w-6 h-6" />
+          <div className="bg-[#08152B] border border-white/[0.08] rounded-xl p-6 hover:border-[#166CFF]/40 transition-colors">
+            <div className="w-10 h-10 rounded-lg bg-[#166CFF]/15 border border-[#166CFF]/30 flex items-center justify-center text-[#3B82F6] mb-4">
+              <Zap className="w-5 h-5" />
             </div>
-            <h3 className="text-lg font-bold text-white mb-2 font-['Space_Grotesk']">
-              Speed &amp; Conversion Infrastructure
+            <h3 className="text-base font-semibold text-white mb-2 font-sans">
+              Digital Presence &amp; Conversion
             </h3>
             <p className="text-sm text-slate-400 leading-relaxed">
-              Bespoke web platforms built on Next.js 15, optimized for 99+ Core Web Vitals, accessible semantic HTML, and Google local discoverability.
+              Modern web architecture engineered for speed, mobile responsiveness, semantic accessibility, and clean search discovery.
             </p>
           </div>
 
           {/* Card 2 */}
-          <div className="bg-[#0B0F1A]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 hover:border-azure/40 transition-all duration-300 hover:-translate-y-1 group shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
-            <div className="w-12 h-12 rounded-xl bg-violet/15 border border-violet/30 flex items-center justify-center text-violet-light mb-4 group-hover:scale-110 transition-transform">
-              <Cpu className="w-6 h-6" />
+          <div className="bg-[#08152B] border border-white/[0.08] rounded-xl p-6 hover:border-[#166CFF]/40 transition-colors">
+            <div className="w-10 h-10 rounded-lg bg-[#166CFF]/15 border border-[#166CFF]/30 flex items-center justify-center text-[#3B82F6] mb-4">
+              <Cpu className="w-5 h-5" />
             </div>
-            <h3 className="text-lg font-bold text-white mb-2 font-['Space_Grotesk']">
-              Automated Lead &amp; Enquiry Triage
+            <h3 className="text-base font-semibold text-white mb-2 font-sans">
+              Enquiry Triage &amp; Automation
             </h3>
             <p className="text-sm text-slate-400 leading-relaxed">
-              Official WhatsApp Business routing and CRM pipelines that capture client inquiries 24/7 with error-handled webhook notifications.
+              Structured WhatsApp routing and CRM integrations that capture enquiries 24/7 without dropped leads or manual data entry.
             </p>
           </div>
 
           {/* Card 3 */}
-          <div className="bg-[#0B0F1A]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 hover:border-azure/40 transition-all duration-300 hover:-translate-y-1 group shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
-            <div className="w-12 h-12 rounded-xl bg-azure/15 border border-azure/30 flex items-center justify-center text-azure-bright mb-4 group-hover:scale-110 transition-transform">
-              <Layers className="w-6 h-6" />
+          <div className="bg-[#08152B] border border-white/[0.08] rounded-xl p-6 hover:border-[#166CFF]/40 transition-colors">
+            <div className="w-10 h-10 rounded-lg bg-[#166CFF]/15 border border-[#166CFF]/30 flex items-center justify-center text-[#3B82F6] mb-4">
+              <Layers className="w-5 h-5" />
             </div>
-            <h3 className="text-lg font-bold text-white mb-2 font-['Space_Grotesk']">
-              Performance Intelligence &amp; BI
+            <h3 className="text-base font-semibold text-white mb-2 font-sans">
+              Operations &amp; Intelligence
             </h3>
             <p className="text-sm text-slate-400 leading-relaxed">
-              Unified executive dashboards connecting Google Analytics, CRM pipelines, and operations metrics for actionable decision-making.
+              Actionable operational dashboards unifying Google Analytics, acquisition pipelines, and performance data for leadership clarity.
             </p>
           </div>
         </div>
 
-        {/* Enterprise Trust Anchor */}
-        <div className="mt-14 pt-8 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-slate-400">
+        {/* Studio Trust Anchor */}
+        <div className="mt-12 pt-6 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-slate-400">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-azure-bright" />
-            <span>Bangalore Enterprise Studio</span>
+            <ShieldCheck className="w-4 h-4 text-[#3B82F6]" />
+            <span>Bangalore Engineering Consultancy</span>
           </div>
           <div>
-            <span>MSME Udyam Registration: {BRAND_CONFIG.udyamRegistrationNumber}</span>
+            <span>MSME Udyam: {BRAND_CONFIG.udyamRegistrationNumber}</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-azure-bright" />
-            <span>PostgreSQL &amp; Serverless Cloud Infrastructure</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            <span>Direct Founder Architecture &amp; Delivery</span>
           </div>
         </div>
       </div>

@@ -194,14 +194,22 @@ export default function DigitalReadinessAssessment() {
   const topFriction = sortedByFriction[0] || QUESTIONS[0].options[0];
 
   return (
-    <div className="bg-[#0B0F1A]/90 backdrop-blur-xl rounded-2xl border border-white/10 p-6 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.5)] max-w-3xl mx-auto">
+    <div className="bg-[#08152B] rounded-xl border border-white/[0.08] p-6 sm:p-10 max-w-3xl mx-auto">
+      {/* Progress Bar */}
+      <div className="w-full bg-[#040D1A] h-1.5 rounded-full overflow-hidden mb-8">
+        <div
+          className="bg-[#166CFF] h-full transition-all duration-300"
+          style={{ width: `${((currentStep + 1) / (completed ? QUESTIONS.length : QUESTIONS.length)) * 100}%` }}
+        />
+      </div>
+
       {!completed ? (
         <div>
           {/* Progress Header */}
-          <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/[0.06]">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-violet-light" />
-              <span className="text-xs font-mono font-semibold uppercase tracking-wider text-azure-bright">
+              <Compass className="w-4 h-4 text-[#3B82F6]" />
+              <span className="text-xs font-mono font-semibold uppercase tracking-wider text-[#3B82F6]">
                 Digital Readiness Diagnostic
               </span>
             </div>
@@ -212,7 +220,7 @@ export default function DigitalReadinessAssessment() {
 
           {/* Question Title */}
           <div className="mb-6">
-            <h3 className="font-['Space_Grotesk'] text-xl sm:text-2xl font-bold text-white mb-1.5">
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-1.5 font-sans">
               {QUESTIONS[currentStep].title}
             </h3>
             <p className="text-xs sm:text-sm text-slate-400">
@@ -227,17 +235,17 @@ export default function DigitalReadinessAssessment() {
                 key={idx}
                 type="button"
                 onClick={() => handleSelectOption(idx)}
-                className="w-full text-left p-4 rounded-xl border border-white/10 bg-[#101524] hover:border-azure/40 hover:bg-[#171E33] transition-all group flex items-start justify-between gap-4"
+                className="w-full text-left p-4 rounded-lg border border-white/10 bg-[#040D1A] hover:border-[#166CFF]/50 hover:bg-[#0E1F3D] transition-colors group flex items-start justify-between gap-4"
               >
                 <div>
-                  <span className="text-sm font-semibold text-white group-hover:text-azure-bright block mb-0.5">
+                  <span className="text-sm font-semibold text-white group-hover:text-[#3B82F6] block mb-0.5">
                     {opt.label}
                   </span>
                   <span className="text-xs text-slate-400 leading-relaxed block">
                     {opt.description}
                   </span>
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-azure-bright flex-shrink-0 mt-1 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-[#3B82F6] flex-shrink-0 mt-1 transition-transform group-hover:translate-x-1" />
               </button>
             ))}
           </div>
@@ -245,9 +253,9 @@ export default function DigitalReadinessAssessment() {
       ) : (
         /* Results View */
         <div className="space-y-6 animate-in fade-in">
-          <div className="flex items-center justify-between pb-4 border-b border-white/10">
+          <div className="flex items-center justify-between pb-4 border-b border-white/[0.06]">
             <div className="flex items-center gap-2">
-              <Compass className="w-5 h-5 text-azure-bright" />
+              <Compass className="w-5 h-5 text-[#3B82F6]" />
               <span className="text-xs font-mono font-semibold uppercase tracking-wider text-white">
                 Diagnostic Assessment Result
               </span>
@@ -263,9 +271,9 @@ export default function DigitalReadinessAssessment() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="p-4 bg-[#101524] border border-white/10 rounded-xl text-center sm:text-left">
+            <div className="p-4 bg-[#040D1A] border border-white/10 rounded-lg text-center sm:text-left">
               <span className="text-xs font-mono uppercase text-slate-400 block">Readiness Score</span>
-              <span className="text-3xl font-['Space_Grotesk'] font-bold text-azure-bright mt-1 block">
+              <span className="text-3xl font-bold text-[#166CFF] mt-1 block font-mono">
                 {percentage}%
               </span>
               <span className="text-[11px] text-slate-400">
@@ -273,12 +281,12 @@ export default function DigitalReadinessAssessment() {
               </span>
             </div>
 
-            <div className="sm:col-span-2 p-4 bg-gradient-to-r from-azure/20 to-violet/20 border border-azure/30 rounded-xl flex flex-col justify-between">
+            <div className="sm:col-span-2 p-4 bg-[#08152B] border border-[#166CFF]/30 rounded-lg flex flex-col justify-between">
               <div>
-                <span className="text-xs font-mono uppercase text-violet-light block font-semibold">
+                <span className="text-xs font-mono uppercase text-[#3B82F6] block font-semibold">
                   Recommended Primary Focus:
                 </span>
-                <span className="text-xl font-['Space_Grotesk'] font-bold text-white mt-0.5 block">
+                <span className="text-xl font-bold text-white mt-0.5 block font-sans">
                   {topFriction.recommendedPillar}
                 </span>
               </div>
@@ -288,7 +296,7 @@ export default function DigitalReadinessAssessment() {
             </div>
           </div>
 
-          <div className="p-5 bg-[#101524] border border-white/10 rounded-xl">
+          <div className="p-5 bg-[#040D1A] border border-white/10 rounded-lg">
             <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-400 mb-2">
               Operational Diagnosis:
             </h4>
@@ -300,14 +308,14 @@ export default function DigitalReadinessAssessment() {
           <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
             <Link
               href={`/contact?service=${encodeURIComponent(topFriction.recommendedPillar)}&notes=${encodeURIComponent(`Diagnostic: ${topFriction.serviceTag}`)}`}
-              className="w-full sm:w-auto flex-1 inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-azure to-violet rounded-xl hover:shadow-[0_4px_25px_rgba(61,110,245,0.4)] transition-all"
+              className="w-full sm:w-auto flex-1 inline-flex items-center justify-center px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white bg-[#166CFF] hover:bg-[#1055CC] rounded-lg transition-colors"
             >
               <span>Discuss {topFriction.recommendedPillar} Strategy</span>
               <ArrowRight className="w-4 h-4 ml-2" />
             </Link>
             <Link
               href="/services"
-              className="w-full sm:w-auto inline-flex items-center justify-center px-5 py-3 text-sm font-semibold text-slate-300 bg-[#101524] border border-white/10 rounded-xl hover:bg-[#171E33] hover:text-white transition-colors"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-5 py-3 text-xs font-semibold uppercase tracking-wider text-slate-300 bg-[#040D1A] border border-white/10 rounded-lg hover:bg-[#0E1F3D] hover:text-white transition-colors"
             >
               <span>Explore All Pillars</span>
             </Link>

@@ -3,39 +3,46 @@
 @tailwind utilities;
 
 :root {
-  --color-obsidian: #07090F;
-  --color-obsidian-surface: #0B0F1A;
-  --color-obsidian-card: #101524;
-  --color-azure: #3D6EF5;
-  --color-azure-light: #5B8CFF;
-  --color-azure-bright: #4D7CFF;
-  --color-violet: #7C5CFF;
-  --color-platinum: #F0F2F7;
+  --color-canvas: #040D1A;
+  --color-surface: #08152B;
+  --color-surface-card: #0B172E;
+  --color-blue: #166CFF;
+  --color-blue-light: #3B82F6;
+  --color-blue-dark: #1055CC;
+  --color-white: #F8FAFC;
   --color-slate: #94A3B8;
 
-  /* Backward compatible bindings */
-  --color-forest: #0B0F1A;
-  --color-forest-dark: #07090F;
-  --color-teal: #3D6EF5;
-  --color-ivory: #07090F;
-  --color-ivory-light: #0B0F1A;
-  --color-copper: #7C5CFF;
-  --color-charcoal: #F0F2F7;
+  /* Aliases */
+  --color-obsidian: #040D1A;
+  --color-obsidian-surface: #08152B;
+  --color-obsidian-card: #0B172E;
+  --color-azure: #166CFF;
+  --color-azure-light: #3B82F6;
+  --color-azure-bright: #2563EB;
+  --color-violet: #166CFF;
+  --color-platinum: #F8FAFC;
+  --color-forest: #08152B;
+  --color-forest-dark: #040D1A;
+  --color-teal: #166CFF;
+  --color-ivory: #040D1A;
+  --color-ivory-light: #08152B;
+  --color-copper: #166CFF;
+  --color-charcoal: #F8FAFC;
   --color-charcoal-muted: #94A3B8;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    color: var(--color-platinum);
-    background-color: var(--color-obsidian);
+    color: var(--color-white);
+    background-color: var(--color-canvas);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    background-color: #07090F;
-    color: #F0F2F7;
+    background-color: #040D1A;
+    color: #F8FAFC;
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
@@ -46,12 +53,12 @@
 
   /* Focus styling for accessibility */
   :focus-visible {
-    outline: 2px solid var(--color-azure-bright);
+    outline: 2px solid var(--color-blue);
     outline-offset: 3px;
   }
 
   ::selection {
-    background-color: rgba(61, 110, 245, 0.35);
+    background-color: rgba(22, 108, 255, 0.35);
     color: #FFFFFF;
   }
 }

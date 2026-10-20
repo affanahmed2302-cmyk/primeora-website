@@ -1,12 +1,15 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { BookOpen, ArrowRight, Sparkles, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Insights & Technical Guidance — Practical Systems Engineering — Primeora Solutions',
+  title: 'Insights & Technical Guidance — Practical Systems Engineering | Primeora Solutions',
   description:
     'Authoritative answers to common business questions on websites, local SEO, Answer Engine Optimization (AEO), CRM pipelines, and operations automation from Primeora Solutions.',
+  alternates: {
+    canonical: 'https://primeora-solutions.netlify.app/insights',
+  },
 };
 
 const INSIGHTS_ARTICLES = [
@@ -51,7 +54,7 @@ const INSIGHTS_ARTICLES = [
     title: 'What should an executive business dashboard actually measure?',
     category: 'Analytics & Insights',
     summary:
-      'Vanity metrics like impressions and page views distract leadership. Discover the 5 empirical measures that correlate directly with sustainable revenue and operational velocity.',
+      'Vanity metrics like impressions and page views distract leadership. Discover the empirical measures that correlate directly with sustainable revenue and operational velocity.',
     readTime: '4 min read',
     keyTakeaway: 'Track Customer Acquisition Cost (CAC), enquiry-to-close velocity, channel conversion rate, and customer lifetime value.',
   },
@@ -59,15 +62,15 @@ const INSIGHTS_ARTICLES = [
 
 export default function InsightsPage() {
   return (
-    <div className="pt-28 pb-20 bg-[#07090F] min-h-screen">
-      <div className="bg-[#0B0F1A]/60 py-16 md:py-24 border-b border-white/10 mb-16 relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-azure/5 blur-[120px] rounded-full pointer-events-none" />
-
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-azure/10 text-azure-bright border border-azure/20 rounded-full text-xs font-semibold tracking-wider uppercase font-mono mb-3">
-            <span>Knowledgebase &amp; AEO</span>
+    <div className="pt-28 pb-20 md:pt-36 md:pb-28 bg-[#040D1A] min-h-screen">
+      {/* Header */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <div className="max-w-3xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#08152B] text-slate-300 border border-white/10 rounded-md text-xs font-mono mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#166CFF]" />
+            <span>KNOWLEDGEBASE &amp; GUIDANCE</span>
           </div>
-          <h1 className="font-['Space_Grotesk'] text-4xl sm:text-5xl font-bold text-white tracking-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight font-sans">
             Technical Insights &amp; Practice Guidance
           </h1>
           <p className="mt-4 text-base sm:text-lg text-slate-400 leading-relaxed">
@@ -76,43 +79,44 @@ export default function InsightsPage() {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         {INSIGHTS_ARTICLES.map((art, idx) => (
           <article
             key={idx}
-            className="bg-[#0B0F1A]/80 backdrop-blur-xl rounded-2xl border border-white/10 p-7 sm:p-9 shadow-[0_8px_30px_rgb(0,0,0,0.5)] hover:border-azure/40 transition-all duration-300 hover:-translate-y-0.5 group"
+            className="bg-[#08152B] rounded-xl border border-white/[0.08] p-7 sm:p-8 hover:border-[#166CFF]/40 transition-colors group"
           >
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-mono uppercase font-semibold text-violet-light">
+              <span className="text-xs font-mono uppercase text-[#3B82F6]">
                 {art.category}
               </span>
-              <span className="text-xs font-mono text-slate-400">
+              <span className="text-xs font-mono text-slate-500">
                 {art.readTime}
               </span>
             </div>
 
-            <h2 className="font-['Space_Grotesk'] text-2xl font-bold text-white mb-3 group-hover:text-azure-light transition-colors">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 font-sans group-hover:text-[#3B82F6] transition-colors">
               {art.title}
             </h2>
 
-            <p className="text-sm text-slate-300 leading-relaxed mb-4">
+            <p className="text-sm text-slate-300 leading-relaxed mb-5">
               {art.summary}
             </p>
 
-            <div className="p-3.5 bg-[#101524] border border-white/10 rounded-xl mb-5 text-xs text-slate-300">
-              <span className="font-semibold text-azure-bright block mb-0.5 font-mono">
-                Key Implementation Rule:
-              </span>
-              <span>{art.keyTakeaway}</span>
-            </div>
+            <div className="pt-4 border-t border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs">
+              <div className="flex items-start gap-2 text-slate-400">
+                <CheckCircle2 className="w-4 h-4 text-[#166CFF] flex-shrink-0 mt-0.5" />
+                <span>
+                  <strong className="text-white">Takeaway: </strong>
+                  {art.keyTakeaway}
+                </span>
+              </div>
 
-            <div className="flex items-center justify-between pt-3 border-t border-white/10">
               <Link
                 href="/contact"
-                className="text-xs font-semibold text-azure-bright hover:text-white inline-flex items-center gap-1 group/link transition-colors"
+                className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#3B82F6] hover:text-white transition-colors flex-shrink-0"
               >
-                <span>Discuss applying this to your systems</span>
-                <ArrowRight className="w-3.5 h-3.5 ml-1 transition-transform group-hover/link:translate-x-1" />
+                <span>Discuss Practice Strategy</span>
+                <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
               </Link>
             </div>
           </article>

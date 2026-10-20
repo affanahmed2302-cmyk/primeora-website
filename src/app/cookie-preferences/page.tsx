@@ -39,114 +39,131 @@ export default function CookiePreferencesPage() {
   if (!mounted) return null;
 
   return (
-    <div className="pt-28 pb-20 bg-[#07090F] min-h-screen">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex items-center gap-2 px-3 py-1 bg-azure/10 text-azure-bright border border-azure/20 rounded-full text-xs font-semibold tracking-wider uppercase font-mono mb-4 w-fit">
-          <Shield className="w-3.5 h-3.5 text-azure-bright" />
-          <span>Privacy Management</span>
+    <div className="pt-28 pb-20 md:pt-36 md:pb-28 bg-[#040D1A] min-h-screen">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-2 px-3 py-1 bg-[#08152B] text-slate-300 border border-white/10 rounded-md text-xs font-mono mb-4 w-fit">
+          <Shield className="w-3.5 h-3.5 text-[#3B82F6]" />
+          <span>PRIVACY GOVERNANCE</span>
         </div>
-        <h1 className="font-['Space_Grotesk'] text-3xl sm:text-4xl font-bold text-white mb-4">
+        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3 font-sans">
           Cookie &amp; Data Preferences
         </h1>
-        <p className="text-sm text-slate-400 leading-relaxed mb-8">
-          Manage how cookies and tracking technologies are used on your browser when visiting Primeora Solutions. Strictly essential cookies are required for basic site stability, while optional cookies require your affirmative consent.
+        <p className="text-sm text-slate-400 mb-8 leading-relaxed">
+          Manage how cookies and anonymous telemetry operate while you browse Primeora Solutions. In accordance with DPDP and privacy standards, you can enable or disable non-essential analytics tracking at any time.
         </p>
 
         {savedMessage && (
-          <div className="p-4 mb-6 bg-azure/20 border border-azure/40 text-azure-bright rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 animate-in fade-in">
-            <Check className="w-4 h-4 text-azure-bright" />
-            <span>Your preferences have been saved successfully.</span>
+          <div className="mb-6 p-4 bg-emerald-950/40 border border-emerald-500/30 rounded-lg flex items-center gap-2 text-emerald-200 text-sm animate-in fade-in">
+            <Check className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+            <span>Preferences saved successfully.</span>
           </div>
         )}
 
-        <div className="space-y-6">
-          {/* Strictly Necessary */}
-          <div className="bg-[#0B0F1A]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="font-['Space_Grotesk'] font-bold text-white text-base">
-                Strictly Necessary Cookies
-              </h3>
-              <span className="text-[11px] font-mono px-2 py-0.5 bg-azure/15 text-azure-bright border border-azure/30 rounded font-semibold">
-                Always Active
-              </span>
+        <div className="space-y-4 mb-8">
+          {/* Essential Category */}
+          <div className="p-6 bg-[#08152B] border border-white/[0.08] rounded-xl flex items-start justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="text-base font-bold text-white font-sans">Strictly Necessary Cookies</span>
+                <span className="text-[10px] font-mono uppercase bg-[#040D1A] text-slate-400 border border-white/10 px-2 py-0.5 rounded">
+                  Always Active
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Required for core website security, session persistence, CSRF protection, and anti-spam verification. These cannot be disabled.
+              </p>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed mb-2">
-              Essential for security, rate limiting, and preserving your cookie preferences across sessions. These cannot be switched off.
-            </p>
-            <span className="text-[11px] font-mono text-slate-500">
-              Provider: First-party (Primeora Solutions) &middot; Duration: Session / 1 Year
-            </span>
+            <input
+              type="checkbox"
+              disabled
+              checked={true}
+              className="mt-1 h-4 w-4 rounded border-white/20 bg-white/10 text-[#166CFF] opacity-60 cursor-not-allowed"
+            />
           </div>
 
-          {/* Performance & Analytics */}
-          <div className="bg-[#0B0F1A]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="font-['Space_Grotesk'] font-bold text-white text-base">
-                Performance &amp; Analytics
-              </h3>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={preferences.analytics}
-                  onChange={(e) =>
-                    setPreferences({ ...preferences, analytics: e.target.checked })
-                  }
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-azure"></div>
-              </label>
+          {/* Performance Analytics Category */}
+          <div className="p-6 bg-[#08152B] border border-white/[0.08] rounded-xl flex items-start justify-between gap-4">
+            <div className="space-y-1">
+              <span className="text-base font-bold text-white font-sans">Performance &amp; Analytics Cookies</span>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Allows us to collect anonymized aggregate statistics (via Google Analytics 4) to monitor page load performance, route traffic, and browser compatibility.
+              </p>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed mb-2">
-              Help us understand how visitors interact with our website by measuring page views, load speed, and visitor flows via Google Analytics 4. IP addresses are anonymized.
-            </p>
-            <span className="text-[11px] font-mono text-slate-500">
-              Provider: Google LLC &middot; Duration: 2 Years
-            </span>
+            <input
+              type="checkbox"
+              id="analytics-toggle"
+              checked={preferences.analytics}
+              onChange={(e) => setPreferences({ ...preferences, analytics: e.target.checked })}
+              className="mt-1 h-5 w-5 rounded border-white/20 bg-[#040D1A] text-[#166CFF] focus:ring-1 focus:ring-[#166CFF] cursor-pointer"
+            />
           </div>
 
-          {/* Marketing & Attribution */}
-          <div className="bg-[#0B0F1A]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="font-['Space_Grotesk'] font-bold text-white text-base">
-                Marketing &amp; Attribution
-              </h3>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={preferences.marketing}
-                  onChange={(e) =>
-                    setPreferences({ ...preferences, marketing: e.target.checked })
-                  }
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-azure"></div>
-              </label>
+          {/* Marketing Category */}
+          <div className="p-6 bg-[#08152B] border border-white/[0.08] rounded-xl flex items-start justify-between gap-4">
+            <div className="space-y-1">
+              <span className="text-base font-bold text-white font-sans">Marketing &amp; Targeting Cookies</span>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Used to deliver relevant campaign attribution across third-party networks. Primeora Solutions currently sets zero third-party cross-site advertising cookies.
+              </p>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed mb-2">
-              Used to measure referral source channels from search ads and third-party partner directories. We do not run third-party programmatic retargeting networks.
-            </p>
-            <span className="text-[11px] font-mono text-slate-500">
-              Provider: Marketing Partners &middot; Duration: 90 Days
-            </span>
+            <input
+              type="checkbox"
+              id="marketing-toggle"
+              checked={preferences.marketing}
+              onChange={(e) => setPreferences({ ...preferences, marketing: e.target.checked })}
+              className="mt-1 h-5 w-5 rounded border-white/20 bg-[#040D1A] text-[#166CFF] focus:ring-1 focus:ring-[#166CFF] cursor-pointer"
+            />
           </div>
         </div>
 
-        <div className="mt-8 flex items-center justify-between pt-6 border-t border-white/10">
-          <Link
-            href="/privacy"
-            className="text-xs text-slate-400 hover:text-white transition-colors"
-          >
-            &larr; Read Full Privacy Policy
-          </Link>
-
+        {/* Action Controls */}
+        <div className="flex flex-col sm:flex-row items-center gap-3">
           <button
             type="button"
             onClick={() => handleSave(preferences)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-azure to-violet text-white text-xs font-semibold rounded-xl hover:shadow-[0_4px_20px_rgba(61,110,245,0.4)] transition-all"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white bg-[#166CFF] hover:bg-[#1055CC] rounded-lg transition-colors gap-2"
           >
-            <Save className="w-3.5 h-3.5" />
+            <Save className="w-4 h-4" />
             <span>Save Preferences</span>
           </button>
+
+          <button
+            type="button"
+            onClick={() =>
+              handleSave({
+                essential: true,
+                analytics: true,
+                marketing: false,
+                timestamp: '',
+              })
+            }
+            className="w-full sm:w-auto inline-flex items-center justify-center px-5 py-3 text-xs font-semibold uppercase tracking-wider text-slate-300 bg-[#08152B] hover:bg-[#0E1F3D] hover:text-white border border-white/10 rounded-lg transition-colors"
+          >
+            <span>Accept Recommended</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() =>
+              handleSave({
+                essential: true,
+                analytics: false,
+                marketing: false,
+                timestamp: '',
+              })
+            }
+            className="w-full sm:w-auto inline-flex items-center justify-center px-5 py-3 text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-white transition-colors"
+          >
+            <span>Reject All Non-Essential</span>
+          </button>
+        </div>
+
+        <div className="mt-8 pt-6 border-t border-white/[0.08] text-xs text-slate-500">
+          For full details on data retention, controller identity, and security architecture, read our{' '}
+          <Link href="/privacy" className="text-[#3B82F6] hover:underline">
+            Privacy Policy
+          </Link>
+          .
         </div>
       </div>
     </div>

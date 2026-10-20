@@ -5,36 +5,39 @@ import Link from 'next/link';
 import { Shield } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy — Data Protection & Information Handling — Primeora Solutions',
+  title: 'Privacy Policy — Data Protection & Information Handling | Primeora Solutions',
   description:
     'Read Primeora Solutions’ transparent privacy policy explaining how we collect, protect, and process data from enquiries and website visitors.',
+  alternates: {
+    canonical: 'https://primeora-solutions.netlify.app/privacy',
+  },
 };
 
 export default function PrivacyPage() {
   return (
-    <div className="pt-28 pb-20 bg-[#07090F] min-h-screen">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex items-center gap-2 px-3 py-1 bg-azure/10 text-azure-bright border border-azure/20 rounded-full text-xs font-semibold tracking-wider uppercase font-mono mb-4 w-fit">
-          <Shield className="w-3.5 h-3.5 text-azure-bright" />
+    <div className="pt-28 pb-20 md:pt-36 md:pb-28 bg-[#040D1A] min-h-screen">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-2 px-3 py-1 bg-[#08152B] text-slate-300 border border-white/10 rounded-md text-xs font-mono mb-4 w-fit">
+          <Shield className="w-3.5 h-3.5 text-[#3B82F6]" />
           <span>Governance &amp; Compliance</span>
         </div>
-        <h1 className="font-['Space_Grotesk'] text-3xl sm:text-4xl font-bold text-white mb-4">
+        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3 font-sans">
           Privacy Policy
         </h1>
-        <p className="text-xs text-slate-400 font-mono mb-8">
-          Last updated: 20 October 2026 &middot; Operating Entity: {BRAND_CONFIG.legalEntity}
+        <p className="text-xs text-slate-400 font-mono mb-10">
+          Last updated: 20 October 2026 · Operating Entity: {BRAND_CONFIG.legalEntity} (Udyam MSME: {BRAND_CONFIG.udyamRegistrationNumber})
         </p>
 
-        <div className="prose prose-invert max-w-none text-sm text-slate-300 leading-relaxed space-y-6">
-          <section className="space-y-3 bg-[#0B0F1A]/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
-            <h2 className="font-['Space_Grotesk'] text-xl font-bold text-white">1. Enterprise Identity &amp; Data Controller</h2>
+        <div className="text-sm text-slate-300 leading-relaxed space-y-6">
+          <section className="space-y-3 bg-[#08152B] border border-white/[0.08] p-6 sm:p-7 rounded-xl">
+            <h2 className="text-lg font-bold text-white font-sans">1. Enterprise Identity &amp; Data Controller</h2>
             <p>
               This website is operated by <strong>{BRAND_CONFIG.legalEntity}</strong> (Udyam Registered MSME: <code>{BRAND_CONFIG.udyamRegistrationNumber}</code>), conducting digital systems engineering and commercial consultancy as <strong>{BRAND_CONFIG.name}</strong> (&ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;). We are committed to transparent, lawful, and secure data handling in compliance with applicable Indian information technology and digital personal data protection laws.
             </p>
           </section>
 
-          <section className="space-y-3 bg-[#0B0F1A]/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
-            <h2 className="font-['Space_Grotesk'] text-xl font-bold text-white">2. Information We Collect</h2>
+          <section className="space-y-3 bg-[#08152B] border border-white/[0.08] p-6 sm:p-7 rounded-xl">
+            <h2 className="text-lg font-bold text-white font-sans">2. Information We Collect</h2>
             <p>We collect only the minimum information necessary to communicate regarding prospective consulting projects and monitor website performance:</p>
             <ul className="list-disc pl-5 space-y-1.5 text-slate-400">
               <li>
@@ -49,31 +52,29 @@ export default function PrivacyPage() {
             </ul>
           </section>
 
-          <section className="space-y-3 bg-[#0B0F1A]/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
-            <h2 className="font-['Space_Grotesk'] text-xl font-bold text-white">3. How We Use Your Information</h2>
-            <p>Information submitted to Primeora Solutions is used solely for:</p>
-            <ul className="list-disc pl-5 space-y-1.5 text-slate-400">
-              <li>Reviewing project fit and responding to your direct commercial enquiry.</li>
-              <li>Preparing customized architecture proposals and engagement scopes.</li>
-              <li>Maintaining operational security, preventing unauthorized access, and halting bot spam.</li>
-            </ul>
-            <p className="font-medium text-azure-bright">
-              We never sell, rent, monetize, or disclose your contact information or project specifications to external data brokers or advertisers. Zero spam.
+          <section className="space-y-3 bg-[#08152B] border border-white/[0.08] p-6 sm:p-7 rounded-xl">
+            <h2 className="text-lg font-bold text-white font-sans">3. How Information is Processed &amp; Stored</h2>
+            <p>
+              Submitted enquiry information is persisted securely in our dedicated database (hosted in the AWS Mumbai, India region with Row Level Security) and delivered via serverless notification webhooks. We do not sell, rent, or lease prospective client information to third-party brokers, marketing lists, or advertising networks.
             </p>
           </section>
 
-          <section className="space-y-3 bg-[#0B0F1A]/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
-            <h2 className="font-['Space_Grotesk'] text-xl font-bold text-white">4. Data Storage &amp; Durability</h2>
+          <section className="space-y-3 bg-[#08152B] border border-white/[0.08] p-6 sm:p-7 rounded-xl">
+            <h2 className="text-lg font-bold text-white font-sans">4. Consent &amp; Cookie Preferences</h2>
             <p>
-              Project enquiries are stored in a secured Supabase PostgreSQL database located in the Asia South (Mumbai) region with Row Level Security (RLS) policies enabled. Client data is never stored unencrypted or exposed to public query endpoints.
+              You may manage or revoke your consent for performance analytics cookies at any time via our{' '}
+              <Link href="/cookie-preferences" className="text-[#3B82F6] underline hover:text-white">
+                Cookie Preferences
+              </Link>{' '}
+              portal. Essential security tokens used to authenticate session access and prevent CSRF attacks remain active to protect application integrity.
             </p>
           </section>
 
-          <section className="space-y-3 bg-[#0B0F1A]/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
-            <h2 className="font-['Space_Grotesk'] text-xl font-bold text-white">5. Your Data Rights &amp; Contact</h2>
+          <section className="space-y-3 bg-[#08152B] border border-white/[0.08] p-6 sm:p-7 rounded-xl">
+            <h2 className="text-lg font-bold text-white font-sans">5. Contacting the Data Controller</h2>
             <p>
-              You have the right to request access to, correction of, or permanent deletion of your submitted enquiry information. To exercise these rights, email our data privacy lead at{' '}
-              <a href={`mailto:${BRAND_CONFIG.contactEmail}`} className="text-azure-bright hover:underline">
+              For data access, correction requests, or questions regarding our privacy practices, contact our designated privacy lead at:{' '}
+              <a href={`mailto:${BRAND_CONFIG.contactEmail}`} className="text-[#3B82F6] hover:underline font-semibold">
                 {BRAND_CONFIG.contactEmail}
               </a>
               .

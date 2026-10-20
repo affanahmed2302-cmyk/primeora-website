@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import Link from 'next/link';
+import { ChevronDown, ArrowRight } from 'lucide-react';
 import { BRAND_CONFIG } from '@/config/brand';
 
 interface FaqItem {
@@ -9,36 +10,26 @@ interface FaqItem {
   answer: string;
 }
 
-const GENERAL_FAQS: FaqItem[] = [
+const PREVIEW_FAQS: FaqItem[] = [
   {
     question: 'What does Primeora Solutions do?',
     answer:
-      'Primeora Solutions acts as a strategy and technology engineering consultancy providing a connected "Digital A-Z" practice for businesses. We design and engineer websites, establish technical SEO and Answer Engine Optimization (AEO), set up sales CRMs and WhatsApp routing, automate operations, and implement business intelligence dashboards.',
+      'Primeora Solutions is a strategy and technology engineering consultancy providing an integrated practice for growing businesses. We design and engineer modern web platforms, connect CRM and WhatsApp enquiry capture pipelines, automate internal operations, and build leadership business intelligence dashboards.',
   },
   {
-    question: 'How does an engagement typically start?',
+    question: 'How does a project engagement start?',
     answer:
-      'Every engagement starts with a Discovery consultation to review your existing tools, customer pathways, and operational bottlenecks. We then deliver a written Blueprint detailing the exact scope, technology stack, timeline, exclusions, and cost before any code is written.',
+      'Every engagement starts with a Discovery consultation to diagnose your technical bottlenecks and commercial goals. We then deliver a formal Architecture Blueprint detailing the exact deliverables, technology stack, milestone timeline, and fixed costs before any implementation begins.',
   },
   {
-    question: 'Do you guarantee a specific volume of leads, rankings, or revenue?',
+    question: 'Do you guarantee a specific volume of leads or search rankings?',
     answer:
-      'No, and we caution against any agency that promises guaranteed leads or Google search positions. Search engine algorithms and client sales conversions depend on product-market fit, pricing, market demand, and third-party platform policies. What we guarantee is robust software engineering, technical SEO compliance, fast-loading platforms, automated lead capture, and empirical conversion tracking.',
+      'No. We caution strongly against any agency that promises guaranteed leads or Google search rankings. Conversion rates and search positions depend on product-market fit, pricing, and third-party platform algorithms. What we guarantee is rigorous software engineering, modern mobile performance, technical SEO compliance, error-handled lead capture, and empirical analytics tracking.',
   },
   {
-    question: 'How are project pricing and payment milestones structured?',
+    question: 'What legal business entity backs Primeora Solutions?',
     answer:
-      'We work on structured milestone payments tied to verifiable deliverables (e.g., Blueprint approval, staging build deployment, final handover and training). Custom scopes are detailed in a formal written proposal so there are never surprise fees.',
-  },
-  {
-    question: 'Can you automate our customer follow-up and billing workflows?',
-    answer:
-      'Yes. We connect web enquiry forms directly to your CRM, WhatsApp Business account, team Slack/email, and GST-compliant invoicing software with error handling so no data is dropped silently.',
-  },
-  {
-    question: 'What legal business entity and registration backs Primeora Solutions?',
-    answer:
-      `Primeora Solutions is a recognized Udyam-registered MSME (Registration No: ${BRAND_CONFIG.udyamRegistrationNumber}) based in Bangalore, Karnataka. All client contracts, service agreements, and tax invoices are executed directly under Primeora Solutions.`,
+      `Primeora Solutions is an official Udyam-registered MSME (Registration No: ${BRAND_CONFIG.udyamRegistrationNumber}) based in Bangalore, Karnataka. All client contracts, non-disclosure agreements, and service milestones are executed directly by Primeora Solutions.`,
   },
 ];
 
@@ -50,52 +41,63 @@ export default function FaqSection() {
   };
 
   return (
-    <section id="faq" className="py-20 md:py-28 bg-[#07090F] border-b border-white/10">
+    <section id="faq" className="py-20 md:py-28 bg-[#040D1A] border-b border-white/[0.08]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-azure/10 text-azure-bright border border-azure/20 rounded-full text-xs font-semibold tracking-wider uppercase font-mono mb-3">
-            <span>Direct Answers</span>
+        <div className="max-w-3xl mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#08152B] text-slate-300 border border-white/10 rounded-md text-xs font-mono mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#166CFF]" />
+            <span>DIRECT ANSWERS</span>
           </div>
-          <h2 className="font-['Space_Grotesk'] text-3xl sm:text-4xl font-bold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight font-sans">
             Frequently Asked Questions
           </h2>
           <p className="mt-3 text-base text-slate-400 leading-relaxed">
-            Transparent explanations of how we operate, scope boundaries, and client responsibilities.
+            Honest, transparent guidance on scope boundaries, client input, and technical delivery.
           </p>
         </div>
 
-        <div className="space-y-4">
-          {GENERAL_FAQS.map((faq, idx) => {
+        <div className="space-y-3">
+          {PREVIEW_FAQS.map((faq, idx) => {
             const isOpen = openIndex === idx;
             return (
               <div
                 key={idx}
-                className="border border-white/10 rounded-2xl overflow-hidden transition-all bg-[#0B0F1A]/80 backdrop-blur-xl shadow-[0_4px_20px_rgb(0,0,0,0.4)] hover:border-azure/30"
+                className="border border-white/[0.08] rounded-xl overflow-hidden bg-[#08152B] hover:border-[#166CFF]/30 transition-colors"
               >
                 <button
                   type="button"
                   onClick={() => toggle(idx)}
-                  className="w-full text-left p-5 sm:p-6 flex items-center justify-between gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-azure-bright"
+                  className="w-full text-left p-5 sm:p-6 flex items-center justify-between gap-4 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#166CFF]"
                   aria-expanded={isOpen}
                 >
-                  <span className="font-['Space_Grotesk'] text-base sm:text-lg font-bold text-white">
+                  <span className="text-base font-bold text-white font-sans">
                     {faq.question}
                   </span>
                   <ChevronDown
                     className={`w-5 h-5 text-slate-400 flex-shrink-0 transition-transform duration-200 ${
-                      isOpen ? 'rotate-180 text-azure-bright' : ''
+                      isOpen ? 'rotate-180 text-[#3B82F6]' : ''
                     }`}
                   />
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-6 sm:px-6 text-sm text-slate-300 leading-relaxed border-t border-white/10 pt-4 animate-in fade-in">
+                  <div className="px-5 pb-6 sm:px-6 text-sm text-slate-300 leading-relaxed border-t border-white/[0.06] pt-4 animate-in fade-in duration-150">
                     {faq.answer}
                   </div>
                 )}
               </div>
             );
           })}
+        </div>
+
+        <div className="mt-8 flex justify-end">
+          <Link
+            href="/services"
+            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#3B82F6] hover:text-white transition-colors group"
+          >
+            <span>Have specific technical questions? Read Our Practice Inclusions &amp; Exclusions</span>
+            <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
+          </Link>
         </div>
       </div>
     </section>
