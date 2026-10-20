@@ -7,6 +7,7 @@ import CookieBanner from '@/components/CookieBanner';
 import AnalyticsLoader from '@/components/AnalyticsLoader';
 import StructuredData from '@/components/StructuredData';
 import SmoothScrollProvider from '@/components/motion/SmoothScrollProvider';
+import AuthHashListener from '@/components/AuthHashListener';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://primeorasolutions.com'),
@@ -111,6 +112,7 @@ export default function RootLayout({
         <StructuredData type="WebSite" />
       </head>
       <body className="min-h-screen flex flex-col bg-[#FBF9F5] dark:bg-[#121110] text-[#191817] dark:text-[#F5F2EB] font-sans antialiased selection:bg-[#C25E38]/20 selection:text-[#C25E38] transition-colors duration-200">
+        <AuthHashListener />
         <SmoothScrollProvider>
           <Navbar />
           <main className="flex-1">{children}</main>
