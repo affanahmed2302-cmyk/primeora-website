@@ -1,68 +1,105 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { saveEnquiry, getEnquiries } from '@/lib/cms-store';
+import { saveEnquiry, getEnquiries, checkEnquiryRateLimit } from '@/lib/cms-store';
 import crypto from 'crypto';
 
-// In-memory rate limiting and duplicate check
-const submissionsByIp = new Map<string, { count: number; resetTime: number }>();
+// In-memory rate limiting tracker (per-instance defense)
+const inMemorySubmissions = new Map<string, { count: number; resetTime: number }>();
 
-function sanitize(str: unknown): string {
+function sanitizeText(str: unknown, maxLength: number): string {
   if (typeof str !== 'string') return '';
   return str
-    .replace(/[<>]/g, '') // strip potential HTML tags
+    .replace(/<[^>]*>/g, '') // Strip HTML tags
+    .replace(/[\u0000-\u0008\u000B-\u000C\u000E-\u001F\u007F]/g, '') // Strip control characters
     .trim()
-    .slice(0, 2000); // hard limit to avoid oversized payload
+    .slice(0, maxLength);
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
-    const now = Date.now();
+    // 1. Request Size Guard: Max 32KB
+    const contentLength = req.headers.get('content-length');
+    if (contentLength && parseInt(contentLength, 10) > 32768) {
+      return NextResponse.json(
+        { success: false, error: 'Payload too large. Submissions must not exceed 32KB.' },
+        { status: 413 }
+      );
+    }
 
-    // 1. Rate Limiting: max 5 submissions per hour per IP
-    const record = submissionsByIp.get(ip);
-    if (record) {
-      if (now < record.resetTime && record.count >= 5) {
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() || '127.0.0.1';
+    const now = Date.now();
+    const ipHash = crypto.createHash('sha256').update(ip).digest('hex').substring(0, 16);
+
+    // 2. In-Memory Rate Limiting (Defense-in-depth)
+    const memRecord = inMemorySubmissions.get(ipHash);
+    if (memRecord) {
+      if (now < memRecord.resetTime && memRecord.count >= 5) {
         return NextResponse.json(
-          { success: false, error: 'Too many submissions from this connection. Please try again later.' },
+          { success: false, error: 'Too many submissions. Please wait before submitting another enquiry.' },
           { status: 429 }
         );
       }
-      if (now >= record.resetTime) {
-        submissionsByIp.set(ip, { count: 0, resetTime: now + 60 * 60 * 1000 });
+      if (now >= memRecord.resetTime) {
+        inMemorySubmissions.set(ipHash, { count: 0, resetTime: now + 60 * 60 * 1000 });
       }
     } else {
-      submissionsByIp.set(ip, { count: 0, resetTime: now + 60 * 60 * 1000 });
+      inMemorySubmissions.set(ipHash, { count: 0, resetTime: now + 60 * 60 * 1000 });
     }
 
-    const body = await req.json();
+    // 3. Durable Database Rate Limiting (Cross-serverless invocation check)
+    const isAllowedByDurableRateLimiter = await checkEnquiryRateLimit(ipHash);
+    if (!isAllowedByDurableRateLimiter) {
+      return NextResponse.json(
+        { success: false, error: 'Too many enquiries submitted from this network. Please try again in an hour.' },
+        { status: 429 }
+      );
+    }
 
-    // 2. Honeypot check: `_hp` field must be empty
+    let body: Record<string, unknown>;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json({ success: false, error: 'Invalid JSON payload format.' }, { status: 400 });
+    }
+
+    // 4. Honeypot check (_hp must be absent or empty)
     if (body._hp && String(body._hp).trim() !== '') {
-      // Silently discard bot submission
-      return NextResponse.json({ success: true, message: 'Enquiry received' });
+      // Silently return success to bot without saving
+      return NextResponse.json({ success: true, message: 'Enquiry received successfully.' });
     }
 
-    // 3. Extract & Sanitize fields
-    const fullName = sanitize(body.fullName);
-    const businessName = sanitize(body.businessName);
-    const contactEmail = sanitize(body.contactEmail);
-    const phone = sanitize(body.phone);
-    const serviceInterest = sanitize(body.serviceInterest);
-    const problemSummary = sanitize(body.problemSummary);
-    const targetTimeline = sanitize(body.targetTimeline);
-    const websiteUrl = sanitize(body.websiteUrl);
+    // 5. Bot Timing Check (_ts must not be sub-second)
+    if (body._ts && typeof body._ts === 'number') {
+      const elapsed = now - body._ts;
+      if (elapsed > 0 && elapsed < 1500) {
+        // Form submitted in under 1.5 seconds indicates automated script
+        return NextResponse.json({ success: true, message: 'Enquiry received successfully.' });
+      }
+    }
 
-    // 4. Validate required fields
+    // 6. Field Extraction & Strict Sanitization
+    const fullName = sanitizeText(body.fullName, 100);
+    const businessName = sanitizeText(body.businessName, 120);
+    const contactEmail = sanitizeText(body.contactEmail, 255).toLowerCase();
+    const phone = sanitizeText(body.phone, 30);
+    const serviceInterest = sanitizeText(body.serviceInterest, 100);
+    const problemSummary = sanitizeText(body.problemSummary, 2000);
+    const targetTimeline = sanitizeText(body.targetTimeline, 100);
+    const websiteUrl = sanitizeText(body.websiteUrl, 255);
+
+    // 7. Validation
     if (!fullName || fullName.length < 2) {
-      return NextResponse.json({ success: false, error: 'Please provide your full name.' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Please provide your full name (at least 2 characters).' }, { status: 400 });
     }
     if (!businessName || businessName.length < 2) {
       return NextResponse.json({ success: false, error: 'Please provide your business or organization name.' }, { status: 400 });
     }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Strict RFC 5322 compliant regex
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
     if (!contactEmail || !emailRegex.test(contactEmail)) {
-      return NextResponse.json({ success: false, error: 'Please enter a valid work email address.' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Please enter a valid business email address.' }, { status: 400 });
     }
+
     if (!problemSummary || problemSummary.length < 15) {
       return NextResponse.json(
         { success: false, error: 'Please provide a brief description of your project or challenge (minimum 15 characters).' },
@@ -70,30 +107,32 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 5. Duplicate Submission Prevention
-    // Check if the same email submitted an identical problem in the last 10 minutes
-    const recentEnquiries = getEnquiries();
+    if (phone && !/^[0-9+\s\-().]{7,25}$/.test(phone)) {
+      return NextResponse.json({ success: false, error: 'Please enter a valid phone number format.' }, { status: 400 });
+    }
+
+    // 8. Duplicate Submission Prevention (10-minute duplicate window)
+    const recentEnquiries = await getEnquiries();
     const tenMinutesAgo = new Date(now - 10 * 60 * 1000).toISOString();
     const isDuplicate = recentEnquiries.some(
       (e) =>
-        e.contactEmail.toLowerCase() === contactEmail.toLowerCase() &&
+        e.contactEmail.toLowerCase() === contactEmail &&
         e.problemSummary === problemSummary &&
         e.createdAt > tenMinutesAgo
     );
 
     if (isDuplicate) {
-      return NextResponse.json(
-        { success: true, message: 'Your enquiry was already received. Our team will review it shortly.' }
-      );
+      return NextResponse.json({
+        success: true,
+        message: 'Your enquiry was already received. Our consulting team will review it shortly.',
+      });
     }
 
-    // Increment rate limiter
-    submissionsByIp.get(ip)!.count += 1;
+    // 9. Increment in-memory rate limiter
+    inMemorySubmissions.get(ipHash)!.count += 1;
 
-    // Hash IP for privacy before storage
-    const ipHash = crypto.createHash('sha256').update(ip).digest('hex').substring(0, 16);
-
-    const saved = saveEnquiry({
+    // 10. Persist enquiry
+    const saved = await saveEnquiry({
       fullName,
       businessName,
       contactEmail,
@@ -105,12 +144,17 @@ export async function POST(req: NextRequest) {
       ipHash,
     });
 
+    // 11. Operational Audit Logging (ZERO PII — strictly non-identifiable metrics)
+    if (process.env.NODE_ENV !== 'production') {
+      console.info(`[Enquiry Audit] ID: ${saved.id} | IP Hash: ${ipHash} | Status: Received`);
+    }
+
     return NextResponse.json({
       success: true,
       message: 'Thank you. Your project enquiry has been securely received.',
       enquiryId: saved.id,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { success: false, error: 'An unexpected error occurred while processing your request. Please try again.' },
       { status: 500 }

@@ -6,10 +6,12 @@ export async function GET(req: NextRequest) {
   const session = verifySession(sessionCookie);
 
   if (!session) {
-    return NextResponse.json({ authenticated: false, user: null }, { status: 401 });
+    const res = NextResponse.json({ authenticated: false, user: null }, { status: 401 });
+    res.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    return res;
   }
 
-  return NextResponse.json({
+  const res = NextResponse.json({
     authenticated: true,
     user: {
       id: session.userId,
@@ -18,4 +20,7 @@ export async function GET(req: NextRequest) {
       role: session.role,
     },
   });
+
+  res.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  return res;
 }

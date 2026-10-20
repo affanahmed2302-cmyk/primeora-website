@@ -105,7 +105,7 @@ export default function AdminLoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@primeorasolutions.com"
+                  placeholder="admin@ritkaraveyra.com"
                   className="w-full pl-9 pr-3.5 py-2.5 text-sm rounded-md border border-border-medium focus:ring-2 focus:ring-teal focus:outline-none"
                 />
                 <Mail className="w-4 h-4 text-charcoal-muted absolute left-3 top-3 pointer-events-none" />
@@ -153,16 +153,10 @@ export default function AdminLoginPage() {
 
           <div className="mt-6 pt-5 border-t border-border-subtle text-center">
             <span className="text-[11px] text-charcoal-muted font-mono block">
-              Initial Development Access:
+              Access Restricted to Authorized Personnel
             </span>
-            <span className="text-[11px] text-charcoal font-mono block mt-0.5">
-              Email: <code>admin@primeorasolutions.com</code>
-            </span>
-            <span className="text-[11px] text-charcoal font-mono block">
-              Pass: <code>ChangeMeInProd2026!</code>
-            </span>
-            <span className="text-[10px] text-copper block mt-1">
-              (Documented in docs/ENV_SETUP.md &middot; Change via production environment)
+            <span className="text-[10px] text-charcoal-muted block mt-1">
+              Protected by cryptographic HMAC sessions &middot; Supabase Auth &amp; RLS
             </span>
           </div>
         </div>

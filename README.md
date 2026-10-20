@@ -89,10 +89,10 @@ python scratch_test.py
 - **Dashboard**: `http://localhost:3000/admin`
 - **Team Directory CMS**: `http://localhost:3000/admin/team`
 
-**Default Initial Developer Access**:
-- Email: `admin@primeorasolutions.com`
-- Password: `ChangeMeInProd2026!`  
-*(Rotate immediately before connecting a public production domain; see `docs/ENV_SETUP.md`)*.
+**Security & Credential Provisioning**:
+- Zero default passwords: In accordance with production security standards, all administrative access is strictly managed via Supabase Auth (invitation-only) or provisioned via secure server environment variables (`ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `ADMIN_PASSWORD_SALT`).
+- Privileged operations fail closed if authentication or durable database storage is unconfigured.
+- See [`docs/ENV_SETUP.md`](./docs/ENV_SETUP.md) for full configuration instructions.
 
 ---
 

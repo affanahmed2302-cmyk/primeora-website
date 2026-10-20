@@ -41,7 +41,7 @@ Executed command: `npm run build`
 | 17 | `POST /api/enquiry (Valid)` | Lead Handling | HTTP POST | **PASS** | Assigned Enquiry ID `enq_...`, hashed IP, logged in review queue |
 | 18 | `POST /api/admin/login (Bad Pass)` | Authentication | HTTP POST | **PASS** | Rejected with status 401 & attempt logged |
 | 19 | `POST /api/admin/login (Valid)` | Authentication | HTTP POST | **PASS** | Role: `super_admin`, HMAC-SHA256 signed session cookie |
-| 20 | `GET /api/admin/session` | Authorization | Cookie Check | **PASS** | Authenticated as `admin@primeorasolutions.com` |
+| 20 | `GET /api/admin/session` | Authorization | Cookie Check | **PASS** | Authenticated as provisioned administrator |
 | 21 | `GET /api/admin/enquiries` | Admin CMS | JSON Response | **PASS** | Retrieved inbound submissions with triage controls |
 | 22 | `POST /api/admin/team` | Admin CMS | HTTP POST | **PASS** | Created new team member profile via API |
 | 23 | `Public CMS Reflection` | CMS Realtime | Public API | **PASS** | Public `/api/team` immediately reflects newly added profile without editing code |

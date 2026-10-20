@@ -9,14 +9,23 @@ export async function GET(req: NextRequest) {
 
     // If verified admin, include draft and inactive items as well
     const includeAll = Boolean(session);
-    const members = getTeamMembers(includeAll);
+    const members = await getTeamMembers(includeAll);
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       members,
       isAdminView: includeAll,
     });
-  } catch (error) {
+
+    // Public visitors can cache for 60 seconds; admin view must never be cached
+    if (includeAll) {
+      response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    } else {
+      response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
+    }
+
+    return response;
+  } catch {
     return NextResponse.json(
       { success: false, error: 'Failed to fetch team members' },
       { status: 500 }

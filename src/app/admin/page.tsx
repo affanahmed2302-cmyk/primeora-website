@@ -211,7 +211,15 @@ export default function AdminDashboardPage() {
             </button>
           </div>
 
-          {enquiries.length === 0 ? (
+          {user?.role !== 'super_admin' ? (
+            <div className="p-12 text-center space-y-2 text-charcoal-muted">
+              <Shield className="w-8 h-8 mx-auto text-copper" />
+              <p className="text-sm font-semibold text-charcoal">Restricted Administrative Data</p>
+              <p className="text-xs max-w-md mx-auto">
+                Customer enquiries and private client leads are strictly restricted to Super Administrators. As a Content Editor, your permissions are focused on team and practice profile curation.
+              </p>
+            </div>
+          ) : enquiries.length === 0 ? (
             <div className="p-12 text-center space-y-2 text-charcoal-muted">
               <Inbox className="w-8 h-8 mx-auto text-charcoal-muted/40" />
               <p className="text-sm font-medium">No enquiries recorded yet.</p>

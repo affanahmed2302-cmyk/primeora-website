@@ -19,6 +19,7 @@ function EnquiryFormContent() {
     targetTimeline: 'Within 1-2 months',
     websiteUrl: '',
     _hp: '', // Honeypot field for bot detection
+    _ts: Date.now(), // Client mount timestamp for sub-second bot detection
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -119,6 +120,7 @@ function EnquiryFormContent() {
               targetTimeline: 'Within 1-2 months',
               websiteUrl: '',
               _hp: '',
+              _ts: Date.now(),
             });
           }}
           className="px-5 py-2 text-xs font-semibold text-forest bg-ivory border border-border-medium rounded hover:bg-ivory-dark transition-colors"

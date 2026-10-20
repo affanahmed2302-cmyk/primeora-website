@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTeamMembers, saveTeamMember, deleteTeamMember } from '@/lib/cms-store';
-import { verifySession } from '@/lib/auth';
+import { verifySession, isSuperAdmin } from '@/lib/auth';
 import { TeamMember } from '@/types';
 
 // Helper: Require authenticated admin session
@@ -13,18 +13,24 @@ function getAuthenticatedAdmin(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const session = getAuthenticatedAdmin(req);
   if (!session) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ success: false, error: 'Unauthorized: Valid administrative session required.' }, { status: 401 });
   }
 
-  const members = getTeamMembers(true);
-  return NextResponse.json({ success: true, members });
+  try {
+    const members = await getTeamMembers(true);
+    const res = NextResponse.json({ success: true, members });
+    res.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    return res;
+  } catch {
+    return NextResponse.json({ success: false, error: 'Failed to retrieve team members.' }, { status: 500 });
+  }
 }
 
 // POST: Create a new team member
 export async function POST(req: NextRequest) {
   const session = getAuthenticatedAdmin(req);
   if (!session) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ success: false, error: 'Unauthorized: Valid administrative session required.' }, { status: 401 });
   }
 
   try {
@@ -45,7 +51,7 @@ export async function POST(req: NextRequest) {
 
     if (!fullName || !publicTitle || !bio) {
       return NextResponse.json(
-        { success: false, error: 'Full name, public title, and bio are required.' },
+        { success: false, error: 'Full name, public title, and biography are required.' },
         { status: 400 }
       );
     }
@@ -55,7 +61,7 @@ export async function POST(req: NextRequest) {
       id: newId,
       fullName: String(fullName).trim(),
       publicTitle: String(publicTitle).trim(),
-      department: String(department || 'General').trim(),
+      department: String(department || 'Consulting Practice').trim(),
       bio: String(bio).trim(),
       responsibilities: Array.isArray(responsibilities) ? responsibilities.map(String) : [],
       photoUrl: photoUrl ? String(photoUrl).trim() : undefined,
@@ -66,10 +72,12 @@ export async function POST(req: NextRequest) {
       isFounder: Boolean(isFounder),
     };
 
-    const saved = saveTeamMember(newMember);
+    const saved = await saveTeamMember(newMember);
     return NextResponse.json({ success: true, member: saved });
-  } catch (err) {
-    return NextResponse.json({ success: false, error: 'Failed to create team member' }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Failed to create team member.';
+    const status = message.includes('DURABLE_STORAGE_UNCONFIGURED') ? 503 : 500;
+    return NextResponse.json({ success: false, error: message }, { status });
   }
 }
 
@@ -77,7 +85,7 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   const session = getAuthenticatedAdmin(req);
   if (!session) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ success: false, error: 'Unauthorized: Valid administrative session required.' }, { status: 401 });
   }
 
   try {
@@ -88,7 +96,7 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ success: false, error: 'Member ID is required.' }, { status: 400 });
     }
 
-    const members = getTeamMembers(true);
+    const members = await getTeamMembers(true);
     const existing = members.find((m) => m.id === id);
     if (!existing) {
       return NextResponse.json({ success: false, error: 'Team member not found.' }, { status: 404 });
@@ -100,22 +108,23 @@ export async function PUT(req: NextRequest) {
       id, // Preserve immutable ID
     };
 
-    const saved = saveTeamMember(updated);
+    const saved = await saveTeamMember(updated);
     return NextResponse.json({ success: true, member: saved });
-  } catch (err) {
-    return NextResponse.json({ success: false, error: 'Failed to update team member' }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Failed to update team member.';
+    return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 }
 
-// DELETE: Delete a team member (SUPER_ADMIN ONLY)
+// DELETE: Delete a team member (STRICT SUPER_ADMIN ONLY)
 export async function DELETE(req: NextRequest) {
   const session = getAuthenticatedAdmin(req);
   if (!session) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ success: false, error: 'Unauthorized: Valid administrative session required.' }, { status: 401 });
   }
 
-  // Strict role check: Only super_admin can delete
-  if (session.role !== 'super_admin') {
+  // Strict role check: Only super_admin can permanently delete records
+  if (!isSuperAdmin(session)) {
     return NextResponse.json(
       { success: false, error: 'Forbidden: Only super administrators can permanently delete records.' },
       { status: 403 }
@@ -127,16 +136,17 @@ export async function DELETE(req: NextRequest) {
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ success: false, error: 'Member ID is required' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Member ID is required.' }, { status: 400 });
     }
 
-    const deleted = deleteTeamMember(id);
+    const deleted = await deleteTeamMember(id);
     if (!deleted) {
-      return NextResponse.json({ success: false, error: 'Member not found or already deleted' }, { status: 404 });
+      return NextResponse.json({ success: false, error: 'Member not found or already deleted.' }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true, message: 'Member deleted successfully' });
-  } catch (err) {
-    return NextResponse.json({ success: false, error: 'Failed to delete member' }, { status: 500 });
+    return NextResponse.json({ success: true, message: 'Member deleted successfully.' });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Failed to delete member.';
+    return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 }

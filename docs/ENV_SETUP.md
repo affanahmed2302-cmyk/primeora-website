@@ -41,10 +41,13 @@ This document specifies the environment variables, configuration procedures, and
    node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
    ```
 3. Set your `ADMIN_JWT_SECRET` in `.env.local`.
-4. Initial Admin Credentials (local testing default):
-   - Email: `admin@primeorasolutions.com`
-   - Initial Password: `ChangeMeInProd2026!`
-   *(You can create additional administrator accounts or change credentials via the admin console)*.
+4. Provision Administrative Credentials:
+   - **Recommended (Supabase Auth)**: Create an administrative user in your Supabase Auth dashboard, and insert a corresponding record into `public.admin_profiles` with `role = 'super_admin'`.
+   - **Alternative (Environment Provisioned)**: Set `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, and `ADMIN_PASSWORD_SALT` in `.env.local` using the generator below:
+     ```bash
+     node -e "const c=require('crypto'); const s=c.randomBytes(16).toString('hex'); const h=c.pbkdf2Sync('YOUR_CHOSEN_PASSWORD', s, 100000, 64, 'sha512').toString('hex'); console.log('ADMIN_PASSWORD_SALT=' + s); console.log('ADMIN_PASSWORD_HASH=' + h);"
+     ```
+   - Note: The platform operates with **zero default passwords**. Unconfigured environments fail closed.
 
 ---
 
