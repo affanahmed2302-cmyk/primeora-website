@@ -56,6 +56,7 @@ public_routes = [
     ('/privacy', 'GDPR/DPDP Privacy Disclosure'),
     ('/terms', 'Entity Governance Terms'),
     ('/cookie-preferences', 'Cookie Preferences'),
+    ('/admin/update-password', 'Founder Secure Password Setup'),
     ('/sitemap.xml', 'Technical XML Sitemap'),
     ('/robots.txt', 'Search Engine Robots Directive'),
 ]
@@ -385,7 +386,24 @@ except Exception as e:
     record('DevOps Security: Response Headers', False, str(e))
 
 # -------------------------------------------------------------------
-# 8. ROBOTS DIRECTIVE & DISALLOW CHECKS
+# 8. PASSWORD UPDATE API GUARD
+# -------------------------------------------------------------------
+try:
+    req = urllib.request.Request(
+        base + '/api/admin/update-password',
+        data=json.dumps({}).encode(),
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    urllib.request.urlopen(req)
+    record('Password Setup Guard: Missing Token', False, 'Should reject empty payload')
+except urllib.error.HTTPError as e:
+    record('Password Setup Guard: Missing Token', e.code in (400, 503), f'Correctly rejected with HTTP {e.code}')
+except Exception as e:
+    record('Password Setup Guard: Missing Token', False, str(e))
+
+# -------------------------------------------------------------------
+# 9. ROBOTS DIRECTIVE & DISALLOW CHECKS
 # -------------------------------------------------------------------
 try:
     req = urllib.request.Request(base + '/robots.txt')
