@@ -10,7 +10,7 @@ import SmoothScrollProvider from '@/components/motion/SmoothScrollProvider';
 import AuthHashListener from '@/components/AuthHashListener';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://primeorasolutions.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://primeora-solutions.netlify.app'),
   title: {
     default: `${BRAND_CONFIG.name} — ${BRAND_CONFIG.tagline}`,
     template: `%s | ${BRAND_CONFIG.name}`,

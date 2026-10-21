@@ -39,7 +39,7 @@ const FOUNDERS = [
   },
   {
     fullName: 'Akarsh P. Thodaskar',
-    email: 'akarsh@primeorasolutions.com',
+    email: 'akarshthodaskar@gmail.com',
     role: 'super_admin'
   }
 ];
