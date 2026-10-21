@@ -1,0 +1,40 @@
+{
+  "name": "primeora-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Primeora Solutions — Strategy & Technology Consultancy Website, CMS, and Digital Systems Engineering Studio",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "python tests/e2e_verify.py",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.1",
+    "@supabase/supabase-js": "^2.118.0",
+    "@types/three": "^0.186.0",
+    "clsx": "^2.1.1",
+    "gsap": "^3.12.7",
+    "lenis": "^1.3.27",
+    "lucide-react": "^0.475.0",
+    "motion": "^14.5.0",
+    "next": "^15.1.7",
+    "pg": "^8.23.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.0.1",
+    "three": "^0.186.1",
+    "vanta": "^0.5.24"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.2",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3"
+  }
+}
