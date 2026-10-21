@@ -185,14 +185,18 @@ const DETAILED_PHASES = [
 
 export default function ProcessPage() {
   return (
-    <div className="pt-28 pb-20 md:pt-36 md:pb-28 bg-[#FBF9F5] dark:bg-[#121110] min-h-screen text-editorial-ink dark:text-[#FBF9F5] transition-colors duration-200">
-      {/* Header Banner without eyebrow */}
+    <div className="pt-28 pb-20 md:pt-36 md:pb-28 bg-[#FBF9F5] dark:bg-[#090807] min-h-screen text-editorial-ink dark:text-[#FBF9F5] transition-colors duration-200">
+      {/* Header Banner */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 sm:mb-20">
         <div className="max-w-3xl">
+          <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#E07A5F]" />
+            <span>Structured Methodology</span>
+          </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight font-sans text-editorial-ink dark:text-[#FBF9F5]">
             Our Four-Step Engineering Methodology
           </h1>
-          <p className="mt-4 text-base sm:text-lg text-[#5A544E] dark:text-[#A8A196] leading-relaxed font-serif">
+          <p className="mt-4 text-base sm:text-lg text-[#5A544E] dark:text-[#9E9689] leading-relaxed font-serif">
             A transparent, disciplined project lifecycle designed to eliminate assumption through structured discovery, architectural blueprints, verified builds, and continuous optimization.
           </p>
         </div>
@@ -203,7 +207,7 @@ export default function ProcessPage() {
             <a
               key={phase.id}
               href={`#${phase.id}`}
-              className="p-4 bg-white dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#2C2926] rounded-lg hover:border-[#C25E38]/50 dark:hover:border-[#E07A5F]/50 transition-colors group block"
+              className="p-4 bg-white dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] rounded-lg hover:border-[#C25E38]/50 dark:hover:border-[#E07A5F]/50 transition-colors group block"
             >
               <div className="flex items-center justify-between mb-1">
                 <span className={`font-mono text-sm font-bold ${phase.accent.numberColor}`}>
@@ -231,14 +235,14 @@ export default function ProcessPage() {
               key={phase.id}
               id={phase.id}
               aria-labelledby={`${phase.id}-title`}
-              className={`bg-white dark:bg-[#181715] border ${phase.accent.border} rounded-2xl overflow-hidden shadow-xs`}
+              className={`bg-white dark:bg-[#141312] border ${phase.accent.border} dark:border-[#242220] rounded-2xl overflow-hidden shadow-xs`}
             >
               {/* Phase Header */}
-              <div className={`p-6 sm:p-8 border-b ${phase.accent.border} ${phase.accent.headerBg}`}>
+              <div className={`p-6 sm:p-8 border-b ${phase.accent.border} dark:border-[#242220] ${phase.accent.headerBg}`}>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div className="flex items-start sm:items-center gap-4">
                     <div
-                      className={`w-12 h-12 rounded-xl border ${phase.accent.border} bg-white dark:bg-[#201E1B] flex items-center justify-center ${phase.accent.iconColor} shadow-xs flex-shrink-0`}
+                      className={`w-12 h-12 rounded-xl border ${phase.accent.border} dark:border-[#242220] bg-white dark:bg-[#1C1A18] flex items-center justify-center ${phase.accent.iconColor} shadow-xs flex-shrink-0`}
                     >
                       <Icon className="w-6 h-6" />
                     </div>
@@ -326,7 +330,7 @@ export default function ProcessPage() {
               </div>
 
               {/* Quality Gate Footer */}
-              <div className="px-6 py-4 sm:px-8 bg-[#FBF9F5] dark:bg-[#1E1C1A] border-t border-[#E5DDD0] dark:border-[#2C2926] flex items-start sm:items-center gap-3">
+              <div className="px-6 py-4 sm:px-8 bg-[#FBF9F5] dark:bg-[#1C1A18] border-t border-[#E5DDD0] dark:border-[#242220] flex items-start sm:items-center gap-3">
                 <ShieldCheck className="w-5 h-5 text-[#C25E38] dark:text-[#E07A5F] flex-shrink-0 mt-0.5 sm:mt-0" />
                 <div className="text-xs leading-relaxed">
                   <span className="font-mono uppercase font-bold text-[#7C7469] dark:text-[#8E867C] mr-2">
@@ -345,7 +349,7 @@ export default function ProcessPage() {
       {/* Handover, Ownership & Warranty Standards */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white dark:bg-[#22201D] text-[#5A544E] dark:text-[#B8B0A5] border border-[#DDD5C7] dark:border-[#33302B] rounded-md text-xs font-mono mb-3 shadow-xs">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white dark:bg-[#141312] text-[#5A544E] dark:text-[#B8B0A5] border border-[#DDD5C7] dark:border-[#242220] rounded-md text-xs font-mono mb-3 shadow-xs">
             <span className="w-1.5 h-1.5 rounded-full bg-[#059669] dark:bg-[#34D399]" />
             <span>OPERATIONAL ASSURANCE</span>
           </div>
@@ -358,7 +362,7 @@ export default function ProcessPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white dark:bg-[#1C1A18] p-6 rounded-xl border border-[#E5DDD0] dark:border-[#2C2926] shadow-xs">
+          <div className="bg-white dark:bg-[#141312] p-6 rounded-xl border border-[#E5DDD0] dark:border-[#242220] shadow-xs">
             <FolderGit2 className="w-6 h-6 text-[#C25E38] dark:text-[#E07A5F] mb-3" />
             <h3 className="text-base font-bold font-sans text-editorial-ink dark:text-[#FBF9F5] mb-2">
               100% Code &amp; IP Ownership
@@ -368,7 +372,7 @@ export default function ProcessPage() {
             </p>
           </div>
 
-          <div className="bg-white dark:bg-[#1C1A18] p-6 rounded-xl border border-[#E5DDD0] dark:border-[#2C2926] shadow-xs">
+          <div className="bg-white dark:bg-[#141312] p-6 rounded-xl border border-[#E5DDD0] dark:border-[#242220] shadow-xs">
             <ShieldCheck className="w-6 h-6 text-[#059669] dark:text-[#34D399] mb-3" />
             <h3 className="text-base font-bold font-sans text-editorial-ink dark:text-[#FBF9F5] mb-2">
               30-Day Post-Launch Warranty
@@ -378,7 +382,7 @@ export default function ProcessPage() {
             </p>
           </div>
 
-          <div className="bg-white dark:bg-[#1C1A18] p-6 rounded-xl border border-[#E5DDD0] dark:border-[#2C2926] shadow-xs">
+          <div className="bg-white dark:bg-[#141312] p-6 rounded-xl border border-[#E5DDD0] dark:border-[#242220] shadow-xs">
             <FileCode2 className="w-6 h-6 text-[#3B82F6] dark:text-[#60A5FA] mb-3" />
             <h3 className="text-base font-bold font-sans text-editorial-ink dark:text-[#FBF9F5] mb-2">
               Runbooks &amp; Video Walkthrough
@@ -390,7 +394,7 @@ export default function ProcessPage() {
         </div>
 
         {/* CTA Card */}
-        <div className="mt-16 bg-[#F4EFEA] dark:bg-[#1A1816] border border-[#E5DDD0] dark:border-[#2C2926] rounded-2xl p-8 sm:p-12 text-center max-w-3xl mx-auto shadow-xs">
+        <div className="mt-16 bg-[#F4EFEA] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] rounded-2xl p-8 sm:p-12 text-center max-w-3xl mx-auto shadow-xs">
           <h2 className="text-2xl sm:text-3xl font-bold font-sans text-editorial-ink dark:text-[#FBF9F5] mb-3">
             Start with Phase 01: Discovery
           </h2>
@@ -407,7 +411,7 @@ export default function ProcessPage() {
             </Link>
             <Link
               href="/services"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md bg-white dark:bg-[#22201D] border border-[#DDD5C7] dark:border-[#383430] text-editorial-ink dark:text-[#FBF9F5] hover:border-[#C25E38] text-sm font-semibold shadow-xs transition-colors"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md bg-white dark:bg-[#1C1A18] border border-[#DDD5C7] dark:border-[#242220] text-editorial-ink dark:text-[#FBF9F5] hover:border-[#C25E38] text-sm font-semibold shadow-xs transition-colors"
             >
               <span>Explore All Services</span>
             </Link>

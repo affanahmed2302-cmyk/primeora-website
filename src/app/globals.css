@@ -26,24 +26,24 @@
 }
 
 .dark {
-  /* NIGHT THEME — Deep Roasted Espresso & Luminous Terracotta */
-  --bg-canvas: #121110;
-  --bg-surface: #1A1917;
-  --bg-surface-elevated: #242220;
-  --bg-subtle: #181716;
+  /* NIGHT THEME (DEFAULT) — Deep Obsidian & Copper Illumination */
+  --bg-canvas: #090807;
+  --bg-surface: #141312;
+  --bg-surface-elevated: #1C1A18;
+  --bg-subtle: #11100E;
 
   --text-primary: #F5F2EB;
-  --text-secondary: #A8A29A;
-  --text-muted: #736E67;
+  --text-secondary: #9E988F;
+  --text-muted: #6E6860;
 
-  --border-subtle: #2C2926;
-  --border-medium: #3D3935;
-  --border-strong: #544F49;
+  --border-subtle: #242220;
+  --border-medium: #36332F;
+  --border-strong: #4D4842;
 
-  --accent-primary: #D9774E;
-  --accent-hover: #E28862;
-  --accent-light: rgba(217, 119, 78, 0.15);
-  --accent-glow: rgba(217, 119, 78, 0.25);
+  --accent-primary: #E07A5F;
+  --accent-hover: #F08E73;
+  --accent-light: rgba(224, 122, 95, 0.15);
+  --accent-glow: rgba(224, 122, 95, 0.25);
 
   --brand-blue: #1065FF;
 }

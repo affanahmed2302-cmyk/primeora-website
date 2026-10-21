@@ -2,7 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { SERVICE_PILLARS, BRAND_CONFIG } from '@/config/brand';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, Globe, Search, UserCheck, Zap, BarChart3, Wrench } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Globe, Search, UserCheck, Zap, BarChart3, Wrench, Clock } from 'lucide-react';
 import PackagesSection from '@/components/PackagesSection';
 
 const iconMap = {
@@ -15,9 +15,9 @@ const iconMap = {
 };
 
 export const metadata: Metadata = {
-  title: 'Engineering Practices & Package Tiers | Primeora Solutions',
+  title: 'Engineering Practices & Service Systems | Primeora Solutions',
   description:
-    'Detailed breakdown of Primeora Solutions’ six engineering practices: Digital Presence, Customer Acquisition, Lead Systems, Automation, Analytics, and Turnkey Management.',
+    'Comprehensive breakdown of Primeora Solutions’ six engineering practices: Digital Presence, Customer Acquisition, Lead Systems, Automation, Analytics, and Turnkey Management.',
   alternates: {
     canonical: 'https://primeora-solutions.netlify.app/services',
   },
@@ -25,15 +25,19 @@ export const metadata: Metadata = {
 
 export default function ServicesPage() {
   return (
-    <div className="pt-28 pb-20 md:pt-36 md:pb-28 bg-editorial-canvas dark:bg-[#121110] min-h-screen text-editorial-ink dark:text-[#FBF9F5] transition-colors duration-200">
-      {/* Page Header without eyebrow */}
+    <div className="pt-28 pb-20 md:pt-36 md:pb-28 bg-[#090807] min-h-screen text-[#F5F2EB] transition-colors duration-200">
+      {/* Page Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-        <div className="max-w-3xl">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight font-sans text-editorial-ink dark:text-[#FBF9F5]">
+        <div className="max-w-3xl space-y-4">
+          <div className="flex items-center gap-2 text-xs font-mono text-[#E07A5F]">
+            <span className="w-2 h-2 rounded-full bg-[#E07A5F] animate-pulse" />
+            <span className="tracking-widest uppercase">Comprehensive Practice Portfolio</span>
+          </div>
+          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight font-sans text-[#F5F2EB]">
             Six Connected Service Practices
           </h1>
-          <p className="mt-4 text-base sm:text-lg text-[#5A544E] dark:text-[#A8A196] leading-relaxed font-serif">
-            We don’t sell fragmented gigs. We architect and maintain an interconnected system covering your website, search discovery, enquiry pipeline, operations, and leadership intelligence.
+          <p className="text-base sm:text-lg text-[#9E988F] leading-relaxed font-sans">
+            We don’t sell fragmented gigs or superficial redesigns. We architect and maintain an interconnected system covering your web infrastructure, search discovery, enquiry pipeline, operations, and leadership intelligence.
           </p>
         </div>
       </div>
@@ -46,34 +50,34 @@ export default function ServicesPage() {
             return (
               <div
                 key={pillar.id}
-                className="bg-white dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#2C2926] rounded-xl p-7 flex flex-col justify-between hover:border-[#C25E38]/50 dark:hover:border-[#E07A5F]/40 hover:shadow-md transition-all duration-200 group"
+                className="bg-[#141312] border border-[#242220] hover:border-[#36332F] rounded-2xl p-8 flex flex-col justify-between hover:shadow-xl transition-all duration-300 group"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-[#FBF9F5] dark:bg-[#24221F] border border-[#DDD5C7] dark:border-[#383430] flex items-center justify-center text-[#C25E38] dark:text-[#E07A5F]">
-                      <Icon className="w-5 h-5" />
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="w-12 h-12 rounded-xl bg-[#1C1A18] border border-[#242220] flex items-center justify-center text-[#E07A5F] group-hover:border-[#E07A5F]/40 transition-colors">
+                      <Icon className="w-6 h-6" />
                     </div>
-                    <span className="text-xs font-mono text-[#7C7469] dark:text-[#8E867C]">
+                    <span className="text-xs font-mono text-[#9E988F] px-2.5 py-1 rounded bg-[#1C1A18] border border-[#242220]">
                       0{idx + 1} / {pillar.badge}
                     </span>
                   </div>
 
-                  <h2 className="text-xl font-bold text-editorial-ink dark:text-[#FBF9F5] mb-2 font-sans group-hover:text-[#C25E38] dark:group-hover:text-[#E07A5F] transition-colors">
+                  <h2 className="text-xl sm:text-2xl font-bold text-[#F5F2EB] mb-2 font-sans group-hover:text-[#E07A5F] transition-colors">
                     {pillar.title}
                   </h2>
 
-                  <p className="text-sm text-[#5A544E] dark:text-[#A8A196] leading-relaxed mb-6">
+                  <p className="text-sm text-[#9E988F] leading-relaxed mb-6 font-sans">
                     {pillar.shortDescription}
                   </p>
 
-                  <div className="pt-4 border-t border-[#E5DDD0] dark:border-[#2C2926] mb-6">
-                    <span className="text-[11px] font-mono uppercase text-[#7C7469] dark:text-[#8E867C] block mb-2 font-medium">
-                      Key Deliverables:
+                  <div className="pt-4 border-t border-[#242220] mb-6">
+                    <span className="text-xs font-mono uppercase text-[#E07A5F] block mb-3 font-semibold">
+                      Standard Deliverables:
                     </span>
-                    <ul className="space-y-1.5">
+                    <ul className="space-y-2">
                       {pillar.deliverablesSummary.slice(0, 3).map((item, i) => (
-                        <li key={i} className="text-xs text-[#3D3833] dark:text-[#D4CDC3] flex items-start gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#C25E38] dark:text-[#E07A5F] flex-shrink-0 mt-0.5" />
+                        <li key={i} className="text-xs text-[#C4BAA9] flex items-start gap-2">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#E07A5F] flex-shrink-0 mt-0.5" />
                           <span>{item}</span>
                         </li>
                       ))}
@@ -83,10 +87,10 @@ export default function ServicesPage() {
 
                 <Link
                   href={`/services/${pillar.id}`}
-                  className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] hover:text-editorial-ink dark:hover:text-white transition-colors"
+                  className="inline-flex items-center text-xs font-mono font-semibold uppercase tracking-wider text-[#E07A5F] hover:text-[#F08E73] transition-colors gap-1.5"
                 >
                   <span>Explore Practice Specs</span>
-                  <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
             );
@@ -98,20 +102,32 @@ export default function ServicesPage() {
       <PackagesSection />
 
       {/* Direct Scope Consultation CTA */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 text-center">
-        <h2 className="text-2xl sm:text-3xl font-bold font-sans mb-3 text-editorial-ink dark:text-[#FBF9F5]">
-          Unsure Which Package Tier Fits Your Growth Stage?
-        </h2>
-        <p className="text-sm text-[#5A544E] dark:text-[#A8A196] max-w-xl mx-auto mb-6 font-serif">
-          Schedule a technical discovery call. We diagnose your bottleneck first and recommend the leanest scope that solves it.
-        </p>
-        <Link
-          href="/contact"
-          className="inline-flex items-center justify-center px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#C25E38] hover:bg-[#A84F2E] rounded-lg transition-colors shadow-sm group"
-        >
-          <span>Request Technical Scope Consultation</span>
-          <ArrowRight className="w-4 h-4 ml-1.5 transition-transform group-hover:translate-x-1" />
-        </Link>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
+        <div className="bg-[#141312] border border-[#242220] rounded-2xl p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="max-w-2xl space-y-2">
+            <h3 className="text-2xl font-bold font-sans text-[#F5F2EB]">
+              Need help deciding which practices your business requires?
+            </h3>
+            <p className="text-sm text-[#9E988F] leading-relaxed">
+              Take our 6-dimension Digital Readiness Assessment or speak directly with our founding partners. We evaluate your bottlenecks and deliver an objective architectural proposal.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+            <Link
+              href="/readiness"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-5 py-3 text-xs font-mono font-semibold uppercase tracking-wider text-[#F5F2EB] bg-[#1C1A18] hover:bg-[#242220] border border-[#242220] hover:border-[#36332F] rounded-lg transition-colors"
+            >
+              <span>Run Diagnostic (3 mins)</span>
+            </Link>
+            <Link
+              href="/contact"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 text-xs font-mono font-semibold uppercase tracking-wider text-white bg-[#C25E38] hover:bg-[#A34520] rounded-lg transition-colors shadow-sm shadow-[#C25E38]/20"
+            >
+              <span>Consult with Partners</span>
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -171,24 +171,28 @@ export default function ProcessSection() {
       ref={containerRef}
       id="process"
       aria-labelledby="process-heading"
-      className="py-20 md:py-28 bg-[#F4EFEA] dark:bg-[#171615] border-b border-[#E5DDD0] dark:border-[#2C2926] relative overflow-hidden transition-colors duration-200"
+      className="py-24 md:py-32 bg-[#F7F4EE] dark:bg-[#090807] border-b border-[#E5DDD0] dark:border-[#242220] relative overflow-hidden transition-colors duration-200"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header without eyebrow */}
-        <div className="max-w-3xl mb-12 sm:mb-16">
+        {/* Section Header */}
+        <div className="max-w-3xl mb-14 sm:mb-18">
+          <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#E07A5F]" />
+            <span>Structured Methodology</span>
+          </div>
           <h2
             id="process-heading"
             className="text-3xl sm:text-4xl lg:text-4xl font-bold text-[#191817] dark:text-[#FBF9F5] tracking-tight font-sans"
           >
             How We Work Together
           </h2>
-          <p className="mt-3 text-base text-[#5A544E] dark:text-[#A8A196] leading-relaxed max-w-2xl font-serif">
+          <p className="mt-3 text-base text-[#5A544E] dark:text-[#9E9689] leading-relaxed max-w-2xl font-serif">
             A disciplined four-step engineering lifecycle designed to eliminate ambiguity, enforce milestone accountability, and guarantee zero-downtime production outcomes.
           </p>
         </div>
 
         {/* Process Step Progression Bar (Desktop) */}
-        <div className="hidden lg:flex items-center justify-between mb-8 px-2 max-w-6xl mx-auto">
+        <div className="hidden lg:flex items-center justify-between mb-10 px-2 max-w-6xl mx-auto">
           {STEPS.map((step, idx) => (
             <div key={step.id} className="flex items-center flex-1 last:flex-initial">
               <div className="flex items-center gap-2.5">
@@ -202,7 +206,7 @@ export default function ProcessSection() {
                 </span>
               </div>
               {idx < STEPS.length - 1 && (
-                <div className="flex-1 mx-4 h-px bg-gradient-to-r from-[#D8CEBF] to-[#C7BBA8] dark:from-[#3A3632] dark:to-[#4A4540]" />
+                <div className="flex-1 mx-4 h-px bg-gradient-to-r from-[#D8CEBF] to-[#C7BBA8] dark:from-[#242220] dark:to-[#383430]" />
               )}
             </div>
           ))}
@@ -218,7 +222,7 @@ export default function ProcessSection() {
             return (
               <div
                 key={step.id}
-                className={`process-card opacity-100 bg-white dark:bg-[#1C1A18] border ${step.accentColor.border} ${step.accentColor.hoverBorder} rounded-xl p-6 flex flex-col justify-between shadow-xs hover:shadow-md transition-all duration-200 group relative`}
+                className="process-card opacity-100 bg-white dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] hover:border-[#C25E38] dark:hover:border-[#E07A5F] rounded-xl p-6 flex flex-col justify-between shadow-xs hover:shadow-lg transition-all duration-300 group relative"
               >
                 {/* Top: Header, Badge, Number, Icon */}
                 <div>
@@ -232,7 +236,7 @@ export default function ProcessSection() {
                       </span>
                     </div>
 
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${step.accentColor.iconBg} ${step.accentColor.iconText} border ${step.accentColor.border}`}>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${step.accentColor.iconBg} ${step.accentColor.iconText} border border-current/20`}>
                       <Icon className="w-4 h-4" />
                     </div>
                   </div>
@@ -245,14 +249,14 @@ export default function ProcessSection() {
                     {step.tagline}
                   </p>
 
-                  <p className="text-xs text-[#5A544E] dark:text-[#A8A196] leading-relaxed mb-5">
+                  <p className="text-xs text-[#5A544E] dark:text-[#9E9689] leading-relaxed mb-5">
                     {step.description}
                   </p>
 
                   {/* Client Action & Deliverable */}
-                  <div className="pt-3 border-t border-[#E5DDD0] dark:border-[#2C2926] space-y-2 text-xs">
+                  <div className="pt-3 border-t border-[#E5DDD0] dark:border-[#242220] space-y-2 text-xs">
                     <div>
-                      <span className="text-[10px] font-mono uppercase text-[#7C7469] dark:text-[#8E867C] block font-semibold">
+                      <span className="text-[10px] font-mono uppercase text-[#7C7469] dark:text-[#7A7368] block font-semibold">
                         Client Input:
                       </span>
                       <span className="text-[11px] text-[#3D3833] dark:text-[#DDD6CC] leading-tight block mt-0.5">
@@ -261,10 +265,10 @@ export default function ProcessSection() {
                     </div>
 
                     <div>
-                      <span className="text-[10px] font-mono uppercase text-[#7C7469] dark:text-[#8E867C] block font-semibold">
+                      <span className="text-[10px] font-mono uppercase text-[#7C7469] dark:text-[#7A7368] block font-semibold">
                         Tangible Deliverable:
                       </span>
-                      <span className="text-[11px] font-medium text-[#191817] dark:text-white leading-tight block mt-0.5">
+                      <span className="text-[11px] font-medium text-[#191817] dark:text-[#FBF9F5] leading-tight block mt-0.5">
                         {step.deliverable}
                       </span>
                     </div>
@@ -272,12 +276,12 @@ export default function ProcessSection() {
                 </div>
 
                 {/* Bottom Duration Badge */}
-                <div className="mt-5 pt-3 border-t border-[#E5DDD0] dark:border-[#2C2926] flex items-center justify-between text-[11px] font-mono text-[#7C7469] dark:text-[#8E867C]">
+                <div className="mt-5 pt-3 border-t border-[#E5DDD0] dark:border-[#242220] flex items-center justify-between text-[11px] font-mono text-[#7C7469] dark:text-[#9E9689]">
                   <span className="inline-flex items-center gap-1">
                     <Clock className="w-3 h-3 text-[#C25E38] dark:text-[#E07A5F]" />
                     <span>Duration</span>
                   </span>
-                  <span className="font-semibold text-[#191817] dark:text-white">
+                  <span className="font-semibold text-[#191817] dark:text-[#FBF9F5]">
                     {step.duration}
                   </span>
                 </div>

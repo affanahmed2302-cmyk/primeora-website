@@ -70,7 +70,7 @@ export const BRAND_CONFIG = {
     { label: 'Process', href: '/process' },
     { label: 'Work', href: '/work' },
     { label: 'About', href: '/about' },
-    { label: 'Team', href: '/team' },
+    { label: 'Founders', href: '/founders' },
     { label: 'Readiness', href: '/readiness' },
     { label: 'Insights', href: '/insights' },
     { label: 'Contact', href: '/contact' },

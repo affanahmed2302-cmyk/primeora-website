@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { SERVICE_PILLARS } from '@/config/brand';
-import { Globe, Search, UserCheck, Zap, BarChart3, Wrench, ArrowRight } from 'lucide-react';
+import { Globe, Search, UserCheck, Zap, BarChart3, Wrench, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 const iconMap = {
   'digital-presence': Globe,
@@ -16,15 +16,19 @@ const iconMap = {
 
 export default function ServicePillarsSection() {
   return (
-    <section id="services" className="py-20 md:py-28 bg-[#FBF9F5] dark:bg-[#121110] border-b border-[#E5DDD0] dark:border-[#2C2926] relative transition-colors duration-200">
+    <section id="services" className="py-20 md:py-28 bg-[#090807] border-b border-[#242220] relative transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header without eyebrow */}
-        <div className="max-w-3xl mb-14">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#191817] dark:text-[#FBF9F5] tracking-tight font-sans">
+        {/* Section Header */}
+        <div className="max-w-3xl mb-14 space-y-3">
+          <div className="flex items-center gap-2 text-xs font-mono text-[#E07A5F]">
+            <span className="w-2 h-2 rounded-full bg-[#E07A5F] animate-pulse" />
+            <span className="tracking-widest uppercase">Systemic Engineering</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#F5F2EB] tracking-tight font-sans">
             Six Connected Service Pillars
           </h2>
-          <p className="mt-3 text-base text-[#5A544E] dark:text-[#A8A196] leading-relaxed max-w-2xl font-serif">
-            Primeora does not sell fragmented deliverables. We engineer an interconnected business system where each pillar reinforces your customer acquisition and daily operations.
+          <p className="text-base text-[#9E988F] leading-relaxed max-w-2xl font-sans">
+            Primeora does not sell fragmented deliverables or disjointed code. We engineer an interconnected business system where each pillar reinforces your customer acquisition and daily operations.
           </p>
         </div>
 
@@ -35,32 +39,32 @@ export default function ServicePillarsSection() {
             return (
               <div
                 key={pillar.id}
-                className="bg-white dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#2C2926] rounded-xl p-7 flex flex-col justify-between hover:border-[#C25E38]/50 dark:hover:border-[#E07A5F]/40 hover:shadow-md transition-all duration-200 group"
+                className="bg-[#141312] border border-[#242220] hover:border-[#36332F] rounded-2xl p-8 flex flex-col justify-between hover:shadow-xl transition-all duration-300 group"
               >
                 <div>
                   <div className="flex items-center justify-between mb-5">
-                    <div className="w-10 h-10 rounded-lg bg-[#FBF9F5] dark:bg-[#24221F] border border-[#DDD5C7] dark:border-[#383430] flex items-center justify-center text-[#C25E38] dark:text-[#E07A5F] group-hover:border-[#C25E38]/50 transition-colors">
-                      <Icon className="w-5 h-5" />
+                    <div className="w-12 h-12 rounded-xl bg-[#1C1A18] border border-[#242220] flex items-center justify-center text-[#E07A5F] group-hover:border-[#E07A5F]/40 transition-colors">
+                      <Icon className="w-6 h-6" />
                     </div>
-                    <span className="text-xs font-mono text-[#7C7469] dark:text-[#8E867C]">
+                    <span className="text-xs font-mono text-[#9E988F] px-2.5 py-1 rounded bg-[#1C1A18] border border-[#242220]">
                       0{idx + 1} / {pillar.badge}
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-bold text-[#191817] dark:text-[#FBF9F5] mb-2.5 font-sans group-hover:text-[#C25E38] dark:group-hover:text-[#E07A5F] transition-colors">
+                  <h3 className="text-xl font-bold text-[#F5F2EB] mb-2.5 font-sans group-hover:text-[#E07A5F] transition-colors">
                     {pillar.title}
                   </h3>
 
-                  <p className="text-sm text-[#5A544E] dark:text-[#A8A196] leading-relaxed mb-6">
+                  <p className="text-sm text-[#9E988F] leading-relaxed mb-6 font-sans">
                     {pillar.shortDescription}
                   </p>
 
-                  <div className="pt-4 border-t border-[#E5DDD0] dark:border-[#2C2926]">
-                    <p className="text-xs font-mono uppercase text-[#7C7469] dark:text-[#8E867C] mb-2.5 font-medium">Key Deliverables:</p>
-                    <ul className="space-y-1.5 mb-6">
+                  <div className="pt-4 border-t border-[#242220]">
+                    <p className="text-xs font-mono uppercase text-[#E07A5F] mb-3 font-semibold">Key Deliverables:</p>
+                    <ul className="space-y-2 mb-6">
                       {pillar.deliverablesSummary.slice(0, 3).map((item, i) => (
-                        <li key={i} className="text-xs text-[#3D3833] dark:text-[#D4CDC3] flex items-start gap-2">
-                          <span className="text-[#C25E38] dark:text-[#E07A5F] mt-0.5">•</span>
+                        <li key={i} className="text-xs text-[#C4BAA9] flex items-start gap-2">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#E07A5F] flex-shrink-0 mt-0.5" />
                           <span>{item}</span>
                         </li>
                       ))}
@@ -70,10 +74,10 @@ export default function ServicePillarsSection() {
 
                 <Link
                   href={`/services/${pillar.id}`}
-                  className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] hover:text-[#191817] dark:hover:text-white transition-colors pt-2"
+                  className="inline-flex items-center text-xs font-mono font-semibold uppercase tracking-wider text-[#E07A5F] hover:text-[#F08E73] transition-colors gap-1.5 pt-2"
                 >
                   <span>Explore Practice Specs</span>
-                  <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
             );
@@ -81,18 +85,18 @@ export default function ServicePillarsSection() {
         </div>
 
         {/* Bottom Banner */}
-        <div className="mt-12 p-6 bg-[#F4EFEA] dark:bg-[#181715] border border-[#E5DDD0] dark:border-[#2C2926] rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
-          <div>
-            <p className="text-sm font-semibold text-[#191817] dark:text-[#FBF9F5] font-sans">
-              Need a tailored combination across multiple practice areas?
+        <div className="mt-12 p-8 bg-[#141312] border border-[#242220] rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+          <div className="space-y-1">
+            <p className="text-base font-bold text-[#F5F2EB] font-sans">
+              Need a tailored architecture across multiple practice areas?
             </p>
-            <p className="text-xs text-[#5A544E] dark:text-[#A8A196] mt-0.5">
+            <p className="text-xs text-[#9E988F]">
               We structure custom implementation scopes or turnkey retainer partnerships based on your operational bottlenecks.
             </p>
           </div>
           <Link
             href="/services"
-            className="inline-flex items-center justify-center px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-[#191817] dark:text-[#FBF9F5] bg-white dark:bg-[#22201D] hover:bg-[#EAE4DC] dark:hover:bg-[#2C2926] border border-[#DDD5C7] dark:border-[#383430] rounded-md transition-colors flex-shrink-0 shadow-xs"
+            className="inline-flex items-center justify-center px-5 py-3 text-xs font-mono font-semibold uppercase tracking-wider text-[#F5F2EB] bg-[#1C1A18] hover:bg-[#242220] border border-[#242220] hover:border-[#36332F] rounded-lg transition-colors flex-shrink-0"
           >
             <span>Compare Package Tiers →</span>
           </Link>
