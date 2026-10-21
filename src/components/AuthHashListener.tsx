@@ -11,8 +11,17 @@ export default function AuthHashListener() {
 
     const hash = window.location.hash;
     if (hash && (hash.includes('access_token=') || hash.includes('type=recovery'))) {
-      if (!window.location.pathname.startsWith('/admin/update-password')) {
-        router.replace(`/admin/update-password${hash}`);
+      if (hash.includes('type=recovery')) {
+        if (!window.location.pathname.startsWith('/admin/reset-password')) {
+          router.replace(`/admin/reset-password${hash}`);
+        }
+      } else {
+        if (
+          !window.location.pathname.startsWith('/admin/update-password') &&
+          !window.location.pathname.startsWith('/admin/reset-password')
+        ) {
+          router.replace(`/admin/update-password${hash}`);
+        }
       }
     }
   }, [router]);
