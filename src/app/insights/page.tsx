@@ -62,14 +62,14 @@ const INSIGHTS_ARTICLES = [
 
 export default function InsightsPage() {
   return (
-    <div className="pt-28 pb-20 md:pt-36 md:pb-28 bg-editorial-canvas dark:bg-[#121110] min-h-screen text-editorial-ink dark:text-[#FBF9F5] transition-colors duration-200">
-      {/* Header without eyebrow */}
+    <div className="pt-28 pb-20 md:pt-36 md:pb-28 bg-[#FBF9F5] dark:bg-[#090807] min-h-screen text-[#191817] dark:text-[#FBF9F5] transition-colors duration-200">
+      {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
         <div className="max-w-3xl">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight font-sans text-editorial-ink dark:text-[#FBF9F5]">
-            Technical Insights &amp; Practice Guidance
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight font-serif text-[#191817] dark:text-[#FBF9F5] mb-4">
+            Technical insights &amp; practice guidance.
           </h1>
-          <p className="mt-4 text-base sm:text-lg text-[#5A544E] dark:text-[#A8A196] leading-relaxed font-serif">
+          <p className="text-base sm:text-lg text-[#5A544E] dark:text-[#9E9689] leading-relaxed font-sans">
             Practical explanations addressing real business-owner challenges across digital presence, search discoverability, workflow automation, and analytics.
           </p>
         </div>
@@ -79,36 +79,36 @@ export default function InsightsPage() {
         {INSIGHTS_ARTICLES.map((art, idx) => (
           <article
             key={idx}
-            className="bg-white dark:bg-[#1C1A18] rounded-xl border border-[#E5DDD0] dark:border-[#2C2926] p-7 sm:p-8 hover:border-[#C25E38]/40 dark:hover:border-[#E07A5F]/30 hover:shadow-md transition-all duration-200 group"
+            className="bg-white dark:bg-[#141312] rounded-2xl border border-[#E5DDD0] dark:border-[#242220] p-7 sm:p-9 hover:border-[#C25E38]/50 dark:hover:border-[#E07A5F]/50 hover:shadow-md transition-all duration-200 shadow-xs group"
           >
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-mono uppercase text-[#C25E38] dark:text-[#E07A5F] font-semibold">
                 {art.category}
               </span>
-              <span className="text-xs font-mono text-[#7C7469] dark:text-[#8E867C]">
+              <span className="text-xs font-mono text-[#7C7469] dark:text-[#7A7368]">
                 {art.readTime}
               </span>
             </div>
 
-            <h2 className="text-xl sm:text-2xl font-bold mb-3 font-sans text-editorial-ink dark:text-[#FBF9F5] group-hover:text-[#C25E38] dark:group-hover:text-[#E07A5F] transition-colors">
+            <h2 className="text-2xl font-bold mb-3 font-serif text-[#191817] dark:text-[#FBF9F5] group-hover:text-[#C25E38] dark:group-hover:text-[#E07A5F] transition-colors">
               {art.title}
             </h2>
 
-            <p className="text-sm text-[#5A544E] dark:text-[#A8A196] leading-relaxed mb-6 font-serif">
+            <p className="text-sm text-[#5A544E] dark:text-[#9E9689] leading-relaxed mb-6 font-sans">
               {art.summary}
             </p>
 
-            <div className="p-4 bg-[#FBF9F5] dark:bg-[#22201D] border border-[#DDD5C7] dark:border-[#33302B] rounded-lg mb-6 flex items-start gap-3 text-xs">
+            <div className="p-4 bg-[#FAF7F2] dark:bg-[#181715] border border-[#E5DDD0] dark:border-[#242220] rounded-xl mb-6 flex items-start gap-3 text-xs">
               <CheckCircle2 className="w-4 h-4 text-[#C25E38] dark:text-[#E07A5F] flex-shrink-0 mt-0.5" />
               <div>
-                <span className="font-semibold text-editorial-ink dark:text-[#FBF9F5] font-sans">Core Architectural Takeaway: </span>
-                <span className="text-[#5A544E] dark:text-[#A8A196]">{art.keyTakeaway}</span>
+                <span className="font-semibold text-[#191817] dark:text-[#FBF9F5] font-sans">Core Architectural Takeaway: </span>
+                <span className="text-[#5A544E] dark:text-[#9E9689]">{art.keyTakeaway}</span>
               </div>
             </div>
 
             <Link
               href="/contact"
-              className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] hover:text-editorial-ink dark:hover:text-white transition-colors"
+              className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] hover:underline transition-colors"
             >
               <span>Discuss Implementing This Standard</span>
               <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
@@ -117,16 +117,16 @@ export default function InsightsPage() {
         ))}
 
         {/* Footer Guidance CTA */}
-        <div className="bg-[#F4EFEA] dark:bg-[#181715] border border-[#E5DDD0] dark:border-[#2C2926] rounded-xl p-8 text-center mt-12 shadow-xs">
-          <h3 className="text-lg font-bold mb-2 font-sans text-editorial-ink dark:text-[#FBF9F5]">
-            Have a Specific Architectural Question for Your Stack?
+        <div className="bg-white dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] rounded-2xl p-8 text-center mt-12 shadow-xs">
+          <h3 className="text-xl font-bold mb-2 font-serif text-[#191817] dark:text-[#FBF9F5]">
+            Have a specific architectural question for your stack?
           </h3>
-          <p className="text-xs text-[#5A544E] dark:text-[#A8A196] max-w-md mx-auto mb-4 font-serif">
+          <p className="text-xs text-[#5A544E] dark:text-[#9E9689] max-w-md mx-auto mb-5 font-sans">
             Our founding engineering partners review tech stack trade-offs directly during discovery.
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center justify-center px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#C25E38] hover:bg-[#A84F2E] rounded-lg transition-colors shadow-sm"
+            className="inline-flex items-center justify-center px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#C25E38] hover:bg-[#A84F2E] dark:bg-[#E07A5F] dark:hover:bg-[#F08E73] dark:text-[#090807] rounded-lg transition-colors shadow-sm"
           >
             <span>Ask an Engineering Partner</span>
           </Link>

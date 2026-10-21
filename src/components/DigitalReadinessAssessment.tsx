@@ -361,37 +361,37 @@ Response SLA: We aim to respond to enquiries within 1–2 business days.`;
   };
 
   return (
-    <div className="bg-[#141312] rounded-2xl border border-[#242220] p-6 sm:p-10 max-w-4xl mx-auto shadow-xl transition-all duration-300 text-[#F5F2EB]">
+    <div className="bg-white dark:bg-[#141312] rounded-2xl border border-[#E5DDD0] dark:border-[#242220] p-6 sm:p-10 max-w-4xl mx-auto shadow-sm transition-all duration-300 text-[#191817] dark:text-[#FBF9F5]">
       {/* Top Header & Telemetry Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-8 border-b border-[#242220] gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-8 border-b border-[#E5DDD0] dark:border-[#242220] gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-[#1C1A18] border border-[#242220] text-[#E07A5F]">
+          <div className="p-2 rounded-lg bg-[#FAF7F2] dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#242220] text-[#C25E38] dark:text-[#E07A5F]">
             <Compass className="w-5 h-5" />
           </div>
           <div>
-            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-[#E07A5F] block">
+            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] block">
               Strategic Consultation Diagnostic
             </span>
-            <h2 className="text-lg font-bold font-sans text-[#F5F2EB]">
+            <h2 className="text-lg font-bold font-sans text-[#191817] dark:text-[#FBF9F5]">
               6-Dimension Digital Systems Audit
             </h2>
           </div>
         </div>
 
-        <div className="flex items-center gap-4 text-xs font-mono text-[#9E988F]">
-          <span className="px-2.5 py-1 rounded bg-[#1C1A18] border border-[#242220]">
+        <div className="flex items-center gap-4 text-xs font-mono text-[#5A544E] dark:text-[#9E9689]">
+          <span className="px-2.5 py-1 rounded bg-[#FAF7F2] dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#242220]">
             Est: ~3 mins
           </span>
-          <span className="text-[#C4BAA9]">
+          <span className="text-[#191817] dark:text-[#C4BAA9]">
             {completed ? 'Diagnosis Complete' : `Dimension ${currentStep + 1} of ${DIMENSIONS.length}`}
           </span>
         </div>
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full bg-[#1C1A18] border border-[#242220] h-2 rounded-full overflow-hidden mb-8">
+      <div className="w-full bg-[#FAF7F2] dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#242220] h-2 rounded-full overflow-hidden mb-8">
         <div
-          className="bg-[#E07A5F] h-full transition-all duration-300"
+          className="bg-[#C25E38] dark:bg-[#E07A5F] h-full transition-all duration-300"
           style={{
             width: `${completed ? 100 : ((currentStep + 1) / DIMENSIONS.length) * 100}%`,
           }}
@@ -403,33 +403,33 @@ Response SLA: We aim to respond to enquiries within 1–2 business days.`;
           {/* Active Dimension Header */}
           <div className="mb-6 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-mono font-semibold uppercase tracking-wider text-[#9E988F]">
+              <span className="text-xs font-mono font-semibold uppercase tracking-wider text-[#7C7469] dark:text-[#9E988F]">
                 {activeDim.name}
               </span>
               <button
                 type="button"
                 onClick={() => setShowGlossary(!showGlossary)}
-                className="inline-flex items-center gap-1 text-xs font-mono text-[#E07A5F] hover:underline"
+                className="inline-flex items-center gap-1 text-xs font-mono text-[#C25E38] dark:text-[#E07A5F] hover:underline"
               >
                 <HelpCircle className="w-3.5 h-3.5" />
                 <span>{showGlossary ? 'Hide Terminology' : 'What is this?'}</span>
               </button>
             </div>
 
-            <h3 className="text-xl sm:text-2xl font-bold font-sans text-[#F5F2EB] leading-tight">
+            <h3 className="text-xl sm:text-2xl font-bold font-sans text-[#191817] dark:text-[#FBF9F5] leading-tight">
               {activeDim.title}
             </h3>
-            <p className="text-xs sm:text-sm text-[#9E988F] leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#5A544E] dark:text-[#9E9689] leading-relaxed">
               {activeDim.subtitle}
             </p>
 
             {/* Expandable Plain-English Glossary Callout */}
             {showGlossary && (
-              <div className="p-4 rounded-xl bg-[#1C1A18] border border-[#36332F] text-xs space-y-1 animate-in fade-in">
-                <span className="font-mono font-bold text-[#E07A5F] uppercase block">
+              <div className="p-4 rounded-xl bg-[#FAF7F2] dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#36332F] text-xs space-y-1 animate-in fade-in">
+                <span className="font-mono font-bold text-[#C25E38] dark:text-[#E07A5F] uppercase block">
                   Plain-English Terminology: {activeDim.glossaryTerm}
                 </span>
-                <p className="text-[#C4BAA9] leading-relaxed">
+                <p className="text-[#5A544E] dark:text-[#C4BAA9] leading-relaxed">
                   {activeDim.glossaryDefinition}
                 </p>
               </div>
@@ -447,24 +447,24 @@ Response SLA: We aim to respond to enquiries within 1–2 business days.`;
                   onClick={() => handleSelectOption(idx)}
                   className={`w-full text-left p-4 sm:p-5 rounded-xl border transition-all duration-200 group flex items-start gap-4 ${
                     isSelected
-                      ? 'bg-[#1C1A18] border-[#E07A5F] shadow-sm'
-                      : 'bg-[#11100E] border-[#242220] hover:border-[#36332F] hover:bg-[#181715]'
+                      ? 'bg-[#FAF7F2] dark:bg-[#1C1A18] border-[#C25E38] dark:border-[#E07A5F] shadow-sm'
+                      : 'bg-white dark:bg-[#11100E] border-[#E5DDD0] dark:border-[#242220] hover:border-[#C4BAA9] dark:hover:border-[#36332F]'
                   }`}
                 >
                   <div
                     className={`w-6 h-6 rounded-full border flex items-center justify-center flex-shrink-0 mt-0.5 text-xs font-mono transition-colors ${
                       isSelected
-                        ? 'border-[#E07A5F] bg-[#E07A5F] text-black font-bold'
-                        : 'border-[#36332F] text-[#9E988F] group-hover:border-[#E07A5F]'
+                        ? 'border-[#C25E38] dark:border-[#E07A5F] bg-[#C25E38] dark:bg-[#E07A5F] text-white dark:text-black font-bold'
+                        : 'border-[#DDD5C7] dark:border-[#36332F] text-[#7C7469] dark:text-[#9E988F] group-hover:border-[#C25E38] dark:group-hover:border-[#E07A5F]'
                     }`}
                   >
                     {idx + 1}
                   </div>
                   <div className="flex-1">
-                    <div className="text-sm sm:text-base font-bold font-sans text-[#F5F2EB] group-hover:text-[#E07A5F] transition-colors">
+                    <div className="text-sm sm:text-base font-bold font-sans text-[#191817] dark:text-[#FBF9F5] group-hover:text-[#C25E38] dark:group-hover:text-[#E07A5F] transition-colors">
                       {opt.label}
                     </div>
-                    <div className="text-xs text-[#9E988F] mt-1 leading-relaxed">
+                    <div className="text-xs text-[#5A544E] dark:text-[#9E9689] mt-1 leading-relaxed">
                       {opt.description}
                     </div>
                   </div>
@@ -474,22 +474,22 @@ Response SLA: We aim to respond to enquiries within 1–2 business days.`;
           </div>
 
           {/* Navigation Controls (Back & Status) */}
-          <div className="flex items-center justify-between pt-4 border-t border-[#242220]">
+          <div className="flex items-center justify-between pt-4 border-t border-[#E5DDD0] dark:border-[#242220]">
             <button
               type="button"
               onClick={handleBack}
               disabled={currentStep === 0}
               className={`inline-flex items-center gap-1.5 px-4 py-2 text-xs font-mono rounded-lg border transition-colors ${
                 currentStep === 0
-                  ? 'opacity-30 cursor-not-allowed border-transparent text-[#6E6860]'
-                  : 'border-[#242220] hover:border-[#36332F] bg-[#1C1A18] text-[#F5F2EB]'
+                  ? 'opacity-30 cursor-not-allowed border-transparent text-[#9E9689]'
+                  : 'border-[#E5DDD0] dark:border-[#242220] hover:border-[#C4BAA9] dark:hover:border-[#36332F] bg-[#FAF7F2] dark:bg-[#1C1A18] text-[#191817] dark:text-[#FBF9F5]'
               }`}
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back</span>
             </button>
 
-            <span className="text-xs font-mono text-[#6E6860]">
+            <span className="text-xs font-mono text-[#7C7469] dark:text-[#6E6860]">
               Select an option above to advance
             </span>
           </div>
@@ -498,20 +498,20 @@ Response SLA: We aim to respond to enquiries within 1–2 business days.`;
         /* Final Comprehensive Diagnostic Results */
         <div className="space-y-8 animate-in fade-in">
           {/* Executive Maturity Header Card */}
-          <div className="p-6 sm:p-8 rounded-2xl bg-[#1C1A18] border border-[#242220] flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="p-6 sm:p-8 rounded-2xl bg-[#FAF7F2] dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#242220] flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="space-y-2">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#9E988F]">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#7C7469] dark:text-[#9E988F]">
                 Digital Systems Maturity Index
               </span>
               <div className="flex items-baseline gap-3">
-                <span className="text-4xl sm:text-5xl font-bold font-sans text-[#F5F2EB]">
+                <span className="text-4xl sm:text-5xl font-bold font-sans text-[#191817] dark:text-[#FBF9F5]">
                   {percentage}%
                 </span>
                 <span className={`px-3 py-1 rounded-md text-xs font-mono font-bold border ${tierColor}`}>
                   {maturityTier}
                 </span>
               </div>
-              <p className="text-xs sm:text-sm text-[#C4BAA9] max-w-xl leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#5A544E] dark:text-[#C4BAA9] max-w-xl leading-relaxed">
                 {tierSummary}
               </p>
             </div>
@@ -520,16 +520,16 @@ Response SLA: We aim to respond to enquiries within 1–2 business days.`;
               <button
                 type="button"
                 onClick={copyResults}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#242220] hover:bg-[#36332F] text-xs font-mono text-[#F5F2EB] transition-colors border border-[#36332F]"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-white dark:bg-[#242220] hover:bg-[#F4EFEA] dark:hover:bg-[#36332F] text-xs font-mono text-[#191817] dark:text-[#FBF9F5] transition-colors border border-[#DDD5C7] dark:border-[#36332F]"
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>{copied ? 'Diagnosis Copied!' : 'Copy Audit Summary'}</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleReset}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-transparent hover:bg-[#1C1A18] text-xs font-mono text-[#9E988F] hover:text-[#F5F2EB] transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-transparent hover:bg-white dark:hover:bg-[#1C1A18] text-xs font-mono text-[#7C7469] dark:text-[#9E988F] hover:text-[#191817] dark:hover:text-[#FBF9F5] transition-colors"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Retake Diagnostic</span>
@@ -539,7 +539,7 @@ Response SLA: We aim to respond to enquiries within 1–2 business days.`;
 
           {/* 6-Dimension Score Breakdown */}
           <div>
-            <h4 className="text-xs font-mono uppercase tracking-widest text-[#9E988F] mb-4 font-semibold">
+            <h4 className="text-xs font-mono uppercase tracking-widest text-[#7C7469] dark:text-[#9E988F] mb-4 font-semibold">
               Dimension-by-Dimension Telemetry
             </h4>
 
@@ -550,31 +550,31 @@ Response SLA: We aim to respond to enquiries within 1–2 business days.`;
                 return (
                   <div
                     key={idx}
-                    className="p-4 rounded-xl bg-[#11100E] border border-[#242220] flex items-start gap-3.5"
+                    className="p-4 rounded-xl bg-white dark:bg-[#11100E] border border-[#E5DDD0] dark:border-[#242220] flex items-start gap-3.5 shadow-xs"
                   >
                     <div
                       className={`p-2 rounded-lg border flex-shrink-0 ${
                         isGap
-                          ? 'bg-amber-950/30 border-amber-800/40 text-amber-400'
-                          : 'bg-emerald-950/30 border-emerald-800/40 text-emerald-400'
+                          ? 'bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-400'
+                          : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
                       }`}
                     >
                       <Icon className="w-4 h-4" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-bold font-sans text-[#F5F2EB] truncate">
+                        <span className="text-xs font-bold font-sans text-[#191817] dark:text-[#FBF9F5] truncate">
                           {item.dim.name}
                         </span>
                         <span
                           className={`text-[11px] font-mono font-bold ${
-                            isGap ? 'text-amber-400' : 'text-emerald-400'
+                            isGap ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'
                           }`}
                         >
                           Level {item.score}/4
                         </span>
                       </div>
-                      <p className="text-[11px] text-[#9E988F] line-clamp-2">
+                      <p className="text-[11px] text-[#5A544E] dark:text-[#9E9689] line-clamp-2">
                         {item.selectedOpt.label}
                       </p>
                     </div>
@@ -587,50 +587,50 @@ Response SLA: We aim to respond to enquiries within 1–2 business days.`;
           {/* Prioritized Implementation Roadmap */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
             {/* Quick Wins */}
-            <div className="p-6 rounded-xl bg-[#11100E] border border-[#242220] space-y-3">
-              <div className="flex items-center gap-2 text-xs font-mono text-[#E07A5F] font-semibold uppercase">
+            <div className="p-6 rounded-xl bg-white dark:bg-[#11100E] border border-[#E5DDD0] dark:border-[#242220] space-y-3 shadow-xs">
+              <div className="flex items-center gap-2 text-xs font-mono text-[#C25E38] dark:text-[#E07A5F] font-semibold uppercase">
                 <Zap className="w-4 h-4" />
                 <span>Phase 1: Immediate Quick Wins (&lt; 14 Days)</span>
               </div>
-              <p className="text-xs text-[#9E988F]">
+              <p className="text-xs text-[#5A544E] dark:text-[#9E9689]">
                 High-impact fixes addressing your most urgent enquiry leaks and discoverability bottlenecks.
               </p>
-              <ul className="space-y-2 text-xs text-[#C4BAA9] pt-2">
+              <ul className="space-y-2 text-xs text-[#191817] dark:text-[#C4BAA9] pt-2">
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#E07A5F] flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#C25E38] dark:text-[#E07A5F] flex-shrink-0 mt-0.5" />
                   <span>Configure official WhatsApp Business lead routing and automated partner push alerts.</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#E07A5F] flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#C25E38] dark:text-[#E07A5F] flex-shrink-0 mt-0.5" />
                   <span>Inject semantic JSON-LD local business schema to establish modern search indexation.</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#E07A5F] flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#C25E38] dark:text-[#E07A5F] flex-shrink-0 mt-0.5" />
                   <span>Standardize client intake with instant automated customer acknowledgements.</span>
                 </li>
               </ul>
             </div>
 
             {/* Strategic Upgrades */}
-            <div className="p-6 rounded-xl bg-[#11100E] border border-[#242220] space-y-3">
-              <div className="flex items-center gap-2 text-xs font-mono text-[#60A5FA] font-semibold uppercase">
+            <div className="p-6 rounded-xl bg-white dark:bg-[#11100E] border border-[#E5DDD0] dark:border-[#242220] space-y-3 shadow-xs">
+              <div className="flex items-center gap-2 text-xs font-mono text-[#1065FF] dark:text-[#60A5FA] font-semibold uppercase">
                 <Workflow className="w-4 h-4" />
                 <span>Phase 2: Architectural Upgrades (30–60 Days)</span>
               </div>
-              <p className="text-xs text-[#9E988F]">
+              <p className="text-xs text-[#5A544E] dark:text-[#9E9689]">
                 Systematic engineering to unify business operations and automate executive reporting.
               </p>
-              <ul className="space-y-2 text-xs text-[#C4BAA9] pt-2">
+              <ul className="space-y-2 text-xs text-[#191817] dark:text-[#C4BAA9] pt-2">
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#60A5FA] flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#1065FF] dark:text-[#60A5FA] flex-shrink-0 mt-0.5" />
                   <span>Migrate primary website to bespoke Next.js 15 App Router with sub-second performance.</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#60A5FA] flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#1065FF] dark:text-[#60A5FA] flex-shrink-0 mt-0.5" />
                   <span>Implement CRM webhook pipelines connecting deal stages directly to GST billing.</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#60A5FA] flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#1065FF] dark:text-[#60A5FA] flex-shrink-0 mt-0.5" />
                   <span>Deploy unified executive BI telemetry with channel attribution modeling.</span>
                 </li>
               </ul>
@@ -638,19 +638,19 @@ Response SLA: We aim to respond to enquiries within 1–2 business days.`;
           </div>
 
           {/* Qualified Consultation Next Step */}
-          <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-[#1C1A18] to-[#141312] border border-[#36332F] flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="p-6 sm:p-8 rounded-2xl bg-[#FAF7F2] dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#36332F] flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
             <div className="space-y-2">
-              <h4 className="text-xl font-bold font-sans text-[#F5F2EB]">
+              <h4 className="text-xl font-bold font-serif text-[#191817] dark:text-[#FBF9F5]">
                 Review your diagnosis directly with our founding partners.
               </h4>
-              <p className="text-xs sm:text-sm text-[#9E988F] max-w-xl">
+              <p className="text-xs sm:text-sm text-[#5A544E] dark:text-[#9E9689] max-w-xl">
                 We review your specific friction points and map out a precise engineering proposal. No sales account reps. We aim to respond to enquiries within 1–2 business days.
               </p>
             </div>
 
             <Link
               href={`/contact?diagnosticScore=${percentage}&tier=${encodeURIComponent(maturityTier)}`}
-              className="inline-flex items-center justify-center px-6 py-3.5 text-sm font-semibold text-white bg-[#C25E38] hover:bg-[#A34520] rounded-lg transition-colors flex-shrink-0 shadow-sm shadow-[#C25E38]/20"
+              className="inline-flex items-center justify-center px-6 py-3.5 text-sm font-semibold text-white bg-[#C25E38] hover:bg-[#A34520] dark:bg-[#E07A5F] dark:hover:bg-[#F08E73] dark:text-[#090807] rounded-lg transition-colors flex-shrink-0 shadow-sm"
             >
               <span>Book Strategic Consultation</span>
               <ArrowRight className="w-4 h-4 ml-2" />
