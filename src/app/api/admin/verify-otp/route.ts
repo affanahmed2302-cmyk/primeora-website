@@ -11,13 +11,20 @@ export async function POST(req: NextRequest) {
 
     if (!rawEmail || !rawToken) {
       return NextResponse.json(
-        { success: false, error: 'Both administrative email and 6-digit recovery code are required.' },
+        { success: false, error: 'Both administrative email and verification code are required.' },
         { status: 400 }
       );
     }
 
     const email = rawEmail.trim().toLowerCase();
     const token = rawToken.toString().trim();
+
+    if (token.length < 6 || token.length > 12) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid verification code format. Codes are 6 to 8 digits.' },
+        { status: 400 }
+      );
+    }
 
     const lockKey = `otp_attempts:${email}`;
     const ipKey = `otp_ip:${ip}`;

@@ -111,6 +111,19 @@ export async function POST(req: NextRequest) {
 
     if (resetError) {
       console.warn(`[Supabase Auth] resetPasswordForEmail warning for ${email}: ${resetError.message}`);
+      if (
+        resetError.message.toLowerCase().includes('rate limit') ||
+        resetError.message.toLowerCase().includes('once every') ||
+        resetError.status === 429
+      ) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Security rate limit: An email was recently dispatched for this account. Please wait at least 60 seconds before requesting another code.',
+          },
+          { status: 429 }
+        );
+      }
     }
 
     // Record audit event

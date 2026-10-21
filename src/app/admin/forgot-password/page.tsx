@@ -24,8 +24,8 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [maskedEmail, setMaskedEmail] = useState('');
 
-  // 6-digit OTP code state
-  const [otpDigits, setOtpDigits] = useState<string[]>(['', '', '', '', '', '']);
+  // 8-digit OTP code state (Supabase GoTrue recovery OTP length)
+  const [otpDigits, setOtpDigits] = useState<string[]>(['', '', '', '', '', '', '', '']);
   const digitInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // Status & errors
@@ -86,20 +86,35 @@ export default function ForgotPasswordPage() {
     }
   };
 
-  // Handle OTP digit changes with auto-advance and backspace handling
+  // Handle OTP digit changes with auto-advance, paste, and backspace handling
   const handleDigitChange = (index: number, value: string) => {
+    // Check if user pasted a full URL or token hash
+    if (value.includes('http://') || value.includes('https://') || value.includes('access_token')) {
+      try {
+        const url = new URL(value);
+        const hashParams = new URLSearchParams(url.hash.substring(1));
+        const token = hashParams.get('access_token') || url.searchParams.get('token');
+        if (token) {
+          router.push(`/admin/reset-password?token=${encodeURIComponent(token)}`);
+          return;
+        }
+      } catch {
+        // Fall through to numeric extraction
+      }
+    }
+
     // Only accept numeric digits
     const cleaned = value.replace(/\D/g, '');
     const newDigits = [...otpDigits];
 
     if (cleaned.length > 1) {
-      // Handle paste of full 6-digit code
-      const pasted = cleaned.slice(0, 6).split('');
-      for (let i = 0; i < 6; i++) {
+      // Handle paste of full 6-to-8 digit code
+      const pasted = cleaned.slice(0, 8).split('');
+      for (let i = 0; i < 8; i++) {
         newDigits[i] = pasted[i] || '';
       }
       setOtpDigits(newDigits);
-      const nextFocus = Math.min(pasted.length, 5);
+      const nextFocus = Math.min(pasted.length, 7);
       digitInputRefs.current[nextFocus]?.focus();
       return;
     }
@@ -108,7 +123,7 @@ export default function ForgotPasswordPage() {
     setOtpDigits(newDigits);
 
     // Auto-focus next input
-    if (cleaned && index < 5) {
+    if (cleaned && index < 7) {
       digitInputRefs.current[index + 1]?.focus();
     }
   };
@@ -116,6 +131,10 @@ export default function ForgotPasswordPage() {
   const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Backspace' && !otpDigits[index] && index > 0) {
       digitInputRefs.current[index - 1]?.focus();
+    } else if (e.key === 'ArrowLeft' && index > 0) {
+      digitInputRefs.current[index - 1]?.focus();
+    } else if (e.key === 'ArrowRight' && index < 7) {
+      digitInputRefs.current[index + 1]?.focus();
     }
   };
 
@@ -155,7 +174,7 @@ export default function ForgotPasswordPage() {
     const token = otpDigits.join('');
 
     if (token.length < 6) {
-      setErrorMessage('Please enter the full 6-digit recovery code.');
+      setErrorMessage('Please enter the full verification code.');
       return;
     }
 
@@ -258,7 +277,7 @@ export default function ForgotPasswordPage() {
           {step === 'request' && (
             <form onSubmit={handleRequestCode} className="space-y-5">
               <p className="text-xs text-[#5A544E] dark:text-[#A8A196] leading-relaxed">
-                Enter your verified administrative email address below. A 6-digit one-time recovery code will be dispatched to verify your identity.
+                Enter your verified administrative email address below. An 8-digit one-time recovery code will be dispatched to verify your identity.
               </p>
 
               <div>
@@ -317,28 +336,57 @@ export default function ForgotPasswordPage() {
                   htmlFor="otp-digit-0"
                   className="block text-xs font-semibold uppercase tracking-wider text-[#5A544E] dark:text-[#A8A196] mb-2 text-center font-mono"
                 >
-                  6-Digit Verification Code
+                  8-Digit Verification Code
                 </label>
-                <div className="flex justify-between gap-2">
-                  {otpDigits.map((digit, idx) => (
-                    <input
-                      key={idx}
-                      id={`otp-digit-${idx}`}
-                      ref={(el) => {
-                        digitInputRefs.current[idx] = el;
-                      }}
-                      type="text"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      maxLength={idx === 0 ? 6 : 1}
-                      disabled={isLocked || status === 'submitting'}
-                      value={digit}
-                      onChange={(e) => handleDigitChange(idx, e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(idx, e)}
-                      className="w-11 h-12 text-center text-lg font-bold font-mono border border-[#DDD5C7] dark:border-[#383430] rounded-lg focus:ring-2 focus:ring-[#C25E38] focus:outline-none bg-[#FBF9F5] dark:bg-[#201E1B] text-editorial-ink dark:text-[#FBF9F5] disabled:opacity-50"
-                      aria-label={`Digit ${idx + 1}`}
-                    />
-                  ))}
+                <div className="flex items-center justify-center gap-1 sm:gap-2">
+                  <div className="flex gap-1 sm:gap-1.5">
+                    {otpDigits.slice(0, 4).map((digit, idx) => (
+                      <input
+                        key={idx}
+                        id={`otp-digit-${idx}`}
+                        ref={(el) => {
+                          digitInputRefs.current[idx] = el;
+                        }}
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        maxLength={idx === 0 ? 8 : 1}
+                        disabled={isLocked || status === 'submitting'}
+                        value={digit}
+                        onChange={(e) => handleDigitChange(idx, e.target.value)}
+                        onKeyDown={(e) => handleKeyDown(idx, e)}
+                        className="w-8 h-10 sm:w-10 sm:h-12 text-center text-base sm:text-lg font-bold font-mono border border-[#DDD5C7] dark:border-[#383430] rounded-lg focus:ring-2 focus:ring-[#C25E38] focus:outline-none bg-[#FBF9F5] dark:bg-[#201E1B] text-editorial-ink dark:text-[#FBF9F5] disabled:opacity-50"
+                        aria-label={`Digit ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-[#A0988C] font-mono font-bold text-sm select-none px-0.5">
+                    &minus;
+                  </span>
+                  <div className="flex gap-1 sm:gap-1.5">
+                    {otpDigits.slice(4, 8).map((digit, relIdx) => {
+                      const idx = relIdx + 4;
+                      return (
+                        <input
+                          key={idx}
+                          id={`otp-digit-${idx}`}
+                          ref={(el) => {
+                            digitInputRefs.current[idx] = el;
+                          }}
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          maxLength={1}
+                          disabled={isLocked || status === 'submitting'}
+                          value={digit}
+                          onChange={(e) => handleDigitChange(idx, e.target.value)}
+                          onKeyDown={(e) => handleKeyDown(idx, e)}
+                          className="w-8 h-10 sm:w-10 sm:h-12 text-center text-base sm:text-lg font-bold font-mono border border-[#DDD5C7] dark:border-[#383430] rounded-lg focus:ring-2 focus:ring-[#C25E38] focus:outline-none bg-[#FBF9F5] dark:bg-[#201E1B] text-editorial-ink dark:text-[#FBF9F5] disabled:opacity-50"
+                          aria-label={`Digit ${idx + 1}`}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 
@@ -364,12 +412,24 @@ export default function ForgotPasswordPage() {
                 </button>
               </div>
 
+              <div className="p-3 bg-[#FBF9F5] dark:bg-[#22201D] border border-[#DDD5C7] dark:border-[#383430] rounded-lg text-center">
+                <span className="text-[11px] text-[#7C7469] dark:text-[#8E867C] block mb-1">
+                  Received an email with a direct reset link?
+                </span>
+                <Link
+                  href="/admin/reset-password"
+                  className="text-xs font-semibold text-[#C25E38] dark:text-[#E07A5F] hover:underline"
+                >
+                  Click here to set your password directly &rarr;
+                </Link>
+              </div>
+
               <div className="flex items-center justify-between text-xs pt-2">
                 <button
                   type="button"
                   onClick={() => {
                     setStep('request');
-                    setOtpDigits(['', '', '', '', '', '']);
+                    setOtpDigits(['', '', '', '', '', '', '', '']);
                     setErrorMessage('');
                   }}
                   className="text-[#7C7469] dark:text-[#8E867C] hover:text-[#C25E38] dark:hover:text-[#E07A5F] transition-colors"

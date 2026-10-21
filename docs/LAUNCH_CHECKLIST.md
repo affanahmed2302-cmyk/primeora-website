@@ -9,7 +9,7 @@
 | **Motion Engineering** | GSAP Timelines | Verified | `@gsap/react` `useGSAP` entrance animations on Hero and Process sections with clean lifecycle teardown. |
 | **Founders Profiles & Photos** | Verified 3 Founders | Verified | Dhananjaya G.R. (512x512 headshot, round glasses), Affan Ahmed Shariff (512x512 headshot), Akarsh P. Thodaskar (512x512 headshot, formal navy suit). Verified badges and LinkedIn profiles connected. |
 | **Founder Admin Access** | Super Admin Roles & Temp Passwords | Verified | All 3 founders verified in Supabase Auth & `admin_profiles` as `super_admin`. 24-hour high-entropy temporary passwords generated; forced password change enforced. |
-| **Account Recovery** | Forgot Password Self-Service Workflow | Verified | Multi-phase recovery flow: neutral enumeration defense, 6-digit OTP verification with 5-attempt lockout, password strength meter, audit logging in `auth_audit_logs`. |
+| **Account Recovery** | Forgot Password Self-Service Workflow | Verified | Multi-phase recovery flow: neutral enumeration defense, 8-digit OTP verification with 4+4 grouped UI, single-use token consumption, dual-path direct link fallback, password strength meter, audit logging in `auth_audit_logs`. |
 | **Statutory Compliance** | DPDP Act 2023 & India Regulations | Verified | Granular unbundled consent on `/contact`, statutory DPDP notice on `/privacy`, Grievance Officer designated with Bengaluru address, CERT-In 180-day log retention. |
 | **Enterprise Registration** | Official Udyam Registration Disclosures | Verified | Verified against certificate: `UDYAM-KR-03-0732181`, Micro Enterprise (Services), Bangalore North, Karnataka 560023. |
 | **Claims Compliance** | Zero Unsubstantiated Claims | Verified | Removed unverified numerical claims; relabeled all case scenarios as Illustrative Workflow Demonstrations with explicit hypothetical disclosures. |
@@ -18,5 +18,5 @@
 | **CMS Security** | Strict Role & Lockout Enforcement | Verified | `super_admin` vs `content_editor` enforced server-side. Temporary passwords locked from managing enquiries/team until permanent password is saved. |
 | **SEO & AEO** | Schema.org Structured Data | Verified | Organization, WebSite, Service, and FAQPage JSON-LD schemas active on all routes. |
 | **Crawler Control** | Sitemap & Robots Directives | Verified | `/sitemap.xml` active; `/robots.txt` disallows `/admin/` and `/api/` from automated web crawlers. |
-| **Automated Tests** | 100% Pass Rate (58/58 Tests) | Verified | All 58 automated e2e test cases passed cleanly in `tests/e2e_verify.py`. |
+| **Automated Tests** | 100% Pass Rate (59/59 Tests) | Verified | All 59 automated e2e test cases passed cleanly in `tests/e2e_verify.py`. |
 | **Production Build** | Clean Next.js Compilation | Verified | `npm run build` completed with zero TypeScript errors across all 42 static & dynamic routes. |

@@ -460,6 +460,21 @@ except Exception as e:
     record('Verify OTP Guard: Empty Payload', False, str(e))
 
 try:
+    # 8-digit OTP format rejection for malformed / short code
+    req = urllib.request.Request(
+        base + '/api/admin/verify-otp',
+        data=json.dumps({'email': 'test@primeorasolutions.com', 'token': '123'}).encode(),
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+    urllib.request.urlopen(req)
+    record('Verify OTP Guard: Short Code Rejection (<6 digits)', False, 'Should reject short token')
+except urllib.error.HTTPError as e:
+    record('Verify OTP Guard: Short Code Rejection (<6 digits)', e.code == 400, f'Correctly rejected short token with HTTP {e.code}')
+except Exception as e:
+    record('Verify OTP Guard: Short Code Rejection (<6 digits)', False, str(e))
+
+try:
     req = urllib.request.Request(
         base + '/api/admin/reset-password',
         data=json.dumps({}).encode(),
