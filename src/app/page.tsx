@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { BRAND_CONFIG, INITIAL_FOUNDERS } from '@/config/brand';
 import ArchitecturalHeroParallax from '@/components/hero/ArchitecturalHeroParallax';
-import PhotographicScrollStory from '@/components/hero/PhotographicScrollStory';
+import BespokeVectorScrollStory from '@/components/hero/BespokeVectorScrollStory';
 import SpatialPracticeLedger from '@/components/services/SpatialPracticeLedger';
 import MagneticWrapper from '@/components/motion/MagneticWrapper';
 import {
@@ -41,9 +41,9 @@ export default function HomePage() {
       <ArchitecturalHeroParallax />
 
       {/* =========================================================================
-          ACT II: SCROLL-DRIVEN PHOTOGRAPHIC STORYTELLING (3 Reversible Operational Scenes)
+          ACT II: BESPOKE VECTOR SCROLL STORYTELLING (3 Reversible Architectural Scenes)
           ========================================================================= */}
-      <PhotographicScrollStory />
+      <BespokeVectorScrollStory />
 
       {/* =========================================================================
           ACT III: DIGITAL READINESS DIAGNOSTIC (High-Visibility Editorial Feature)
