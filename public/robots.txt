@@ -1,0 +1,25 @@
+User-Agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-Agent: GPTBot
+Allow: /
+Allow: /insights
+Allow: /services
+Disallow: /admin/
+Disallow: /api/
+
+User-Agent: OAI-SearchBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+User-Agent: PerplexityBot
+Allow: /
+Allow: /insights
+Allow: /services
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://primeora-solutions.netlify.app/sitemap.xml

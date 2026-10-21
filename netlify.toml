@@ -29,6 +29,13 @@
     X-Robots-Tag = "noindex, nofollow"
     Cache-Control = "no-store, no-cache, must-revalidate, proxy-revalidate"
 
+# Crawler directives cache guard (revalidate immediately upon every deploy)
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    Cache-Control = "public, max-age=0, must-revalidate"
+
 # Non-production contexts: Deploy Previews & Branch Deploys must not be indexed by crawlers
 [context.deploy-preview.environment]
   NEXT_PUBLIC_APP_ENV = "preview"

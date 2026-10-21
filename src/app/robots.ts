@@ -26,7 +26,7 @@ export default function robots(): MetadataRoute.Robots {
       },
       {
         userAgent: 'GPTBot',
-        allow: '/',
+        allow: ['/', '/insights', '/services'],
         disallow: ['/admin/', '/api/'],
       },
       {
@@ -36,7 +36,7 @@ export default function robots(): MetadataRoute.Robots {
       },
       {
         userAgent: 'PerplexityBot',
-        allow: '/',
+        allow: ['/', '/insights', '/services'],
         disallow: ['/admin/', '/api/'],
       },
     ],
