@@ -189,14 +189,10 @@ export default function ProcessPage() {
       {/* Header Banner */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 sm:mb-20">
         <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#E07A5F]" />
-            <span>Structured Methodology</span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight font-sans text-editorial-ink dark:text-[#FBF9F5]">
-            Our Four-Step Engineering Methodology
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight font-serif text-[#191817] dark:text-[#FBF9F5] mb-4">
+            Our four-step engineering methodology.
           </h1>
-          <p className="mt-4 text-base sm:text-lg text-[#5A544E] dark:text-[#9E9689] leading-relaxed font-serif">
+          <p className="text-base sm:text-lg text-[#5A544E] dark:text-[#9E9689] leading-relaxed font-sans">
             A transparent, disciplined project lifecycle designed to eliminate assumption through structured discovery, architectural blueprints, verified builds, and continuous optimization.
           </p>
         </div>
