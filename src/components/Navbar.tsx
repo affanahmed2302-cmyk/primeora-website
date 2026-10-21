@@ -46,20 +46,26 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center space-x-6" aria-label="Main Navigation">
+          <nav className="hidden lg:flex items-center space-x-4 xl:space-x-6" aria-label="Main Navigation">
             {BRAND_CONFIG.navLinks.map((link) => {
               const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
+              const isReadiness = link.label === 'Readiness';
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-xs font-medium tracking-wide uppercase transition-colors ${
+                  className={`text-xs font-medium tracking-wide uppercase transition-colors flex items-center gap-1 ${
                     isActive
                       ? 'text-[#191817] dark:text-white font-semibold border-b-2 border-[#C25E38] pb-0.5'
                       : 'text-[#5C5751] hover:text-[#191817] dark:text-[#A8A29A] dark:hover:text-white'
                   }`}
                 >
-                  {link.label}
+                  <span>{link.label}</span>
+                  {isReadiness && (
+                    <span className="text-[9px] font-mono font-bold text-[#C25E38] dark:text-[#E07A5F] bg-[#C25E38]/10 px-1 py-0.2 rounded">
+                      3m
+                    </span>
+                  )}
                 </Link>
               );
             })}

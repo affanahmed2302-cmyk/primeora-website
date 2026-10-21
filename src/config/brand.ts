@@ -64,11 +64,13 @@ export const BRAND_CONFIG = {
     charcoal: '#F8FAFC',
   },
 
-  // Primary Navigation Links (Concise 5-destination architecture)
+  // Primary Navigation Links
   navLinks: [
     { label: 'Services', href: '/services' },
     { label: 'Work', href: '/work' },
     { label: 'Founders', href: '/founders' },
+    { label: 'Process', href: '/process' },
+    { label: 'Readiness', href: '/readiness' },
     { label: 'Insights', href: '/insights' },
     { label: 'Contact', href: '/contact' },
   ],

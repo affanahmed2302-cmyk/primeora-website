@@ -4,9 +4,23 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { BRAND_CONFIG, INITIAL_FOUNDERS } from '@/config/brand';
 import ArchitecturalHeroParallax from '@/components/hero/ArchitecturalHeroParallax';
+import ScrollStoryTransformation from '@/components/hero/ScrollStoryTransformation';
 import SpatialPracticeLedger from '@/components/services/SpatialPracticeLedger';
 import MagneticWrapper from '@/components/motion/MagneticWrapper';
-import { ArrowRight, ShieldCheck, Linkedin, CheckCircle2, ArrowUpRight } from 'lucide-react';
+import {
+  ArrowRight,
+  ShieldCheck,
+  Linkedin,
+  CheckCircle2,
+  ArrowUpRight,
+  Compass,
+  Zap,
+  Globe,
+  Database,
+  LineChart,
+  Activity,
+  FileCheck,
+} from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Primeora Solutions — Digital Systems Engineered for Measurable Growth',
@@ -19,72 +33,135 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div className="bg-[#FBF9F5] dark:bg-[#090807] text-[#191817] dark:text-[#F5F2EB] transition-colors duration-200">
+    <div className="bg-[#FBF9F5] dark:bg-[#090807] text-[#191817] dark:text-[#FBF9F5] transition-colors duration-200">
       {/* =========================================================================
           ACT I: CINEMATIC HERO & 3D ISOMETRIC ARCHITECTURAL PARALLAX (Aceternity UI + Animmaster)
           ========================================================================= */}
       <ArchitecturalHeroParallax />
 
       {/* =========================================================================
-          ACT II: THE REALITY VS. THE INTEGRATED ALTERNATIVE (Editorial Contrast Spread)
+          ACT II: SCROLL-DRIVEN VISUAL STORYTELLING (3 Sequential Operational Scenes)
           ========================================================================= */}
-      <section className="py-20 md:py-32 border-t border-[#E5DDD0] dark:border-[#242220] bg-white dark:bg-[#0E0D0C] transition-colors">
+      <ScrollStoryTransformation />
+
+      {/* =========================================================================
+          ACT III: DIGITAL READINESS DIAGNOSTIC (High-Visibility Editorial Feature)
+          ========================================================================= */}
+      <section className="py-20 md:py-28 border-t border-[#E5DDD0] dark:border-[#242220] bg-[#FAF6F0] dark:bg-[#11100F] transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-            {/* Left (5 cols): Diagnostic Challenge */}
-            <div className="lg:col-span-5 space-y-6">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#C25E38] dark:text-[#E07A5F] font-semibold block">
-                The Operational Bottleneck
-              </span>
+          <div className="bg-white dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] rounded-2xl p-8 sm:p-12 lg:p-16 shadow-xs">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+              {/* Left Column (7 cols): Diagnostic Value Proposition */}
+              <div className="lg:col-span-7 space-y-5">
+                <div className="flex items-center gap-2">
+                  <span className="p-1 rounded-md bg-[#C25E38]/10 text-[#C25E38] dark:text-[#E07A5F]">
+                    <Compass className="w-4 h-4" />
+                  </span>
+                  <span className="text-xs font-mono uppercase tracking-widest text-[#C25E38] dark:text-[#E07A5F] font-semibold">
+                    Interactive Diagnostic · 3-Minute Assessment
+                  </span>
+                </div>
 
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-sans tracking-tight leading-[1.15] text-[#191817] dark:text-[#FBF9F5]">
-                Why fragmented digital tools cost more than they earn.
-              </h2>
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-sans tracking-tight text-[#191817] dark:text-[#FBF9F5] leading-tight">
+                  Benchmark your digital systems before spending another rupee.
+                </h2>
 
-              <p className="text-base text-[#5A544E] dark:text-[#9E988F] font-serif leading-relaxed">
-                Most growing businesses don’t suffer from a lack of software. They suffer from disconnected tools: a website built on an outdated template that converts poorly, an ad campaign dropping leads into an unmonitored inbox, and a team wasting hours copying data between spreadsheets.
-              </p>
+                <p className="text-base sm:text-lg text-[#5A544E] dark:text-[#9E988F] font-serif leading-relaxed">
+                  Most growing businesses know an operational bottleneck exists, but can’t pinpoint whether lost revenue stems from slow mobile loading, delayed enquiry follow-ups, or manual spreadsheet drag.
+                </p>
 
-              <div className="p-4 rounded-lg bg-[#FAF6F0] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] text-xs font-mono text-[#7C7469] dark:text-[#8E867C]">
-                We eliminate the friction between discovery, lead capture, and internal operations by treating your digital presence as a single unified system.
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 text-xs font-mono text-[#5A544E] dark:text-[#9E988F]">
+                  <div className="flex items-center gap-1.5 p-2 rounded bg-[#FAF6F0] dark:bg-[#1A1917] border border-[#E5DDD0] dark:border-[#242220]">
+                    <Globe className="w-3.5 h-3.5 text-[#1065FF]" />
+                    <span>Web Velocity</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 p-2 rounded bg-[#FAF6F0] dark:bg-[#1A1917] border border-[#E5DDD0] dark:border-[#242220]">
+                    <Compass className="w-3.5 h-3.5 text-[#C25E38] dark:text-[#E07A5F]" />
+                    <span>AEO &amp; Search</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 p-2 rounded bg-[#FAF6F0] dark:bg-[#1A1917] border border-[#E5DDD0] dark:border-[#242220]">
+                    <Database className="w-3.5 h-3.5 text-[#1065FF]" />
+                    <span>Lead Triage</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 p-2 rounded bg-[#FAF6F0] dark:bg-[#1A1917] border border-[#E5DDD0] dark:border-[#242220]">
+                    <Activity className="w-3.5 h-3.5 text-[#C25E38] dark:text-[#E07A5F]" />
+                    <span>CRM Pipeline</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 p-2 rounded bg-[#FAF6F0] dark:bg-[#1A1917] border border-[#E5DDD0] dark:border-[#242220]">
+                    <Zap className="w-3.5 h-3.5 text-[#1065FF]" />
+                    <span>Automations</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 p-2 rounded bg-[#FAF6F0] dark:bg-[#1A1917] border border-[#E5DDD0] dark:border-[#242220]">
+                    <LineChart className="w-3.5 h-3.5 text-[#C25E38] dark:text-[#E07A5F]" />
+                    <span>Executive BI</span>
+                  </div>
+                </div>
+
+                <div className="pt-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                  <MagneticWrapper strength={0.25}>
+                    <Link
+                      href="/readiness"
+                      className="inline-flex items-center justify-center px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#C25E38] hover:bg-[#A34520] rounded-md transition-colors shadow-sm"
+                    >
+                      <span>Start 3-Minute Diagnostic</span>
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Link>
+                  </MagneticWrapper>
+
+                  <span className="text-xs font-mono text-[#7C7469] dark:text-[#8E867C]">
+                    Zero sales calls · Instant objective scorecard
+                  </span>
+                </div>
               </div>
-            </div>
 
-            {/* Right (7 cols): The 3 Pillars of Unified Engineering */}
-            <div className="lg:col-span-7 space-y-6">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#1065FF] font-semibold block">
-                The Primeora Standard
-              </span>
-
-              <div className="space-y-4">
-                <div className="p-6 rounded-xl bg-[#FAF6F0] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220]">
-                  <h3 className="text-lg font-bold font-sans text-[#191817] dark:text-[#FBF9F5] mb-2 flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-[#1065FF] flex-shrink-0" />
-                    <span>Engineered Web Infrastructure</span>
-                  </h3>
-                  <p className="text-sm text-[#5A544E] dark:text-[#9E988F] font-serif leading-relaxed">
-                    Custom Next.js frontends engineered for sub-second Core Web Vitals, accessible semantic markup, and technical search engine discoverability.
-                  </p>
+              {/* Right Column (5 cols): Diagnostic Preview Card */}
+              <div className="lg:col-span-5 bg-[#FAF6F0] dark:bg-[#181715] border border-[#E5DDD0] dark:border-[#242220] rounded-xl p-6 sm:p-7 space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-[#E5DDD0] dark:border-[#242220]">
+                  <span className="text-xs font-mono font-bold text-[#191817] dark:text-[#FBF9F5] uppercase">
+                    Sample Maturity Deliverable
+                  </span>
+                  <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">
+                    Transparent Rules
+                  </span>
                 </div>
 
-                <div className="p-6 rounded-xl bg-[#FAF6F0] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220]">
-                  <h3 className="text-lg font-bold font-sans text-[#191817] dark:text-[#FBF9F5] mb-2 flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-[#C25E38] dark:text-[#E07A5F] flex-shrink-0" />
-                    <span>Zero-Loss Lead Triage &amp; CRM</span>
-                  </h3>
-                  <p className="text-sm text-[#5A544E] dark:text-[#9E988F] font-serif leading-relaxed">
-                    Multichannel enquiries (forms, WhatsApp, calendar booking) route into a PostgreSQL database and sales CRM within seconds with instant team notifications.
-                  </p>
+                <div className="space-y-3 text-xs font-mono">
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-[#5A544E] dark:text-[#9E988F]">
+                      <span>1. Web Infrastructure Score</span>
+                      <span className="font-bold text-[#1065FF]">Level 3: Operational</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-[#E5DDD0] dark:bg-[#2C2926] rounded-full overflow-hidden">
+                      <div className="h-full bg-[#1065FF] w-[75%]" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-[#5A544E] dark:text-[#9E988F]">
+                      <span>2. Lead Capture &amp; Triage</span>
+                      <span className="font-bold text-[#C25E38] dark:text-[#E07A5F]">Level 1: Severe Drag</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-[#E5DDD0] dark:bg-[#2C2926] rounded-full overflow-hidden">
+                      <div className="h-full bg-[#C25E38] dark:bg-[#E07A5F] w-[25%]" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-[#5A544E] dark:text-[#9E988F]">
+                      <span>3. Workflow Automation</span>
+                      <span className="font-bold text-amber-500">Level 2: Emerging</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-[#E5DDD0] dark:bg-[#2C2926] rounded-full overflow-hidden">
+                      <div className="h-full bg-amber-500 w-[50%]" />
+                    </div>
+                  </div>
                 </div>
 
-                <div className="p-6 rounded-xl bg-[#FAF6F0] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220]">
-                  <h3 className="text-lg font-bold font-sans text-[#191817] dark:text-[#FBF9F5] mb-2 flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-[#1065FF] flex-shrink-0" />
-                    <span>Automated Operations &amp; Intelligence</span>
-                  </h3>
-                  <p className="text-sm text-[#5A544E] dark:text-[#9E988F] font-serif leading-relaxed">
-                    Billing, invoicing, and reporting synchronize automatically via resilient webhooks, providing leadership with real-time conversion and revenue clarity.
-                  </p>
+                <div className="p-3 rounded-lg bg-white dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] text-[11px] font-serif text-[#5A544E] dark:text-[#9E988F] leading-snug">
+                  <strong className="font-sans font-semibold text-[#191817] dark:text-[#FBF9F5] block mb-0.5">
+                    Actionable Roadmap Provided:
+                  </strong>
+                  You receive an immediate, prioritized breakdown of high-impact fixes before engaging any agency or developer.
                 </div>
               </div>
             </div>
@@ -93,7 +170,7 @@ export default function HomePage() {
       </section>
 
       {/* =========================================================================
-          ACT III: THE SPATIAL PRACTICE LEDGER (Skiper UI Pattern)
+          ACT IV: THE SPATIAL PRACTICE LEDGER (Skiper UI Accordion Pattern)
           ========================================================================= */}
       <section className="py-20 md:py-32 border-t border-[#E5DDD0] dark:border-[#242220] bg-[#FBF9F5] dark:bg-[#090807] transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
@@ -122,7 +199,7 @@ export default function HomePage() {
       </section>
 
       {/* =========================================================================
-          ACT IV: DIRECT FOUNDER ENGINEERING & CONSULTATION ROUTE
+          ACT V: DIRECT FOUNDER ENGINEERING & CONSULTATION ROUTE
           ========================================================================= */}
       <section className="py-20 md:py-32 border-t border-[#E5DDD0] dark:border-[#242220] bg-white dark:bg-[#0E0D0C] transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

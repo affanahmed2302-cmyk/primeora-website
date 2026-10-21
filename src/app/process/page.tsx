@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ArchitecturalTracingTimeline from '@/components/process/ArchitecturalTracingTimeline';
+import ProgressiveArchitecturalBlueprint from '@/components/process/ProgressiveArchitecturalBlueprint';
 import KineticTextReveal from '@/components/motion/KineticTextReveal';
 import MagneticWrapper from '@/components/motion/MagneticWrapper';
 import {
@@ -43,6 +44,9 @@ export default function ProcessPage() {
           </p>
         </div>
       </div>
+
+      {/* Progressive Architectural Blueprint Layering */}
+      <ProgressiveArchitecturalBlueprint />
 
       {/* SVG Tracing Beam Timeline (Aceternity UI + Animmaster) */}
       <ArchitecturalTracingTimeline />
