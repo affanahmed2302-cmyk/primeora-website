@@ -19,6 +19,7 @@ import {
   Layers,
   FileCheck,
 } from 'lucide-react';
+import ServiceVisualDemonstrator from '@/components/services/ServiceVisualDemonstrator';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   'digital-presence': Globe,
@@ -104,7 +105,7 @@ export default async function ServicePillarPage({
         </nav>
 
         {/* Practice Hero Header */}
-        <div className="max-w-4xl mb-16">
+        <div className="max-w-4xl mb-12">
           <div className="flex items-start gap-5">
             <div className="w-14 h-14 rounded-2xl bg-white dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] flex items-center justify-center text-[#C25E38] dark:text-[#E07A5F] flex-shrink-0 shadow-xs">
               <Icon className="w-7 h-7" />
@@ -122,6 +123,9 @@ export default async function ServicePillarPage({
             </div>
           </div>
         </div>
+
+        {/* Page-Specific Interactive Visual Concept Demonstration */}
+        <ServiceVisualDemonstrator slug={pillar.id} />
 
         {/* Two-Column Detail Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
