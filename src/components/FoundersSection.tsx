@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { TeamMember } from '@/types';
 import { INITIAL_FOUNDERS } from '@/config/brand';
-import { Linkedin, Globe, ArrowRight, ArrowUpRight, ShieldCheck, Clock } from 'lucide-react';
+import { Linkedin, Globe, ArrowRight, ArrowUpRight, ShieldCheck, Clock, Mail } from 'lucide-react';
 
 interface FoundersSectionProps {
   initialMembers?: TeamMember[];
@@ -110,7 +110,17 @@ export default function FoundersSection({ initialMembers }: FoundersSectionProps
                 </div>
 
                 {/* Verified Links */}
-                <div className="pt-4 border-t border-[#E5DDD0] dark:border-[#242220] flex items-center gap-3">
+                <div className="pt-4 border-t border-[#E5DDD0] dark:border-[#242220] flex flex-wrap items-center gap-2.5">
+                  {person.email && (
+                    <a
+                      href={`mailto:${person.email}`}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#F4EFEA] dark:bg-[#1C1A18] hover:bg-[#EAE4DC] dark:hover:bg-[#242220] border border-[#DDD5C7] dark:border-[#242220] rounded-md text-xs font-mono text-[#191817] dark:text-[#F5F2EB] transition-colors"
+                      title={person.email}
+                    >
+                      <Mail className="w-3.5 h-3.5 text-[#C25E38] dark:text-[#E07A5F]" />
+                      <span>Email</span>
+                    </a>
+                  )}
                   {person.linkedinUrl && (
                     <a
                       href={person.linkedinUrl}

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getEnquiries, updateEnquiry } from '@/lib/cms-store';
+import { getEnquiries, updateEnquiry, deleteEnquiry } from '@/lib/cms-store';
 import { verifySession, isSuperAdmin, requiresPasswordChange } from '@/lib/auth';
 
 function getAuthenticatedAdmin(req: NextRequest) {
@@ -108,5 +108,57 @@ export async function PATCH(req: NextRequest) {
     });
   } catch {
     return NextResponse.json({ success: false, error: 'Failed to update enquiry record.' }, { status: 500 });
+  }
+}
+
+// DELETE enquiry record (STRICT SUPER_ADMIN ONLY)
+export async function DELETE(req: NextRequest) {
+  const session = getAuthenticatedAdmin(req);
+  if (!session) {
+    return NextResponse.json({ success: false, error: 'Unauthorized: Administrative authentication required.' }, { status: 401 });
+  }
+
+  if (requiresPasswordChange(session)) {
+    return NextResponse.json(
+      { success: false, error: 'Password change required before accessing administrative operations.', mustChangePassword: true },
+      { status: 403 }
+    );
+  }
+
+  if (!isSuperAdmin(session)) {
+    return NextResponse.json(
+      { success: false, error: 'Forbidden: Super administrator privileges required to delete client enquiries.' },
+      { status: 403 }
+    );
+  }
+
+  try {
+    const { searchParams } = new URL(req.url);
+    let id = searchParams.get('id');
+
+    if (!id) {
+      try {
+        const body = await req.json();
+        id = body?.id;
+      } catch {
+        // Ignored if query param wasn't present and body not JSON
+      }
+    }
+
+    if (!id) {
+      return NextResponse.json({ success: false, error: 'Enquiry ID is required.' }, { status: 400 });
+    }
+
+    const deleted = await deleteEnquiry(id);
+    if (!deleted) {
+      return NextResponse.json({ success: false, error: 'Enquiry record not found or delete failed.' }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Enquiry deleted successfully.',
+    });
+  } catch {
+    return NextResponse.json({ success: false, error: 'Failed to delete enquiry record.' }, { status: 500 });
   }
 }

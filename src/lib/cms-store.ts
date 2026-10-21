@@ -59,6 +59,7 @@ interface DbTeamMemberRow {
   photo_url: string | null;
   linkedin_url: string | null;
   portfolio_url: string | null;
+  email?: string | null;
   display_order: number;
   status: 'draft' | 'published' | 'inactive';
   created_at?: string;
@@ -66,6 +67,10 @@ interface DbTeamMemberRow {
 }
 
 function mapDbToTeamMember(row: DbTeamMemberRow): TeamMember {
+  const initial = INITIAL_FOUNDERS.find(
+    (f) => f.id === row.id || f.fullName.toLowerCase() === row.full_name.toLowerCase()
+  );
+
   return {
     id: String(row.id),
     fullName: row.full_name,
@@ -73,12 +78,13 @@ function mapDbToTeamMember(row: DbTeamMemberRow): TeamMember {
     department: row.department,
     bio: row.bio,
     responsibilities: Array.isArray(row.responsibilities) ? row.responsibilities : [],
-    photoUrl: row.photo_url || undefined,
-    linkedinUrl: row.linkedin_url || undefined,
-    portfolioUrl: row.portfolio_url || undefined,
+    photoUrl: row.photo_url || initial?.photoUrl || undefined,
+    linkedinUrl: row.linkedin_url || initial?.linkedinUrl || undefined,
+    portfolioUrl: row.portfolio_url || initial?.portfolioUrl || undefined,
+    email: row.email || initial?.email || undefined,
     displayOrder: typeof row.display_order === 'number' ? row.display_order : 10,
     status: row.status || 'draft',
-    isFounder: false,
+    isFounder: initial?.isFounder ?? true,
   };
 }
 
@@ -458,6 +464,36 @@ export async function updateEnquiryStatus(
   status: EnquirySubmission['status']
 ): Promise<boolean> {
   return updateEnquiry(id, { status });
+}
+
+export async function deleteEnquiry(id: string): Promise<boolean> {
+  if (isSupabaseConfigured()) {
+    const supabase = getSupabaseAdminClient();
+    if (!supabase) return false;
+
+    const { error } = await supabase
+      .from('enquiries')
+      .delete()
+      .eq('id', id);
+
+    return !error;
+  }
+
+  const index = inMemoryEnquiries.findIndex((e) => e.id === id);
+  if (index !== -1) {
+    inMemoryEnquiries.splice(index, 1);
+    if (shouldAllowLocalFallback()) {
+      ensureDataDir();
+      try {
+        fs.writeFileSync(ENQUIRIES_FILE, JSON.stringify(inMemoryEnquiries, null, 2), 'utf8');
+      } catch {
+        // Ignored
+      }
+    }
+    return true;
+  }
+
+  return false;
 }
 
 // Durable cross-serverless rate limit check
