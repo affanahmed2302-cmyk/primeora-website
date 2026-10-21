@@ -147,7 +147,6 @@ export default function ProcessSection() {
     const cards = stepsContainerRef.current?.querySelectorAll<HTMLElement>('.process-card');
     if (!cards || cards.length === 0) return;
 
-    // Subtle transform-only scroll reveal with automatic cleanup
     // Default opacity is ALWAYS 1 in CSS so content is never hidden
     const ctx = gsap.context(() => {
       gsap.from(cards, {
@@ -175,15 +174,11 @@ export default function ProcessSection() {
       className="py-20 md:py-28 bg-[#F4EFEA] dark:bg-[#171615] border-b border-[#E5DDD0] dark:border-[#2C2926] relative overflow-hidden transition-colors duration-200"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
+        {/* Section Header without eyebrow */}
         <div className="max-w-3xl mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white dark:bg-[#22201D] text-[#5A544E] dark:text-[#B8B0A5] border border-[#DDD5C7] dark:border-[#33302B] rounded-md text-xs font-mono mb-3 shadow-xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C25E38] dark:bg-[#E07A5F]" />
-            <span>DELIVERY METHODOLOGY</span>
-          </div>
           <h2
             id="process-heading"
-            className="text-3xl sm:text-4xl lg:text-4xl font-bold text-editorial-ink dark:text-[#FBF9F5] tracking-tight font-sans"
+            className="text-3xl sm:text-4xl lg:text-4xl font-bold text-[#191817] dark:text-[#FBF9F5] tracking-tight font-sans"
           >
             How We Work Together
           </h2>
@@ -202,7 +197,7 @@ export default function ProcessSection() {
                 >
                   0{step.step}
                 </span>
-                <span className="text-xs font-sans font-semibold text-editorial-ink dark:text-[#FBF9F5]">
+                <span className="text-xs font-sans font-semibold text-[#191817] dark:text-[#FBF9F5]">
                   {step.title}
                 </span>
               </div>
@@ -237,69 +232,67 @@ export default function ProcessSection() {
                       </span>
                     </div>
 
-                    <div
-                      className={`p-2 rounded-lg border ${step.accentColor.border} ${step.accentColor.iconBg} ${step.accentColor.iconText} transition-transform duration-200 group-hover:scale-105`}
-                      aria-hidden="true"
-                    >
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${step.accentColor.iconBg} ${step.accentColor.iconText} border ${step.accentColor.border}`}>
                       <Icon className="w-4 h-4" />
                     </div>
                   </div>
 
-                  <h3 className="text-lg font-bold text-editorial-ink dark:text-[#FBF9F5] mb-1 font-sans">
+                  <h3 className="text-lg font-bold text-[#191817] dark:text-[#FBF9F5] mb-1 font-sans">
                     {step.title}
                   </h3>
-                  <p className={`text-xs font-mono ${step.accentColor.numberText} mb-3 font-medium`}>
+
+                  <p className="text-xs font-mono text-[#C25E38] dark:text-[#E07A5F] mb-3">
                     {step.tagline}
                   </p>
+
                   <p className="text-xs text-[#5A544E] dark:text-[#A8A196] leading-relaxed mb-5">
                     {step.description}
                   </p>
+
+                  {/* Client Action & Deliverable */}
+                  <div className="pt-3 border-t border-[#E5DDD0] dark:border-[#2C2926] space-y-2 text-xs">
+                    <div>
+                      <span className="text-[10px] font-mono uppercase text-[#7C7469] dark:text-[#8E867C] block font-semibold">
+                        Client Input:
+                      </span>
+                      <span className="text-[11px] text-[#3D3833] dark:text-[#DDD6CC] leading-tight block mt-0.5">
+                        {step.clientInput}
+                      </span>
+                    </div>
+
+                    <div>
+                      <span className="text-[10px] font-mono uppercase text-[#7C7469] dark:text-[#8E867C] block font-semibold">
+                        Tangible Deliverable:
+                      </span>
+                      <span className="text-[11px] font-medium text-[#191817] dark:text-white leading-tight block mt-0.5">
+                        {step.deliverable}
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Bottom: Inputs, Deliverables, Duration */}
-                <div className="pt-4 border-t border-[#E5DDD0] dark:border-[#2C2926] text-xs space-y-3">
-                  <div>
-                    <span className="text-[#7C7469] dark:text-[#8E867C] block uppercase font-mono text-[10px] font-semibold tracking-wider mb-0.5">
-                      Client Input
-                    </span>
-                    <span className="text-[#3D3833] dark:text-[#D4CDC3] leading-snug block">
-                      {step.clientInput}
-                    </span>
-                  </div>
-
-                  <div>
-                    <span className={`${step.accentColor.numberText} block uppercase font-mono text-[10px] font-semibold tracking-wider mb-0.5 flex items-center gap-1`}>
-                      <CheckCircle2 className="w-3 h-3 flex-shrink-0" />
-                      Milestone Deliverable
-                    </span>
-                    <span className="text-editorial-ink dark:text-[#FBF9F5] font-medium leading-snug block">
-                      {step.deliverable}
-                    </span>
-                  </div>
-
-                  <div className="pt-1 flex items-center justify-between text-[11px] text-[#7C7469] dark:text-[#8E867C] font-mono">
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-[#A0988C] dark:text-[#70685E]" />
-                      Duration:
-                    </span>
-                    <span className="font-semibold text-editorial-ink dark:text-[#EAE4DC]">
-                      {step.duration}
-                    </span>
-                  </div>
+                {/* Bottom Duration Badge */}
+                <div className="mt-5 pt-3 border-t border-[#E5DDD0] dark:border-[#2C2926] flex items-center justify-between text-[11px] font-mono text-[#7C7469] dark:text-[#8E867C]">
+                  <span className="inline-flex items-center gap-1">
+                    <Clock className="w-3 h-3 text-[#C25E38] dark:text-[#E07A5F]" />
+                    <span>Duration</span>
+                  </span>
+                  <span className="font-semibold text-[#191817] dark:text-white">
+                    {step.duration}
+                  </span>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* Bottom Callout linking to /process */}
-        <div className="mt-12 text-center">
+        {/* Bottom Detailed Link */}
+        <div className="mt-10 text-center">
           <Link
             href="/process"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold bg-white dark:bg-[#201E1B] text-editorial-ink dark:text-[#FBF9F5] border border-[#DDD5C7] dark:border-[#3A3631] hover:border-[#C25E38] dark:hover:border-[#E07A5F] hover:text-[#C25E38] dark:hover:text-[#E07A5F] shadow-xs hover:shadow-sm transition-all duration-200 group"
+            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] hover:text-[#191817] dark:hover:text-white transition-colors"
           >
-            <span>Explore the Complete 4-Step Engineering Architecture &amp; Quality Gates</span>
-            <ArrowRight className="w-4 h-4 text-[#C25E38] dark:text-[#E07A5F] group-hover:translate-x-1 transition-transform" />
+            <span>Review Full Four-Phase Engineering Specification &rarr;</span>
           </Link>
         </div>
       </div>

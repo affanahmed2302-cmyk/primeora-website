@@ -3,16 +3,14 @@
 import React, { useRef } from 'react';
 import Link from 'next/link';
 import { BRAND_CONFIG } from '@/config/brand';
-import SystemSchematicHero from '@/components/motion/SystemSchematicHero';
-import DecryptedText from '@/components/react-bits/DecryptedText';
-import { ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import DigitalSystemsMap from '@/components/motion/DigitalSystemsMap';
+import { ArrowRight, ShieldCheck } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
-  const badgeRef = useRef<HTMLDivElement>(null);
   const subtextRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
 
@@ -21,31 +19,11 @@ export default function HeroSection() {
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (prefersReducedMotion) return;
 
-      const tl = gsap.timeline({ defaults: { ease: 'power2.out', duration: 0.5 } });
+      const tl = gsap.timeline({ defaults: { ease: 'power2.out', duration: 0.4 } });
 
-      tl.fromTo(
-        badgeRef.current,
-        { y: -6, opacity: 0.5 },
-        { y: 0, opacity: 1, duration: 0.4 }
-      )
-        .fromTo(
-          headlineRef.current,
-          { y: 12, opacity: 0.5 },
-          { y: 0, opacity: 1, duration: 0.5 },
-          '-=0.2'
-        )
-        .fromTo(
-          subtextRef.current,
-          { y: 8, opacity: 0.5 },
-          { y: 0, opacity: 1, duration: 0.4 },
-          '-=0.25'
-        )
-        .fromTo(
-          ctaRef.current,
-          { y: 6, opacity: 0.5 },
-          { y: 0, opacity: 1, duration: 0.4 },
-          '-=0.2'
-        );
+      tl.from(headlineRef.current, { y: 10, duration: 0.35, clearProps: 'all' })
+        .from(subtextRef.current, { y: 8, duration: 0.3, clearProps: 'all' }, '-=0.15')
+        .from(ctaRef.current, { y: 6, duration: 0.3, clearProps: 'all' }, '-=0.15');
     },
     { scope: containerRef }
   );
@@ -53,7 +31,7 @@ export default function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden bg-[#FBF9F5] dark:bg-[#121110] border-b border-[#E6DFD5] dark:border-[#2C2926] transition-colors"
+      className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden bg-[#FBF9F5] dark:bg-[#121110] border-b border-[#E6DFD5] dark:border-[#2C2926] transition-colors"
     >
       {/* Background Editorial Grid */}
       <div className="absolute inset-0 bg-editorial-grid opacity-60 pointer-events-none" />
@@ -63,27 +41,10 @@ export default function HeroSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-4xl mx-auto text-center space-y-6">
-          {/* Studio Category Badge */}
-          <div
-            ref={badgeRef}
-            className="inline-flex items-center gap-2.5 px-3 py-1 bg-white dark:bg-[#1A1917] border border-[#E6DFD5] dark:border-[#2C2926] rounded-md text-xs font-medium text-[#5C5751] dark:text-[#A8A29A] font-mono shadow-sm"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C25E38]" />
-            <DecryptedText
-              text={BRAND_CONFIG.name}
-              speed={35}
-              sequential={true}
-              className="text-[#191817] dark:text-white font-semibold tracking-wider uppercase"
-              encryptedClassName="text-[#C25E38]"
-            />
-            <span className="text-[#8C867E]">/</span>
-            <span>Digital Systems &amp; Strategic Architecture</span>
-          </div>
-
-          {/* Primary Editorial Headline */}
+          {/* Primary Editorial Headline (No kicker/eyebrow above it) */}
           <h1
             ref={headlineRef}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#191817] dark:text-white leading-[1.12] font-sans"
+            className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#191817] dark:text-white leading-[1.14] font-sans break-words"
           >
             Digital systems engineered for{' '}
             <span className="font-serif italic font-normal text-[#C25E38] block sm:inline">
@@ -105,7 +66,7 @@ export default function HeroSection() {
             className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3.5"
           >
             <Link
-              href="/contact"
+              href="#contact"
               className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 text-sm font-semibold text-white bg-[#C25E38] hover:bg-[#A34520] rounded-lg transition-colors group shadow-sm"
             >
               <span>Discuss a Project</span>
@@ -128,14 +89,14 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Meaningful Visual Element: Procedural Architectural Systems Matrix */}
-        <SystemSchematicHero />
+        {/* Meaningful Visual Element: Interactive Digital Transformation Systems Map */}
+        <DigitalSystemsMap />
 
         {/* Studio Trust Anchor */}
         <div className="mt-14 pt-6 border-t border-[#E6DFD5] dark:border-[#2C2926] flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-[#5C5751] dark:text-[#A8A29A]">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-[#C25E38]" />
-            <span>Bangalore Engineering Consultancy</span>
+            <span>Bangalore Engineering Practice</span>
           </div>
           <div>
             <span>MSME Udyam: {BRAND_CONFIG.udyamRegistrationNumber}</span>
