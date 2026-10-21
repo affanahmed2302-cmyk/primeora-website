@@ -105,7 +105,7 @@ export default function EnquiryForm() {
       }
     } catch {
       setStatus('error');
-      setErrorMessage('Network error during transmission. Please email contact@primeorasolutions.com directly.');
+      setErrorMessage('Network error during transmission. Please email primeorasolutions.in@gmail.com directly.');
     }
   };
 

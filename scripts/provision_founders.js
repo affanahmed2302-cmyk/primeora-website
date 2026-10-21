@@ -24,7 +24,7 @@ const FOUNDERS = [
     role: 'super_admin'
   },
   {
-    email: 'akarsh@primeorasolutions.com',
+    email: 'akarshthodaskar@gmail.com',
     fullName: 'Akarsh P. Thodaskar',
     role: 'super_admin'
   }

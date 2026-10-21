@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { SERVICE_PILLARS } from '@/config/brand';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://primeorasolutions.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://primeora-solutions.netlify.app';
   const currentDate = new Date().toISOString();
 
   // Core public routes

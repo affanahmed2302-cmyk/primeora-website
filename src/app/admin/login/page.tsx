@@ -105,7 +105,7 @@ export default function AdminLoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@primeorasolutions.com"
+                  placeholder="founder@gmail.com"
                   className="w-full pl-9 pr-3.5 py-2.5 text-sm rounded-lg border border-[#DDD5C7] dark:border-[#383430] bg-[#FBF9F5] dark:bg-[#201E1B] text-editorial-ink dark:text-[#FBF9F5] focus:ring-2 focus:ring-[#C25E38] focus:outline-none"
                 />
                 <Mail className="w-4 h-4 text-[#7C7469] dark:text-[#8E867C] absolute left-3 top-3 pointer-events-none" />
