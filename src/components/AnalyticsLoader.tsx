@@ -1,11 +1,44 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, Suspense } from 'react';
 import Script from 'next/script';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { CookiePreferences } from './CookieBanner';
+import { trackPageView } from '@/lib/analytics';
+
+function NavigationTracker({
+  gaId,
+  consentGranted,
+}: {
+  gaId: string;
+  consentGranted: boolean;
+}) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    // Avoid double counting on the very first page load
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    if (!consentGranted || !pathname || pathname.startsWith('/admin')) {
+      return;
+    }
+
+    const search = searchParams?.toString();
+    const url = search ? `${pathname}?${search}` : pathname;
+    trackPageView(url);
+  }, [pathname, searchParams, consentGranted, gaId]);
+
+  return null;
+}
 
 export default function AnalyticsLoader() {
-  const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-9JN6EWLSXV';
+  const pathname = usePathname();
   const [consentGranted, setConsentGranted] = useState(false);
 
   useEffect(() => {
@@ -24,7 +57,7 @@ export default function AnalyticsLoader() {
 
     checkConsent();
 
-    // Listen for consent updates
+    // Listen for consent updates from CookieBanner
     const handleConsentUpdate = (e: Event) => {
       const customEvent = e as CustomEvent<CookiePreferences>;
       setConsentGranted(Boolean(customEvent.detail?.analytics));
@@ -34,8 +67,10 @@ export default function AnalyticsLoader() {
     return () => window.removeEventListener('cookie-consent-updated', handleConsentUpdate);
   }, []);
 
-  // Do not load scripts if GA ID is missing or consent is not granted
-  if (!gaId || !consentGranted) {
+  // Exclude admin routes entirely from GA tracking
+  const isAdmin = pathname?.startsWith('/admin');
+
+  if (!gaId || !consentGranted || isAdmin) {
     return null;
   }
 
@@ -56,6 +91,9 @@ export default function AnalyticsLoader() {
           });
         `}
       </Script>
+      <Suspense fallback={null}>
+        <NavigationTracker gaId={gaId} consentGranted={consentGranted} />
+      </Suspense>
     </>
   );
 }

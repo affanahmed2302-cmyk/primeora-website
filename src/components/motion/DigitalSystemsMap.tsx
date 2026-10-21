@@ -34,7 +34,7 @@ const SYSTEM_STAGES: SystemStage[] = [
     problem: 'Slow template sites, unindexed pages, zero presence on modern AI answer engines (ChatGPT, Perplexity).',
     engineeredSolution: 'Bespoke Next.js 15 web application with semantic JSON-LD schema, sub-second load times, and Local SEO/AEO indexation.',
     technologies: ['Next.js 15 App Router', 'TypeScript', 'AEO Schema Markup', 'Global Edge CDN'],
-    metrics: '< 800ms First Contentful Paint',
+    metrics: 'Edge-Rendered Asset Delivery',
     icon: Globe,
   },
   {

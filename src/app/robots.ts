@@ -22,16 +22,21 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/admin/', '/api/', '/_next/'],
+        disallow: ['/admin/', '/api/'],
       },
       {
         userAgent: 'GPTBot',
-        allow: ['/', '/insights', '/services'],
+        allow: '/',
+        disallow: ['/admin/', '/api/'],
+      },
+      {
+        userAgent: 'OAI-SearchBot',
+        allow: '/',
         disallow: ['/admin/', '/api/'],
       },
       {
         userAgent: 'PerplexityBot',
-        allow: ['/', '/insights', '/services'],
+        allow: '/',
         disallow: ['/admin/', '/api/'],
       },
     ],

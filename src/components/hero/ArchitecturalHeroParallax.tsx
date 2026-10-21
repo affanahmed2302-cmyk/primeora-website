@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from 'react';
 import Link from 'next/link';
+import { trackEvent } from '@/lib/analytics';
 import { motion, useScroll, useTransform, useSpring, useReducedMotion } from 'motion/react';
 import KineticTextReveal from '@/components/motion/KineticTextReveal';
 import MagneticWrapper from '@/components/motion/MagneticWrapper';
@@ -194,6 +195,13 @@ export default function ArchitecturalHeroParallax() {
             <MagneticWrapper strength={0.2}>
               <Link
                 href="/contact"
+                onClick={() => {
+                  trackEvent('contact_cta_click', {
+                    cta_label: 'Consult with Partners',
+                    cta_location: 'hero_primary',
+                    destination: '/contact',
+                  });
+                }}
                 className="inline-flex items-center justify-center px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#C25E38] hover:bg-[#A34520] rounded-md transition-colors shadow-sm group"
               >
                 <span>Consult with Partners</span>

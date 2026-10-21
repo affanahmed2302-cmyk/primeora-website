@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { trackEvent } from '@/lib/analytics';
 import Link from 'next/link';
 import {
   Compass,
@@ -327,6 +328,15 @@ export default function DigitalReadinessAssessment() {
       'You have basic digital visibility, but lack automated enquiry triage, local search domination, and structured data attribution.';
   }
 
+  useEffect(() => {
+    if (completed) {
+      trackEvent('readiness_diagnostic_completed', {
+        score: percentage,
+        tier: maturityTier,
+      });
+    }
+  }, [completed, percentage, maturityTier]);
+
   // Identify strengths and critical gaps
   const scoredDimensions = DIMENSIONS.map((dim, idx) => {
     const selectedIdx = answers[idx] ?? 0;
@@ -650,6 +660,13 @@ Response SLA: We aim to respond to enquiries within 1–2 business days.`;
 
             <Link
               href={`/contact?diagnosticScore=${percentage}&tier=${encodeURIComponent(maturityTier)}`}
+              onClick={() => {
+                trackEvent('contact_cta_click', {
+                  cta_label: 'Book Strategic Consultation',
+                  cta_location: 'readiness_diagnostic_result',
+                  destination: '/contact',
+                });
+              }}
               className="inline-flex items-center justify-center px-6 py-3.5 text-sm font-semibold text-white bg-[#C25E38] hover:bg-[#A34520] dark:bg-[#E07A5F] dark:hover:bg-[#F08E73] dark:text-[#090807] rounded-lg transition-colors flex-shrink-0 shadow-sm"
             >
               <span>Book Strategic Consultation</span>

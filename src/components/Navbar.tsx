@@ -7,6 +7,7 @@ import { BRAND_CONFIG } from '@/config/brand';
 import PrimeoraLogo from '@/components/brand/PrimeoraLogo';
 import ThemeToggle from '@/components/ThemeToggle';
 import { Menu, X, ArrowRight } from 'lucide-react';
+import { trackEvent } from '@/lib/analytics';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -76,6 +77,13 @@ export default function Navbar() {
             <ThemeToggle />
             <Link
               href="/contact"
+              onClick={() => {
+                trackEvent('contact_cta_click', {
+                  cta_label: 'Discuss a Project',
+                  cta_location: 'navbar_desktop',
+                  destination: '/contact',
+                });
+              }}
               className="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white bg-[#C25E38] hover:bg-[#A34520] rounded-md transition-colors shadow-sm group"
             >
               <span>Discuss a Project</span>
@@ -139,7 +147,14 @@ export default function Navbar() {
           <div className="pt-3 border-t border-[#E6DFD5] dark:border-[#2C2926]">
             <Link
               href="/contact"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={() => {
+                setMobileMenuOpen(false);
+                trackEvent('contact_cta_click', {
+                  cta_label: 'Discuss a Project',
+                  cta_location: 'navbar_mobile',
+                  destination: '/contact',
+                });
+              }}
               className="w-full inline-flex items-center justify-center px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#C25E38] hover:bg-[#A34520] rounded-md transition-colors shadow-sm"
             >
               <span>Discuss a Project</span>

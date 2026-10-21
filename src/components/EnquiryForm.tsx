@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { SERVICE_PILLARS } from '@/config/brand';
 import { Send, CheckCircle2, AlertCircle, Loader2, Shield } from 'lucide-react';
 import Link from 'next/link';
+import { trackEvent } from '@/lib/analytics';
 
 // Isolated subcomponent to parse search params without blocking SSR/SSG
 function SearchParamsSync({
@@ -102,6 +103,10 @@ export default function EnquiryForm() {
         setErrorMessage(data.message || 'We could not submit your request. Please try again or email us directly.');
       } else {
         setStatus('success');
+        trackEvent('generate_lead', {
+          service_category: formData.serviceInterest,
+          timeline: formData.targetTimeline,
+        });
       }
     } catch {
       setStatus('error');
