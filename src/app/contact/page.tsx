@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import EnquiryForm from '@/components/EnquiryForm';
 import { BRAND_CONFIG } from '@/config/brand';
 import { Mail, MapPin, ShieldCheck, Clock } from 'lucide-react';
+import KineticTextReveal from '@/components/motion/KineticTextReveal';
 
 export const metadata: Metadata = {
   title: 'Discuss a Project — Project Enquiry & Consultation | Primeora Solutions',
@@ -19,10 +20,18 @@ export default function ContactPage() {
       {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
         <div className="max-w-3xl">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight font-serif text-[#191817] dark:text-[#FBF9F5] mb-4">
-            Discuss a project.
-          </h1>
-          <p className="text-base sm:text-lg text-[#5A544E] dark:text-[#9E9689] leading-relaxed font-sans">
+          <span className="text-xs font-mono uppercase tracking-widest text-[#C25E38] dark:text-[#E07A5F] font-semibold block mb-2">
+            Initiate Consultation
+          </span>
+
+          <KineticTextReveal
+            text="Discuss a project."
+            highlightWord="project."
+            highlightClass="italic font-serif text-[#C25E38] dark:text-[#E07A5F]"
+            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight font-sans text-[#191817] dark:text-[#FBF9F5] mb-4"
+          />
+
+          <p className="text-base sm:text-lg text-[#5A544E] dark:text-[#9E988F] leading-relaxed font-serif">
             Every partnership begins with understanding your commercial objectives. Complete the enquiry form below, and our leadership team will review and reply with initial thoughts. <strong>We aim to respond to enquiries within 1–2 business days.</strong>
           </p>
         </div>

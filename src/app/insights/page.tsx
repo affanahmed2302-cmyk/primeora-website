@@ -2,6 +2,8 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import KineticTextReveal from '@/components/motion/KineticTextReveal';
+import MagneticWrapper from '@/components/motion/MagneticWrapper';
 
 export const metadata: Metadata = {
   title: 'Insights & Technical Guidance — Practical Systems Engineering | Primeora Solutions',
@@ -66,70 +68,78 @@ export default function InsightsPage() {
       {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
         <div className="max-w-3xl">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight font-serif text-[#191817] dark:text-[#FBF9F5] mb-4">
-            Technical insights &amp; practice guidance.
-          </h1>
-          <p className="text-base sm:text-lg text-[#5A544E] dark:text-[#9E9689] leading-relaxed font-sans">
+          <span className="text-xs font-mono uppercase tracking-widest text-[#C25E38] dark:text-[#E07A5F] font-semibold block mb-2">
+            Publication &amp; Analysis
+          </span>
+
+          <KineticTextReveal
+            text="Technical insights & practice guidance."
+            highlightWord="guidance."
+            highlightClass="italic font-serif text-[#C25E38] dark:text-[#E07A5F]"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight font-sans text-[#191817] dark:text-[#FBF9F5] mb-4"
+          />
+
+          <p className="text-base sm:text-lg text-[#5A544E] dark:text-[#9E988F] leading-relaxed font-serif">
             Practical explanations addressing real business-owner challenges across digital presence, search discoverability, workflow automation, and analytics.
           </p>
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {INSIGHTS_ARTICLES.map((art, idx) => (
           <article
             key={idx}
-            className="bg-white dark:bg-[#141312] rounded-2xl border border-[#E5DDD0] dark:border-[#242220] p-7 sm:p-9 hover:border-[#C25E38]/50 dark:hover:border-[#E07A5F]/50 hover:shadow-md transition-all duration-200 shadow-xs group"
+            className="bg-white dark:bg-[#141312] rounded-2xl border border-[#E5DDD0] dark:border-[#242220] p-8 sm:p-10 shadow-xs hover:border-[#1065FF]/40 transition-all duration-200 group"
           >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-mono uppercase text-[#C25E38] dark:text-[#E07A5F] font-semibold">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs font-mono uppercase text-[#C25E38] dark:text-[#E07A5F] font-semibold tracking-wider">
                 {art.category}
               </span>
-              <span className="text-xs font-mono text-[#7C7469] dark:text-[#7A7368]">
+              <span className="text-xs font-mono text-[#7C7469] dark:text-[#8E867C]">
                 {art.readTime}
               </span>
             </div>
 
-            <h2 className="text-2xl font-bold mb-3 font-serif text-[#191817] dark:text-[#FBF9F5] group-hover:text-[#C25E38] dark:group-hover:text-[#E07A5F] transition-colors">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-3 font-sans text-[#191817] dark:text-[#FBF9F5] group-hover:text-[#1065FF] transition-colors">
               {art.title}
             </h2>
 
-            <p className="text-sm text-[#5A544E] dark:text-[#9E9689] leading-relaxed mb-6 font-sans">
+            <p className="text-sm sm:text-base text-[#5A544E] dark:text-[#9E988F] leading-relaxed mb-6 font-serif">
               {art.summary}
             </p>
 
-            <div className="p-4 bg-[#FAF7F2] dark:bg-[#181715] border border-[#E5DDD0] dark:border-[#242220] rounded-xl mb-6 flex items-start gap-3 text-xs">
-              <CheckCircle2 className="w-4 h-4 text-[#C25E38] dark:text-[#E07A5F] flex-shrink-0 mt-0.5" />
+            <div className="p-4 rounded-xl bg-[#FAF6F0] dark:bg-[#1A1917] border border-[#E5DDD0] dark:border-[#2C2926] flex items-start gap-3 text-xs sm:text-sm text-[#191817] dark:text-[#FBF9F5]">
+              <CheckCircle2 className="w-4 h-4 text-[#1065FF] flex-shrink-0 mt-0.5" />
               <div>
-                <span className="font-semibold text-[#191817] dark:text-[#FBF9F5] font-sans">Core Architectural Takeaway: </span>
-                <span className="text-[#5A544E] dark:text-[#9E9689]">{art.keyTakeaway}</span>
+                <strong className="font-semibold text-editorial-ink dark:text-white font-sans">
+                  Architectural Takeaway:{' '}
+                </strong>
+                <span className="font-serif text-[#5A544E] dark:text-[#9E988F]">{art.keyTakeaway}</span>
               </div>
             </div>
-
-            <Link
-              href="/contact"
-              className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] hover:underline transition-colors"
-            >
-              <span>Discuss Implementing This Standard</span>
-              <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
-            </Link>
           </article>
         ))}
 
-        {/* Footer Guidance CTA */}
-        <div className="bg-white dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] rounded-2xl p-8 text-center mt-12 shadow-xs">
-          <h3 className="text-xl font-bold mb-2 font-serif text-[#191817] dark:text-[#FBF9F5]">
-            Have a specific architectural question for your stack?
-          </h3>
-          <p className="text-xs text-[#5A544E] dark:text-[#9E9689] max-w-md mx-auto mb-5 font-sans">
-            Our founding engineering partners review tech stack trade-offs directly during discovery.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center justify-center px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#C25E38] hover:bg-[#A84F2E] dark:bg-[#E07A5F] dark:hover:bg-[#F08E73] dark:text-[#090807] rounded-lg transition-colors shadow-sm"
-          >
-            <span>Ask an Engineering Partner</span>
-          </Link>
+        {/* Bottom CTA */}
+        <div className="pt-12 mt-16 border-t border-[#E5DDD0] dark:border-[#242220] flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div>
+            <h3 className="text-xl font-bold font-sans text-[#191817] dark:text-[#FBF9F5]">
+              Have a specific technical question for your organization?
+            </h3>
+            <p className="text-xs sm:text-sm text-[#5A544E] dark:text-[#9E988F] font-serif">
+              Our founding partners provide direct technical audits. Response SLA: within 1–2 business days.
+            </p>
+          </div>
+
+          <MagneticWrapper strength={0.25}>
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#C25E38] hover:bg-[#A34520] rounded-md transition-colors shadow-sm"
+            >
+              <span>Submit a Project Enquiry</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-2" />
+            </Link>
+          </MagneticWrapper>
         </div>
       </div>
     </div>

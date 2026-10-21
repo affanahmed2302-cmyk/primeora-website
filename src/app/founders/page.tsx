@@ -5,6 +5,8 @@ import { getTeamMembers } from '@/lib/cms-store';
 import { INITIAL_FOUNDERS, BRAND_CONFIG } from '@/config/brand';
 import Link from 'next/link';
 import { Linkedin, Globe, CheckCircle2, ArrowRight, ShieldCheck, Clock, ArrowUpRight, Mail } from 'lucide-react';
+import KineticTextReveal from '@/components/motion/KineticTextReveal';
+import MagneticWrapper from '@/components/motion/MagneticWrapper';
 
 export const metadata: Metadata = {
   title: 'Founding Partners | Primeora Solutions',
@@ -32,11 +34,18 @@ export default async function FoundersPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Editorial Section Header */}
         <div className="max-w-3xl mb-16">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight font-serif text-[#191817] dark:text-[#FBF9F5] leading-tight mb-4">
-            Direct founder engineering.
-          </h1>
+          <span className="text-xs font-mono uppercase tracking-widest text-[#C25E38] dark:text-[#E07A5F] font-semibold block mb-2">
+            Leadership &amp; Execution
+          </span>
 
-          <p className="text-base sm:text-lg text-[#5A544E] dark:text-[#9E9689] leading-relaxed font-sans">
+          <KineticTextReveal
+            text="Direct founder engineering."
+            highlightWord="engineering."
+            highlightClass="italic font-serif text-[#C25E38] dark:text-[#E07A5F]"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight font-sans text-[#191817] dark:text-[#FBF9F5] leading-tight mb-4"
+          />
+
+          <p className="text-base sm:text-lg text-[#5A544E] dark:text-[#9E988F] leading-relaxed font-serif">
             Primeora Solutions was founded on a simple principle: businesses deserve direct, accountable execution from senior practitioners, not junior account managers or offshore handoffs.
           </p>
         </div>
@@ -152,7 +161,7 @@ export default async function FoundersPage() {
                       <h3 className="text-xs font-mono uppercase tracking-widest text-[#7C7469] dark:text-[#8E867C] mb-2 font-semibold">
                         Role &amp; Executive Focus
                       </h3>
-                      <p className="text-sm sm:text-base text-[#5A544E] dark:text-[#C4BAA9] leading-relaxed">
+                      <p className="text-sm sm:text-base text-[#5A544E] dark:text-[#C4BAA9] leading-relaxed font-serif">
                         {founder.bio}
                       </p>
                     </div>
@@ -183,21 +192,29 @@ export default async function FoundersPage() {
         {/* Closing Partner Invitation */}
         <div className="bg-white dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] rounded-2xl p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
           <div className="max-w-2xl space-y-2">
-            <h3 className="text-2xl font-bold font-serif text-[#191817] dark:text-[#FBF9F5]">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#1065FF] font-semibold block">
+              Direct Access
+            </span>
+            <h3 className="text-2xl font-bold font-sans text-[#191817] dark:text-[#FBF9F5]">
               Speak directly with our founding partners.
             </h3>
-            <p className="text-sm text-[#5A544E] dark:text-[#9E9689] leading-relaxed">
-              Every prospective engagement begins with a direct, qualified technical consultation. We audit your operational bottlenecks and provide honest architectural direction. Response SLA: within 1–2 business days.
+            <p className="text-sm text-[#5A544E] dark:text-[#9E988F] font-serif leading-relaxed">
+              Every prospective engagement begins with a direct, qualified technical consultation. We audit your operational bottlenecks and provide honest architectural direction.
             </p>
+            <div className="pt-2 text-xs font-mono text-[#7C7469] dark:text-[#8E867C]">
+              We aim to respond to enquiries within 1–2 business days.
+            </div>
           </div>
 
-          <Link
-            href="/contact"
-            className="inline-flex items-center justify-center px-6 py-3.5 text-sm font-semibold text-white bg-[#C25E38] hover:bg-[#A34520] dark:bg-[#E07A5F] dark:hover:bg-[#F08E73] dark:text-[#090807] rounded-lg transition-colors flex-shrink-0 shadow-sm"
-          >
-            <span>Book a Direct Consultation</span>
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Link>
+          <MagneticWrapper strength={0.25}>
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#C25E38] hover:bg-[#A34520] rounded-md transition-colors flex-shrink-0 shadow-sm"
+            >
+              <span>Book a Direct Consultation</span>
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Link>
+          </MagneticWrapper>
         </div>
       </div>
     </div>
