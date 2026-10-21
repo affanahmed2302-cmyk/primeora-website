@@ -43,12 +43,9 @@ export default function FaqSection() {
   return (
     <section id="faq" className="py-20 md:py-28 bg-[#F4EFEA] dark:bg-[#171615] border-b border-[#E5DDD0] dark:border-[#2C2926] transition-colors duration-200">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header without eyebrow */}
         <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white dark:bg-[#22201D] text-[#5A544E] dark:text-[#B8B0A5] border border-[#DDD5C7] dark:border-[#33302B] rounded-md text-xs font-mono mb-3 shadow-xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C25E38] dark:bg-[#E07A5F]" />
-            <span>DIRECT ANSWERS</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-editorial-ink dark:text-[#FBF9F5] tracking-tight font-sans">
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#191817] dark:text-[#FBF9F5] tracking-tight font-sans">
             Frequently Asked Questions
           </h2>
           <p className="mt-3 text-base text-[#5A544E] dark:text-[#A8A196] leading-relaxed font-serif">
@@ -62,27 +59,25 @@ export default function FaqSection() {
             return (
               <div
                 key={idx}
-                className="border border-[#E5DDD0] dark:border-[#2C2926] rounded-xl overflow-hidden bg-white dark:bg-[#1C1A18] hover:border-[#C25E38]/40 dark:hover:border-[#E07A5F]/30 transition-all duration-200 shadow-xs"
+                className="bg-white dark:bg-[#1C1A18] rounded-xl border border-[#E5DDD0] dark:border-[#2C2926] overflow-hidden transition-colors shadow-xs"
               >
                 <button
                   type="button"
                   onClick={() => toggle(idx)}
-                  className="w-full text-left p-5 sm:p-6 flex items-center justify-between gap-4 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#C25E38]"
+                  className="w-full py-4 px-6 text-left flex items-center justify-between gap-4 font-sans font-bold text-sm sm:text-base text-[#191817] dark:text-[#FBF9F5] hover:text-[#C25E38] dark:hover:text-[#E07A5F] transition-colors"
                   aria-expanded={isOpen}
                 >
-                  <span className="text-base font-bold text-editorial-ink dark:text-[#FBF9F5] font-sans">
-                    {faq.question}
-                  </span>
+                  <span>{faq.question}</span>
                   <ChevronDown
-                    className={`w-5 h-5 text-[#7C7469] dark:text-[#8E867C] flex-shrink-0 transition-transform duration-200 ${
-                      isOpen ? 'rotate-180 text-[#C25E38] dark:text-[#E07A5F]' : ''
+                    className={`w-4 h-4 text-[#C25E38] dark:text-[#E07A5F] flex-shrink-0 transition-transform duration-200 ${
+                      isOpen ? 'transform rotate-180' : ''
                     }`}
                   />
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-6 sm:px-6 text-sm text-[#5A544E] dark:text-[#A8A196] leading-relaxed border-t border-[#E5DDD0] dark:border-[#2C2926] pt-4 animate-in fade-in duration-150">
-                    {faq.answer}
+                  <div className="px-6 pb-5 pt-1 text-xs sm:text-sm text-[#5A544E] dark:text-[#A8A196] leading-relaxed border-t border-[#E5DDD0]/50 dark:border-[#2C2926]/50">
+                    <p>{faq.answer}</p>
                   </div>
                 )}
               </div>
@@ -90,13 +85,13 @@ export default function FaqSection() {
           })}
         </div>
 
-        <div className="mt-8 flex justify-end">
+        <div className="mt-8 text-center">
           <Link
-            href="/services"
-            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] hover:text-editorial-ink dark:hover:text-white transition-colors group"
+            href="/insights"
+            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] hover:text-[#191817] dark:hover:text-white transition-colors"
           >
-            <span>Have specific technical questions? Read Our Practice Inclusions &amp; Exclusions</span>
-            <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
+            <span>Explore Technical Insights &amp; Guides</span>
+            <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
           </Link>
         </div>
       </div>

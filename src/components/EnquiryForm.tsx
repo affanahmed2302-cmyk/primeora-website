@@ -119,7 +119,7 @@ export default function EnquiryForm() {
           Enquiry Received
         </h3>
         <p className="text-sm text-[#5A544E] dark:text-[#A8A196] leading-relaxed mb-6 font-serif">
-          Thank you, <strong className="text-editorial-ink dark:text-[#FBF9F5]">{formData.fullName}</strong>. Your project brief has been routed to our founding partners. We review client requirements and respond within one business day.
+          Thank you, <strong className="text-editorial-ink dark:text-[#FBF9F5]">{formData.fullName}</strong>. Your project brief has been received and routed directly to our founding partners. <strong>We aim to respond to enquiries within 1–2 business days.</strong>
         </p>
         <div className="p-4 bg-[#FBF9F5] dark:bg-[#22201D] rounded-lg border border-[#DDD5C7] dark:border-[#33302B] text-xs font-mono text-[#7C7469] dark:text-[#8E867C] mb-8 text-left space-y-1">
           <div><strong className="text-[#3D3833] dark:text-[#DDD6CC]">Business:</strong> {formData.businessName}</div>
@@ -355,8 +355,14 @@ export default function EnquiryForm() {
           </div>
         </div>
 
+        {/* Response SLA Commitment */}
+        <div className="mt-6 p-3 bg-[#FBF9F5] dark:bg-[#121110] border border-[#DDD5C7] dark:border-[#2C2926] rounded-lg flex items-center gap-2.5 text-xs font-mono text-[#5C5751] dark:text-[#A8A29A]">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0" />
+          <span>Response commitment: <strong>We aim to respond to enquiries within 1–2 business days.</strong></span>
+        </div>
+
         {/* Submit Button & Privacy Notice */}
-        <div className="mt-8 pt-6 border-t border-[#E5DDD0] dark:border-[#2C2926] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="mt-6 pt-6 border-t border-[#E5DDD0] dark:border-[#2C2926] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <button
             type="submit"
             disabled={status === 'submitting'}

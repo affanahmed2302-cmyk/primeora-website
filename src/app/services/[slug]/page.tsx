@@ -100,13 +100,8 @@ export default async function ServicePillarPage({
           <span className="text-[#C25E38] dark:text-[#E07A5F] font-semibold">{pillar.title.toUpperCase()}</span>
         </nav>
 
-        {/* Practice Hero Header */}
+        {/* Practice Hero Header without eyebrow */}
         <div className="max-w-4xl mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white dark:bg-[#22201D] text-[#5A544E] dark:text-[#B8B0A5] border border-[#DDD5C7] dark:border-[#33302B] rounded-md text-xs font-mono mb-4 shadow-xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C25E38] dark:bg-[#E07A5F]" />
-            <span>PRACTICE SPECIFICATION / {pillar.badge.toUpperCase()}</span>
-          </div>
-
           <div className="flex items-start gap-5 mt-2">
             <div className="w-14 h-14 rounded-xl bg-white dark:bg-[#1C1A18] border border-[#E5DDD0] dark:border-[#2C2926] flex items-center justify-center text-[#C25E38] dark:text-[#E07A5F] flex-shrink-0 shadow-xs">
               <Icon className="w-7 h-7" />

@@ -31,13 +31,9 @@ export default function FoundersSection({ initialMembers }: FoundersSectionProps
   return (
     <section id="team" className="py-20 md:py-28 bg-[#F4EFEA] dark:bg-[#171615] border-b border-[#E5DDD0] dark:border-[#2C2926] transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+        {/* Section Header without eyebrow */}
         <div className="max-w-3xl mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white dark:bg-[#22201D] text-[#5A544E] dark:text-[#B8B0A5] border border-[#DDD5C7] dark:border-[#33302B] rounded-md text-xs font-mono mb-3 shadow-xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C25E38] dark:bg-[#E07A5F]" />
-            <span>PARTNERS &amp; LEADERSHIP</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-editorial-ink dark:text-[#FBF9F5] tracking-tight font-sans">
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#191817] dark:text-[#FBF9F5] tracking-tight font-sans">
             Direct Founder Engineering
           </h2>
           <p className="mt-3 text-base text-[#5A544E] dark:text-[#A8A196] leading-relaxed max-w-2xl font-serif">
@@ -70,7 +66,7 @@ export default function FoundersSection({ initialMembers }: FoundersSectionProps
                         />
                       </div>
                     ) : (
-                      <div className="relative w-16 h-16 rounded-xl flex-shrink-0 border border-[#DDD5C7] dark:border-[#383430] bg-gradient-to-br from-[#EAE4DC] to-[#DDD5C7] dark:from-[#24221F] dark:to-[#1B1917] flex flex-col items-center justify-center text-editorial-ink dark:text-[#FBF9F5] shadow-xs">
+                      <div className="relative w-16 h-16 rounded-xl flex-shrink-0 border border-[#DDD5C7] dark:border-[#383430] bg-gradient-to-br from-[#EAE4DC] to-[#DDD5C7] dark:from-[#24221F] dark:to-[#1B1917] flex flex-col items-center justify-center text-[#191817] dark:text-[#FBF9F5] shadow-xs">
                         <span className="font-mono font-bold text-lg tracking-wider text-[#C25E38] dark:text-[#E07A5F]">
                           {person.fullName.split(' ').map((n) => n[0]).join('')}
                         </span>
@@ -81,7 +77,7 @@ export default function FoundersSection({ initialMembers }: FoundersSectionProps
                     )}
 
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-base font-bold text-editorial-ink dark:text-[#FBF9F5] font-sans group-hover:text-[#C25E38] dark:group-hover:text-[#E07A5F] transition-colors truncate">
+                      <h3 className="text-base font-bold text-[#191817] dark:text-[#FBF9F5] font-sans group-hover:text-[#C25E38] dark:group-hover:text-[#E07A5F] transition-colors truncate">
                         {person.fullName}
                       </h3>
                       <p className="text-xs font-mono text-[#C25E38] dark:text-[#E07A5F] mt-0.5 font-medium">
@@ -138,7 +134,7 @@ export default function FoundersSection({ initialMembers }: FoundersSectionProps
                       href={person.linkedinUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FBF9F5] dark:bg-[#22201D] hover:bg-[#EAE4DC] dark:hover:bg-[#2A2825] border border-[#DDD5C7] dark:border-[#383430] rounded-md text-xs text-[#3D3833] dark:text-[#DDD6CC] hover:text-editorial-ink dark:hover:text-white transition-colors"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FBF9F5] dark:bg-[#22201D] hover:bg-[#EAE4DC] dark:hover:bg-[#2A2825] border border-[#DDD5C7] dark:border-[#383430] rounded-md text-xs text-[#3D3833] dark:text-[#DDD6CC] hover:text-[#191817] dark:hover:text-white transition-colors"
                     >
                       <Linkedin className="w-3.5 h-3.5 text-[#1065FF]" />
                       <span>LinkedIn</span>
@@ -150,7 +146,7 @@ export default function FoundersSection({ initialMembers }: FoundersSectionProps
                       href={person.portfolioUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FBF9F5] dark:bg-[#22201D] hover:bg-[#EAE4DC] dark:hover:bg-[#2A2825] border border-[#DDD5C7] dark:border-[#383430] rounded-md text-xs text-[#3D3833] dark:text-[#DDD6CC] hover:text-editorial-ink dark:hover:text-white transition-colors"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FBF9F5] dark:bg-[#22201D] hover:bg-[#EAE4DC] dark:hover:bg-[#2A2825] border border-[#DDD5C7] dark:border-[#383430] rounded-md text-xs text-[#3D3833] dark:text-[#DDD6CC] hover:text-[#191817] dark:hover:text-white transition-colors"
                     >
                       <Globe className="w-3.5 h-3.5 text-[#C25E38] dark:text-[#E07A5F]" />
                       <span>Portfolio</span>
@@ -163,14 +159,13 @@ export default function FoundersSection({ initialMembers }: FoundersSectionProps
           })}
         </div>
 
-        {/* Link to Dedicated Team & About Page */}
-        <div className="mt-10 flex justify-end">
+        {/* Bottom Link */}
+        <div className="mt-10 text-center">
           <Link
             href="/team"
-            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] hover:text-editorial-ink dark:hover:text-white transition-colors group"
+            className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] hover:text-[#191817] dark:hover:text-white transition-colors"
           >
-            <span>View Full Founding Team &amp; Governance Structure</span>
-            <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
+            <span>View Complete Leadership Bios &amp; Credentials &rarr;</span>
           </Link>
         </div>
       </div>

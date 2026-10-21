@@ -77,6 +77,32 @@
     background-color: var(--accent-light);
     color: var(--accent-primary);
   }
+
+  /* Browser Surfaces Polish: Custom Scrollbars */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg-canvas);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-medium);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-primary);
+  }
+
+  /* Form Caret Theming */
+  input, textarea, select {
+    caret-color: var(--accent-primary);
+  }
+
+  /* Tabular Figures for Dates, Metrics, and Codes */
+  .font-mono, [data-tabular] {
+    font-feature-settings: 'tnum' 1;
+  }
 }
 
 /* Reduced motion preference compliance */
