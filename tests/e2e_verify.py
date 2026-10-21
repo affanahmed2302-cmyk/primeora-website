@@ -548,6 +548,22 @@ except Exception as e:
     record('Technical SEO: Robots.txt Rules', False, str(e))
 
 # -------------------------------------------------------------------
+# 9b. TEST DATA HYGIENE: AUTOMATICALLY PURGE TEST-GENERATED ENQUIRY
+# -------------------------------------------------------------------
+if 'valid_enquiry_id' in locals() and valid_enquiry_id:
+    try:
+        cleanup_req = urllib.request.Request(
+            base + f'/api/admin/enquiries?id={valid_enquiry_id}',
+            headers={'Cookie': super_cookie},
+            method='DELETE'
+        )
+        with urllib.request.urlopen(cleanup_req) as resp:
+            cleanup_data = json.loads(resp.read().decode())
+            record('Test Data Hygiene: Purge Test Enquiry', cleanup_data.get('success') is True, f'Successfully purged generated test enquiry {valid_enquiry_id}')
+    except Exception as e:
+        record('Test Data Hygiene: Purge Test Enquiry', False, f'Failed to clean up test enquiry: {e}')
+
+# -------------------------------------------------------------------
 # FINAL SUMMARY REPORT
 # -------------------------------------------------------------------
 passed = sum(1 for r in results if r['success'])

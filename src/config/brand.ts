@@ -534,6 +534,7 @@ export const INITIAL_FOUNDERS: TeamMember[] = [
     ],
     photoUrl: '/team/akarsh-thodaskar.jpg',
     linkedinUrl: 'https://www.linkedin.com/in/akarsh-p-6963b5397?utm_source=share_via&utm_content=profile&utm_medium=member_android',
+    email: 'akarshthodaskar@gmail.com',
     displayOrder: 2,
     status: 'published',
     isFounder: true,

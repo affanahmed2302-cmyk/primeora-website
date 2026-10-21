@@ -59,6 +59,7 @@ export interface TeamMember {
   avatarUrl?: string;
   linkedinUrl?: string;
   portfolioUrl?: string;
+  email?: string;
   displayOrder: number;
   status: 'draft' | 'published' | 'inactive';
   isFounder?: boolean;

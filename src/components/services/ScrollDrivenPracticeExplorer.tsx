@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import {
   Globe,
@@ -38,6 +39,8 @@ interface PracticeItem {
   clientInputs: string[];
   slaCommitment: string;
   href: string;
+  imageSrc: string;
+  imageAlt: string;
 }
 
 const PRACTICES: PracticeItem[] = [
@@ -60,6 +63,8 @@ const PRACTICES: PracticeItem[] = [
     clientInputs: ['Approved text copy', 'High-res brand assets', 'Domain registrar credentials'],
     slaCommitment: 'Sub-second LCP benchmark · 100% Code Ownership',
     href: '/services/digital-presence',
+    imageSrc: '/images/services/01-digital-presence.jpg',
+    imageAlt: 'Engineered web platforms and digital presence architecture',
   },
   {
     id: 'customer-acquisition',
@@ -80,6 +85,8 @@ const PRACTICES: PracticeItem[] = [
     clientInputs: ['Business registration proof', 'Official operating hours', 'Service catalogues'],
     slaCommitment: 'Full Entity Verification · Zero Spam Tactics',
     href: '/services/customer-acquisition',
+    imageSrc: '/images/services/02-customer-acquisition.jpg',
+    imageAlt: 'Search discoverability, answer engine optimization, and local authority',
   },
   {
     id: 'lead-sales-systems',
@@ -100,6 +107,8 @@ const PRACTICES: PracticeItem[] = [
     clientInputs: ['Current CRM access credentials', 'Enquiry routing hierarchy', 'WhatsApp Business phone'],
     slaCommitment: 'Sub-15 second team notifications · Zero lost leads',
     href: '/services/lead-sales-systems',
+    imageSrc: '/images/services/03-lead-systems.jpg',
+    imageAlt: 'Lead triage pipelines, database connectivity, and CRM integration',
   },
   {
     id: 'operations-automation',
@@ -120,6 +129,8 @@ const PRACTICES: PracticeItem[] = [
     clientInputs: ['Accounting platform API keys', 'GST tax slab rules', 'Merchant gateway credentials'],
     slaCommitment: '100% Hands-off Invoicing · Error-handled retries',
     href: '/services/operations-automation',
+    imageSrc: '/images/services/04-operations-automation.jpg',
+    imageAlt: 'Operations automation, payment gateway webhooks, and billing infrastructure',
   },
   {
     id: 'analytics-insights',
@@ -140,6 +151,8 @@ const PRACTICES: PracticeItem[] = [
     clientInputs: ['Ad platform read access', 'Historical revenue data', 'Target KPI definitions'],
     slaCommitment: 'Real-time telemetry · Zero vanity metrics',
     href: '/services/analytics-insights',
+    imageSrc: '/images/services/05-analytics-insights.jpg',
+    imageAlt: 'Business intelligence telemetry, analytics, and executive attribution dashboards',
   },
   {
     id: 'ongoing-management',
@@ -160,6 +173,8 @@ const PRACTICES: PracticeItem[] = [
     clientInputs: ['Domain DNS access', 'Cloud infrastructure hosting access'],
     slaCommitment: '1–2 business day SLA · 99.9% monitored uptime',
     href: '/services/ongoing-management',
+    imageSrc: '/images/services/06-ongoing-management.jpg',
+    imageAlt: 'High-availability server infrastructure, systems monitoring, and turnkey maintenance',
   },
 ];
 
@@ -252,13 +267,13 @@ export default function ScrollDrivenPracticeExplorer() {
           })}
         </div>
 
-        {/* Right Column (5 cols): Sticky Visual Stage with 6 Different Scenes */}
+        {/* Right Column (5 cols): Sticky Photographic Practice Stage */}
         <div className="lg:col-span-5 lg:sticky lg:top-28">
-          <div className="w-full bg-[#FAF6F0] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] rounded-2xl p-6 sm:p-8 shadow-xs flex flex-col justify-between min-h-[540px]">
+          <div className="w-full bg-[#FAF6F0] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] rounded-2xl p-5 sm:p-7 shadow-xs flex flex-col justify-between">
             {/* Top Stage Bar */}
-            <div className="flex items-center justify-between pb-4 border-b border-[#E5DDD0] dark:border-[#242220]">
+            <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-[#E5DDD0] dark:border-[#242220]">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#1065FF]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#1065FF] animate-pulse" />
                 <span className="text-xs font-mono font-semibold uppercase tracking-wider text-[#191817] dark:text-[#FBF9F5]">
                   Practice Visual Stage
                 </span>
@@ -268,233 +283,79 @@ export default function ScrollDrivenPracticeExplorer() {
               </span>
             </div>
 
-            {/* Dynamic Visual Scene based on activeIdx */}
-            <div className="my-6 flex-1 flex items-center justify-center">
+            {/* Central High-Resolution Photographic Canvas */}
+            <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden border border-[#E5DDD0] dark:border-[#2C2926] shadow-md bg-black">
               <AnimatePresence mode="wait">
-                {activeIdx === 0 && (
-                  <motion.div
-                    key="scene-0"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-full space-y-4"
-                  >
-                    {/* Scene 1: Digital Presence Browser Mockup */}
-                    <div className="p-4 rounded-xl bg-white dark:bg-[#1A1917] border border-[#E5DDD0] dark:border-[#2C2926] shadow-xs">
-                      <div className="flex items-center gap-1.5 mb-3 pb-2 border-b border-[#E5DDD0] dark:border-[#2C2926]">
-                        <span className="w-2 h-2 rounded-full bg-red-400" />
-                        <span className="w-2 h-2 rounded-full bg-amber-400" />
-                        <span className="w-2 h-2 rounded-full bg-green-400" />
-                        <span className="text-[10px] font-mono text-[#7C7469] dark:text-[#8E867C] ml-2">
-                          https://client-domain.com
-                        </span>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center text-xs font-mono">
-                          <span className="text-[#5A544E] dark:text-[#9E988F]">Largest Contentful Paint</span>
-                          <span className="text-[#1065FF] font-bold">0.74s (99th percentile)</span>
-                        </div>
-                        <div className="w-full bg-[#E5DDD0] dark:bg-[#2C2926] h-1.5 rounded-full overflow-hidden">
-                          <div className="bg-[#1065FF] h-full w-[95%]" />
-                        </div>
-                        <div className="pt-2 text-[11px] font-mono text-[#7C7469] dark:text-[#8E867C] grid grid-cols-2 gap-2">
-                          <div>Framework: Next.js 15 App Router</div>
-                          <div>CDN: Global Edge Network</div>
-                          <div>Schema: JSON-LD Embedded</div>
-                          <div>Accessibility: WCAG 2.1 AA</div>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
+                <motion.div
+                  key={activePractice.id}
+                  initial={{ opacity: 0, scale: 1.05 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.35, ease: 'easeOut' }}
+                  className="absolute inset-0 w-full h-full"
+                >
+                  <Image
+                    src={activePractice.imageSrc}
+                    alt={activePractice.imageAlt}
+                    fill
+                    priority
+                    className="object-cover object-center filter contrast-[1.06] brightness-[0.92]"
+                    sizes="(max-width: 1024px) 100vw, 520px"
+                  />
 
-                {activeIdx === 1 && (
-                  <motion.div
-                    key="scene-1"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-full space-y-4"
-                  >
-                    {/* Scene 2: Customer Acquisition AEO Graph */}
-                    <div className="p-4 rounded-xl bg-white dark:bg-[#1A1917] border border-[#E5DDD0] dark:border-[#2C2926] shadow-xs">
-                      <span className="text-xs font-mono uppercase text-[#C25E38] dark:text-[#E07A5F] font-bold block mb-3">
-                        Answer Engine Entity Knowledge Graph
-                      </span>
-                      <div className="space-y-3">
-                        <div className="p-2.5 rounded bg-[#FAF7F2] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] flex items-center justify-between text-xs font-mono">
-                          <span>Perplexity / ChatGPT AI</span>
-                          <span className="text-green-600 dark:text-green-400 font-bold">Indexed Entity</span>
-                        </div>
-                        <div className="p-2.5 rounded bg-[#FAF7F2] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] flex items-center justify-between text-xs font-mono">
-                          <span>Google Local Pack (Maps)</span>
-                          <span className="text-[#1065FF] font-bold">Category Mapped</span>
-                        </div>
-                        <div className="p-2.5 rounded bg-[#FAF7F2] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] flex items-center justify-between text-xs font-mono">
-                          <span>Schema.org LocalBusiness</span>
-                          <span className="text-green-600 dark:text-green-400 font-bold">Verified JSON-LD</span>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
+                  {/* Editorial Gradient Vignette */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/50" />
 
-                {activeIdx === 2 && (
-                  <motion.div
-                    key="scene-2"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-full space-y-4"
-                  >
-                    {/* Scene 3: Lead Systems Triage Pipeline */}
-                    <div className="p-4 rounded-xl bg-white dark:bg-[#1A1917] border border-[#E5DDD0] dark:border-[#2C2926] shadow-xs">
-                      <span className="text-xs font-mono uppercase text-[#1065FF] font-bold block mb-3">
-                        Live Enquiry Triage &amp; WhatsApp Alert
-                      </span>
-                      <div className="space-y-2.5 text-xs font-mono">
-                        <div className="p-2.5 rounded bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-500/30 flex items-center justify-between">
-                          <span>1. Inbound Webhook Received</span>
-                          <span className="text-emerald-600 dark:text-emerald-400 font-bold">0.08s</span>
-                        </div>
-                        <div className="p-2.5 rounded bg-[#FAF7F2] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] flex items-center justify-between">
-                          <span>2. Honeypot &amp; Timing Trap</span>
-                          <span className="text-green-600 font-bold">Human Verified</span>
-                        </div>
-                        <div className="p-2.5 rounded bg-[#FAF7F2] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] flex items-center justify-between">
-                          <span>3. PostgreSQL Commit</span>
-                          <span className="text-[#1065FF] font-bold">ACID Logged</span>
-                        </div>
-                        <div className="p-2.5 rounded bg-blue-50 dark:bg-blue-950/20 border border-blue-500/30 flex items-center justify-between">
-                          <span>4. WhatsApp Dispatch</span>
-                          <span className="text-blue-600 dark:text-blue-400 font-bold">&lt; 15s Alert</span>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
+                  {/* Top-Left Category Pill */}
+                  <div className="absolute top-3 left-3 z-10">
+                    <span className="px-2.5 py-1 rounded-full text-[11px] font-mono font-bold bg-black/60 backdrop-blur-md text-[#E07A5F] border border-white/20 shadow-xs">
+                      PRACTICE {activePractice.num} · {activePractice.category}
+                    </span>
+                  </div>
 
-                {activeIdx === 3 && (
-                  <motion.div
-                    key="scene-3"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-full space-y-4"
-                  >
-                    {/* Scene 4: Operations Automation Engine */}
-                    <div className="p-4 rounded-xl bg-white dark:bg-[#1A1917] border border-[#E5DDD0] dark:border-[#2C2926] shadow-xs">
-                      <span className="text-xs font-mono uppercase text-[#C25E38] dark:text-[#E07A5F] font-bold block mb-3">
-                        Automated Invoicing &amp; Settlement Flow
-                      </span>
-                      <div className="space-y-2 text-xs font-mono">
-                        <div className="p-2 rounded bg-[#FAF7F2] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220]">
-                          <div className="font-semibold text-[#191817] dark:text-[#FBF9F5]">Payment Gateway Event</div>
-                          <div className="text-[10px] text-[#7C7469] dark:text-[#8E867C]">Order Confirmed · 100% Verified</div>
-                        </div>
-                        <div className="text-center text-[#7C7469]">↓</div>
-                        <div className="p-2 rounded bg-[#FAF7F2] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220]">
-                          <div className="font-semibold text-[#191817] dark:text-[#FBF9F5]">GST Tax Engine</div>
-                          <div className="text-[10px] text-[#7C7469] dark:text-[#8E867C]">CGST / SGST Calculated · Compliant</div>
-                        </div>
-                        <div className="text-center text-[#7C7469]">↓</div>
-                        <div className="p-2 rounded bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-500/30">
-                          <div className="font-semibold text-emerald-700 dark:text-emerald-400">PDF Dispatch &amp; Sync</div>
-                          <div className="text-[10px] text-[#5A544E] dark:text-[#C4BAA9]">Emailed to Client + Synced to Accounting</div>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
+                  {/* Top-Right SLA Chip */}
+                  <div className="absolute top-3 right-3 z-10 hidden sm:block">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono text-sky-300 bg-sky-950/70 backdrop-blur-md border border-sky-400/30">
+                      {activePractice.slaCommitment.split('·')[0].trim()}
+                    </span>
+                  </div>
 
-                {activeIdx === 4 && (
-                  <motion.div
-                    key="scene-4"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-full space-y-4"
-                  >
-                    {/* Scene 5: Executive BI Cockpit */}
-                    <div className="p-4 rounded-xl bg-white dark:bg-[#1A1917] border border-[#E5DDD0] dark:border-[#2C2926] shadow-xs">
-                      <span className="text-xs font-mono uppercase text-[#1065FF] font-bold block mb-3">
-                        Executive Revenue Intelligence Cockpit
-                      </span>
-                      <div className="grid grid-cols-2 gap-3 text-xs font-mono">
-                        <div className="p-2.5 rounded bg-[#FAF7F2] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220]">
-                          <div className="text-[10px] text-[#7C7469]">Blended CAC</div>
-                          <div className="text-base font-bold text-[#1065FF]">Optimized</div>
-                        </div>
-                        <div className="p-2.5 rounded bg-[#FAF7F2] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220]">
-                          <div className="text-[10px] text-[#7C7469]">Inbound Velocity</div>
-                          <div className="text-base font-bold text-green-600">+42% MoM</div>
-                        </div>
-                        <div className="p-2.5 rounded bg-[#FAF7F2] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220]">
-                          <div className="text-[10px] text-[#7C7469]">Conversion Rate</div>
-                          <div className="text-base font-bold text-[#C25E38] dark:text-[#E07A5F]">4.8% Direct</div>
-                        </div>
-                        <div className="p-2.5 rounded bg-[#FAF7F2] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220]">
-                          <div className="text-[10px] text-[#7C7469]">Sync Latency</div>
-                          <div className="text-base font-bold text-[#7C7469]">Real-time</div>
-                        </div>
-                      </div>
+                  {/* Bottom Text Over Photo */}
+                  <div className="absolute bottom-0 inset-x-0 p-4 sm:p-5 z-10 text-white">
+                    <div className="text-[11px] font-mono text-[#60A5FA] mb-1">
+                      {activePractice.slaCommitment}
                     </div>
-                  </motion.div>
-                )}
-
-                {activeIdx === 5 && (
-                  <motion.div
-                    key="scene-5"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-full space-y-4"
-                  >
-                    {/* Scene 6: Turnkey SLA & Reliability */}
-                    <div className="p-4 rounded-xl bg-white dark:bg-[#1A1917] border border-[#E5DDD0] dark:border-[#2C2926] shadow-xs">
-                      <span className="text-xs font-mono uppercase text-[#C25E38] dark:text-[#E07A5F] font-bold block mb-3">
-                        Operational SLA &amp; Reliability Ledger
-                      </span>
-                      <div className="space-y-2.5 text-xs font-mono">
-                        <div className="flex items-center justify-between p-2 rounded bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-500/30">
-                          <span>Production Uptime:</span>
-                          <span className="font-bold text-emerald-600 dark:text-emerald-400">99.98% Monitored</span>
-                        </div>
-                        <div className="flex items-center justify-between p-2 rounded bg-[#FAF7F2] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220]">
-                          <span>Partner Response SLA:</span>
-                          <span className="font-bold text-[#1065FF]">1–2 Business Days</span>
-                        </div>
-                        <div className="flex items-center justify-between p-2 rounded bg-[#FAF7F2] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220]">
-                          <span>Weekly Security Patches:</span>
-                          <span className="font-bold text-[#C25E38] dark:text-[#E07A5F]">Automated Clean</span>
-                        </div>
-                        <div className="flex items-center justify-between p-2 rounded bg-[#FAF7F2] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220]">
-                          <span>Client Code Ownership:</span>
-                          <span className="font-bold text-[#191817] dark:text-[#FBF9F5]">100% Direct</span>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
+                    <h4 className="text-base sm:text-lg font-bold font-sans tracking-tight text-white leading-snug">
+                      {activePractice.title}
+                    </h4>
+                  </div>
+                </motion.div>
               </AnimatePresence>
             </div>
 
-            {/* Bottom Active Information */}
-            <div className="pt-4 border-t border-[#E5DDD0] dark:border-[#242220] flex items-center justify-between text-xs">
+            {/* Structured Practice Blueprint Card */}
+            <div className="mt-4 p-4 rounded-xl bg-white dark:bg-[#1A1917] border border-[#E5DDD0] dark:border-[#2C2926] space-y-3">
+              <div className="flex items-center justify-between text-xs font-mono">
+                <span className="text-[#5A544E] dark:text-[#9E988F] uppercase font-semibold">
+                  Required Inputs:
+                </span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-bold">Client Verified</span>
+              </div>
+              <p className="text-xs font-serif text-[#5A544E] dark:text-[#9E988F]">
+                {activePractice.clientInputs.join(' · ')}
+              </p>
+            </div>
+
+            {/* Bottom Active Information & Navigation */}
+            <div className="pt-4 mt-4 border-t border-[#E5DDD0] dark:border-[#242220] flex items-center justify-between text-xs">
               <span className="font-mono text-[#7C7469] dark:text-[#8E867C]">
-                Practice {activePractice.num}: {activePractice.title.split(' ')[0]}
+                Practice {activePractice.num} of 06
               </span>
               <Link
                 href={activePractice.href}
                 className="inline-flex items-center text-xs font-mono font-semibold uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] hover:underline"
               >
-                <span>Full Specification</span>
+                <span>Full Practice Specification</span>
                 <ExternalLink className="w-3.5 h-3.5 ml-1" />
               </Link>
             </div>

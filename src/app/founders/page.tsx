@@ -144,18 +144,30 @@ export default async function FoundersPage() {
                         <ShieldCheck className="w-4 h-4" />
                         <span>Partner 0{idx + 1} · Verified</span>
                       </span>
-                      {founder.linkedinUrl && (
-                        <a
-                          href={founder.linkedinUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-[#5A544E] dark:text-[#9E988F] hover:text-[#191817] dark:hover:text-white transition-colors"
-                          aria-label={`${founder.fullName} LinkedIn`}
-                        >
-                          <span>LinkedIn</span>
-                          <ArrowUpRight className="w-3.5 h-3.5 text-[#7C7469]" />
-                        </a>
-                      )}
+                      <div className="flex items-center gap-3">
+                        {founder.email && (
+                          <a
+                            href={`mailto:${founder.email}`}
+                            className="inline-flex items-center gap-1 text-[#5A544E] dark:text-[#9E988F] hover:text-[#C25E38] dark:hover:text-[#E07A5F] transition-colors"
+                            aria-label={`Email ${founder.fullName}`}
+                          >
+                            <Mail className="w-3.5 h-3.5 text-[#C25E38] dark:text-[#E07A5F]" />
+                            <span>{founder.email}</span>
+                          </a>
+                        )}
+                        {founder.linkedinUrl && (
+                          <a
+                            href={founder.linkedinUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-[#5A544E] dark:text-[#9E988F] hover:text-[#191817] dark:hover:text-white transition-colors"
+                            aria-label={`${founder.fullName} LinkedIn`}
+                          >
+                            <span>LinkedIn</span>
+                            <ArrowUpRight className="w-3.5 h-3.5 text-[#7C7469]" />
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
 

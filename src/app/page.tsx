@@ -4,13 +4,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { BRAND_CONFIG, INITIAL_FOUNDERS } from '@/config/brand';
 import ArchitecturalHeroParallax from '@/components/hero/ArchitecturalHeroParallax';
-import ScrollStoryTransformation from '@/components/hero/ScrollStoryTransformation';
+import PhotographicScrollStory from '@/components/hero/PhotographicScrollStory';
 import SpatialPracticeLedger from '@/components/services/SpatialPracticeLedger';
 import MagneticWrapper from '@/components/motion/MagneticWrapper';
 import {
   ArrowRight,
   ShieldCheck,
   Linkedin,
+  Mail,
   CheckCircle2,
   ArrowUpRight,
   Compass,
@@ -40,9 +41,9 @@ export default function HomePage() {
       <ArchitecturalHeroParallax />
 
       {/* =========================================================================
-          ACT II: SCROLL-DRIVEN VISUAL STORYTELLING (3 Sequential Operational Scenes)
+          ACT II: SCROLL-DRIVEN PHOTOGRAPHIC STORYTELLING (3 Reversible Operational Scenes)
           ========================================================================= */}
-      <ScrollStoryTransformation />
+      <PhotographicScrollStory />
 
       {/* =========================================================================
           ACT III: DIGITAL READINESS DIAGNOSTIC (High-Visibility Editorial Feature)
@@ -257,18 +258,30 @@ export default function HomePage() {
                     <span>Verified Partner</span>
                   </span>
 
-                  {founder.linkedinUrl && (
-                    <a
-                      href={founder.linkedinUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs font-mono text-[#5A544E] dark:text-[#9E988F] hover:text-[#191817] dark:hover:text-white transition-colors"
-                      aria-label={`${founder.fullName} LinkedIn`}
-                    >
-                      <span>LinkedIn</span>
-                      <ArrowUpRight className="w-3 h-3 text-[#7C7469]" />
-                    </a>
-                  )}
+                  <div className="flex items-center gap-3">
+                    {founder.email && (
+                      <a
+                        href={`mailto:${founder.email}`}
+                        className="inline-flex items-center gap-1 text-xs font-mono text-[#C25E38] dark:text-[#E07A5F] hover:underline transition-colors"
+                        aria-label={`Email ${founder.fullName}`}
+                      >
+                        <Mail className="w-3 h-3" />
+                        <span>Email</span>
+                      </a>
+                    )}
+                    {founder.linkedinUrl && (
+                      <a
+                        href={founder.linkedinUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs font-mono text-[#5A544E] dark:text-[#9E988F] hover:text-[#191817] dark:hover:text-white transition-colors"
+                        aria-label={`${founder.fullName} LinkedIn`}
+                      >
+                        <span>LinkedIn</span>
+                        <ArrowUpRight className="w-3 h-3 text-[#7C7469]" />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
