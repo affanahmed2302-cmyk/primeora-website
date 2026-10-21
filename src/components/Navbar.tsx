@@ -30,8 +30,8 @@ export default function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
         scrolled
-          ? 'bg-[#FBF9F5]/95 dark:bg-[#121110]/95 backdrop-blur-md border-b border-[#E6DFD5] dark:border-[#2C2926] shadow-sm py-3'
-          : 'bg-[#FBF9F5]/80 dark:bg-[#121110]/80 backdrop-blur-sm border-b border-transparent py-4'
+          ? 'bg-[#FBF9F5]/95 dark:bg-[#090807]/95 backdrop-blur-md border-b border-[#E6DFD5] dark:border-[#242220] shadow-sm py-3'
+          : 'bg-[#FBF9F5]/80 dark:bg-[#090807]/80 backdrop-blur-sm border-b border-transparent py-4'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -109,7 +109,7 @@ export default function Navbar() {
 
       {/* Mobile Dropdown Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#FBF9F5] dark:bg-[#1A1917] border-b border-[#E6DFD5] dark:border-[#2C2926] px-4 pt-4 pb-6 space-y-3 shadow-lg animate-in slide-in-from-top-2 duration-150">
+        <div className="lg:hidden bg-[#FBF9F5] dark:bg-[#141312] border-b border-[#E6DFD5] dark:border-[#242220] px-4 pt-4 pb-6 space-y-3 shadow-lg animate-in slide-in-from-top-2 duration-150">
           <nav className="flex flex-col space-y-1.5" aria-label="Mobile Navigation">
             {BRAND_CONFIG.navLinks.map((link) => {
               const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));

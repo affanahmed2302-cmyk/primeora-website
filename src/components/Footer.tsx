@@ -12,9 +12,9 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#F4EFEA] dark:bg-[#0E0D0C] text-[#5A544E] dark:text-[#9C948A] pt-16 pb-12 border-t border-[#E5DDD0] dark:border-[#262422] transition-colors duration-200">
+    <footer className="bg-[#F4EFEA] dark:bg-[#090807] text-[#5A544E] dark:text-[#9E988F] pt-16 pb-12 border-t border-[#E5DDD0] dark:border-[#242220] transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-[#E5DDD0] dark:border-[#262422]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-[#E5DDD0] dark:border-[#242220]">
           {/* Brand Column */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="inline-block">
@@ -104,8 +104,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/team" className="hover:text-[#C25E38] dark:hover:text-[#E07A5F] transition-colors">
-                  Partners &amp; Leadership
+                <Link href="/founders" className="hover:text-[#C25E38] dark:hover:text-[#E07A5F] transition-colors">
+                  Founding Partners
                 </Link>
               </li>
               <li>
