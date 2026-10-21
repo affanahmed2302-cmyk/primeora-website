@@ -84,19 +84,41 @@ In **Supabase Dashboard > Authentication > Email Templates > Reset Password**:
       <p style="margin: 4px 0 0 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #7C7469; font-family: monospace;">Administrative Security</p>
     </div>
     <p style="font-size: 14px; line-height: 1.6; color: #5A544E;">
-      A password reset request was initiated for your administrator account. Use the one-time 6-digit recovery code below to proceed:
+      A password reset request was initiated for your administrator account. Use the one-time 8-digit verification code below to proceed:
     </p>
     <div style="background-color: #FFFFFF; border: 1px solid #DDD5C7; border-radius: 8px; padding: 16px; text-align: center; margin: 24px 0;">
       <span style="font-size: 28px; font-weight: 700; letter-spacing: 0.2em; font-family: monospace; color: #C25E38;">{{ .Token }}</span>
     </div>
     <p style="font-size: 12px; color: #7C7469; line-height: 1.5;">
-      This code is valid for <strong>15 minutes</strong>. If you did not initiate this request, no action is required; your account remains secure.
+      This code is valid for <strong>15 minutes</strong>. Enter this code on the recovery screen or click the direct recovery link below:
+    </p>
+    <p style="text-align: center; margin: 16px 0;">
+      <a href="{{ .ConfirmationURL }}" style="display: inline-block; padding: 10px 20px; background-color: #C25E38; color: #FFFFFF; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 13px;">Reset Password Directly</a>
+    </p>
+    <p style="font-size: 11px; color: #7C7469; line-height: 1.4;">
+      If you did not initiate this request, no action is required; your account remains secure.
     </p>
     <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #E5DDD0; font-size: 10px; color: #A0988C; font-family: monospace;">
       Primeora Solutions &middot; Bangalore North, Karnataka 560023 &middot; UDYAM-KR-03-0732181
     </div>
   </div>
   ```
+
+---
+
+### 3.4 Supabase URL Configuration (Site URL & Redirect Allowlist)
+
+Navigate to **Supabase Dashboard > Authentication > URL Configuration**:
+
+- **Site URL:**
+  `https://primeora-solutions.netlify.app`
+- **Redirect URLs (Allowlist):**
+  - `https://primeora-solutions.netlify.app/**`
+  - `https://primeora-solutions.netlify.app/admin/reset-password`
+  - `https://*.netlify.app/**`
+  - `http://localhost:3000/**`
+  - `http://localhost:3000/admin/reset-password`
+
 
 ---
 
