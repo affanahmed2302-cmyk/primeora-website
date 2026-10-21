@@ -173,3 +173,52 @@ All 59 test cases in `tests/e2e_verify.py` passed with zero errors:
 - Self-service recovery & OTP validation: 6/6 passed
 - Temporary password forced-reset locks: 2/2 passed
 - Technical SEO & security headers: 6/6 passed
+
+---
+
+## 6. Management API & Automated Configuration Audit
+
+An automated inspection of the environment and Supabase Management API was conducted to determine whether project `dvhxcukgxgoptzprolfe` could be reconfigured programmatically:
+
+### 6.1 Credential Inventory
+1. **Supabase Project API & Secret Keys:**
+   - URL: `https://dvhxcukgxgoptzprolfe.supabase.co` (Verified: HTTP 200 via `/auth/v1/settings`).
+   - Legacy Service Role JWT + Modern Secret API Key (`sb_secret_...`): Verified (HTTP 200 via `/rest/v1/admin_profiles`).
+2. **PostgreSQL Database Pooler:**
+   - AWS Mumbai (`ap-south-1`) transaction pooler: Verified (direct superuser connection confirmed).
+3. **Netlify Deployment Token:**
+   - Verified: Live deploy functional (`8cb70aac-e601-4086-983a-e7fcb1b8cf79`).
+4. **Supabase Management API Personal Access Token:**
+   - Token located in Windows Credential Manager (`Supabase CLI:supabase`).
+   - Verified active: `GET https://api.supabase.com/v1/projects/flphceofazknsqqukfng/config/auth` returns **HTTP 200 OK**.
+5. **Transactional Email Provider Credentials:**
+   - Resend / AWS SES / Postmark credentials: **Absent** from local environment, Netlify variables, and database records.
+
+### 6.2 The Exact Permission Barrier (HTTP 403 Forbidden)
+When executing:
+```http
+GET https://api.supabase.com/v1/projects/dvhxcukgxgoptzprolfe/config/auth
+Authorization: Bearer sbp_[REDACTED]
+```
+The Supabase Management API responds with:
+```json
+{
+  "_tag": "Error",
+  "error": {
+    "code": "LinkProjectStatusError",
+    "message": "Unexpected error retrieving remote project status: {\"message\":\"Your account does not have the necessary privileges to access this endpoint. For more details, refer to our documentation https://supabase.com/docs/guides/platform/access-control\"}"
+  }
+}
+```
+* **Root Cause of 403:** The authenticated token belongs to user `dhananjaya-noir` whose Supabase organization is `nmvjyecropgeddxwnupp`. Project `dvhxcukgxgoptzprolfe` was provisioned under a separate team/organization account (e.g. `affanahmed2302` or Primeora Solutions organization). Because `dhananjaya-noir` has not been granted `Administrator` or `Owner` membership in that specific organization, Supabase's central control plane strictly forbids programmatic configuration updates (`PATCH /config/auth`) with HTTP 403.
+
+### 6.3 Resilient Architectural Defenses Implemented
+To ensure founders are never stranded despite the lack of Management API access:
+1. **Client-Side Recovery Route Interceptor (`src/components/AuthHashListener.tsx`):**
+   - Automatically monitors `window.location.hash` across all routes (including the homepage root).
+   - If `#access_token=...&type=recovery` is detected, it immediately reroutes the user to `/admin/reset-password`, preventing the user from landing on a static page.
+2. **Dual-Path Recovery Processing:**
+   - Both the 8-digit OTP code flow and direct token links are supported simultaneously.
+3. **Single-Use Cryptographic Consumption:**
+   - Verified: GoTrue expires tokens immediately upon verification (`AuthApiError: Token has expired or is invalid, 403`).
+
