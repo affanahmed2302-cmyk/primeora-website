@@ -26,8 +26,8 @@ export default function robots(): MetadataRoute.Robots {
       },
       {
         userAgent: 'GPTBot',
-        allow: ['/$', '/insights$', '/insights/', '/services$', '/services/'],
-        disallow: ['/admin/', '/api/', '/'],
+        allow: '/',
+        disallow: ['/admin/', '/api/'],
       },
       {
         userAgent: 'OAI-SearchBot',

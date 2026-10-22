@@ -1,30 +1,13 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import {
-  Globe,
-  Search,
-  UserCheck,
-  Zap,
-  BarChart3,
-  Wrench,
   ArrowRight,
   CheckCircle2,
-  Layers,
   FileCheck,
-  ShieldCheck,
-  Clock,
-  Sparkles,
   ExternalLink,
-  Code2,
-  Database,
-  Network,
-  Cpu,
-  Activity,
-  LineChart,
 } from 'lucide-react';
 
 interface PracticeItem {
@@ -32,6 +15,7 @@ interface PracticeItem {
   num: string;
   title: string;
   category: string;
+  shortCategory: string;
   displaySubtitle: string;
   problemSummary: string;
   solutionOverview: string;
@@ -46,6 +30,7 @@ const PRACTICES: PracticeItem[] = [
     id: 'digital-presence',
     num: '01',
     category: 'Foundation & Infrastructure',
+    shortCategory: 'Infrastructure',
     title: 'Digital Presence & Engineered Web Platforms',
     displaySubtitle: 'High-speed web performance, accessible architecture, and clear brand positioning.',
     problemSummary:
@@ -66,6 +51,7 @@ const PRACTICES: PracticeItem[] = [
     id: 'customer-acquisition',
     num: '02',
     category: 'Search & Visibility',
+    shortCategory: 'Search & AEO',
     title: 'Answer Engine & Local Search Authority',
     displaySubtitle: 'Indexing your business where modern commercial discovery happens.',
     problemSummary:
@@ -86,6 +72,7 @@ const PRACTICES: PracticeItem[] = [
     id: 'lead-sales-systems',
     num: '03',
     category: 'Pipeline & Conversion',
+    shortCategory: 'Lead Triage',
     title: 'Zero-Loss Lead Triage & CRM Systems',
     displaySubtitle: 'Capturing, verifying, and routing enquiries directly to partners.',
     problemSummary:
@@ -106,6 +93,7 @@ const PRACTICES: PracticeItem[] = [
     id: 'operations-automation',
     num: '04',
     category: 'Efficiency & Scale',
+    shortCategory: 'Automations',
     title: 'Operations Automation & Billing Webhooks',
     displaySubtitle: 'Eliminating repetitive human data entry through connected workflows.',
     problemSummary:
@@ -126,6 +114,7 @@ const PRACTICES: PracticeItem[] = [
     id: 'analytics-insights',
     num: '05',
     category: 'Intelligence & Decisions',
+    shortCategory: 'BI & Analytics',
     title: 'Executive BI & Channel Attribution Cockpit',
     displaySubtitle: 'Replacing guesswork with real-time operational revenue telemetry.',
     problemSummary:
@@ -146,6 +135,7 @@ const PRACTICES: PracticeItem[] = [
     id: 'ongoing-management',
     num: '06',
     category: 'Durability & SLA',
+    shortCategory: 'SLA Stewardship',
     title: 'Turnkey Systems Maintenance & 1–2 Day SLA',
     displaySubtitle: 'Proactive engineering stewardship to ensure continuous uptime and security.',
     problemSummary:
@@ -166,26 +156,199 @@ const PRACTICES: PracticeItem[] = [
 
 export default function ScrollDrivenPracticeExplorer() {
   const [activeIdx, setActiveIdx] = useState(0);
+  const activeIdxRef = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const isManualScrollRef = useRef(false);
+  const manualScrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const shouldReduceMotion = useReducedMotion();
+
+  // Deliberate viewing-region section activation calculator
+  const computeActiveSection = useCallback(() => {
+    if (isManualScrollRef.current) return;
+    if (!sectionRefs.current.length) return;
+
+    // Viewport activation threshold: 38% down from viewport top
+    const triggerY = window.innerHeight * 0.38;
+    let targetIdx = -1;
+
+    for (let i = 0; i < sectionRefs.current.length; i++) {
+      const el = sectionRefs.current[i];
+      if (!el) continue;
+      const rect = el.getBoundingClientRect();
+      // Primary check: section spans across the trigger line
+      if (rect.top <= triggerY && rect.bottom >= triggerY) {
+        targetIdx = i;
+        break;
+      }
+    }
+
+    // Boundary edge cases: above first section or below last section
+    if (targetIdx === -1) {
+      const firstEl = sectionRefs.current[0];
+      const lastEl = sectionRefs.current[sectionRefs.current.length - 1];
+      if (firstEl && firstEl.getBoundingClientRect().top > triggerY) {
+        targetIdx = 0;
+      } else if (lastEl && lastEl.getBoundingClientRect().bottom < triggerY) {
+        targetIdx = sectionRefs.current.length - 1;
+      }
+    }
+
+    if (targetIdx !== -1 && targetIdx !== activeIdxRef.current) {
+      activeIdxRef.current = targetIdx;
+      setActiveIdx(targetIdx);
+    }
+  }, []);
+
+  // Jump to practice on tab click, card click, or keyboard activation
+  const jumpToPractice = useCallback((idx: number) => {
+    if (idx < 0 || idx >= PRACTICES.length) return;
+    const targetEl = sectionRefs.current[idx];
+    if (!targetEl) return;
+
+    isManualScrollRef.current = true;
+    if (manualScrollTimeoutRef.current) clearTimeout(manualScrollTimeoutRef.current);
+
+    activeIdxRef.current = idx;
+    setActiveIdx(idx);
+
+    // Calculate smooth scroll offset with comfortable header clearance
+    const rect = targetEl.getBoundingClientRect();
+    const currentScrollY = window.scrollY || window.pageYOffset;
+    const targetOffset = currentScrollY + rect.top - (window.innerHeight * 0.22);
+
+    window.scrollTo({
+      top: Math.max(0, targetOffset),
+      behavior: 'smooth',
+    });
+
+    // Update URL hash without causing an instant layout jump
+    if (typeof window !== 'undefined' && window.history?.replaceState) {
+      window.history.replaceState(null, '', `#${PRACTICES[idx].id}`);
+    }
+
+    // Release manual scroll flag after smooth scrolling finishes
+    manualScrollTimeoutRef.current = setTimeout(() => {
+      isManualScrollRef.current = false;
+      computeActiveSection();
+    }, 700);
+  }, [computeActiveSection]);
+
+  // Set up scroll listeners, resize observer, and IntersectionObserver
+  useEffect(() => {
+    // Initial evaluation / Hash navigation check
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const hash = window.location.hash.replace('#', '');
+      const matchedIdx = PRACTICES.findIndex((p) => p.id === hash);
+      if (matchedIdx !== -1) {
+        setTimeout(() => {
+          jumpToPractice(matchedIdx);
+        }, 120);
+      } else {
+        computeActiveSection();
+      }
+    } else {
+      computeActiveSection();
+    }
+
+    // IntersectionObserver observing deliberate section visibility boundaries
+    const observer = new IntersectionObserver(
+      () => {
+        computeActiveSection();
+      },
+      {
+        root: null,
+        rootMargin: '-20% 0px -40% 0px',
+        threshold: [0, 0.2, 0.5, 0.8, 1.0],
+      }
+    );
+
+    sectionRefs.current.forEach((el) => {
+      if (el) observer.observe(el);
+    });
+
+    // Throttled passive scroll and resize listeners for immediate responsive updates
+    let rafId: number | null = null;
+    const onScroll = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        computeActiveSection();
+        rafId = null;
+      });
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+      if (manualScrollTimeoutRef.current) clearTimeout(manualScrollTimeoutRef.current);
+    };
+  }, [computeActiveSection, jumpToPractice]);
 
   const activePractice = PRACTICES[activeIdx];
 
   return (
     <div ref={containerRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Quick Interactive Practice Navigation Tabs */}
+      <div className="mb-8 md:mb-12 overflow-x-auto pb-2 scrollbar-none" role="tablist" aria-label="Practice disciplines navigation">
+        <div className="flex items-center gap-2 min-w-max p-1.5 bg-[#FAF6F0] dark:bg-[#11100F] border border-[#E5DDD0] dark:border-[#242220] rounded-xl shadow-2xs">
+          {PRACTICES.map((practice, idx) => {
+            const isActive = activeIdx === idx;
+            return (
+              <button
+                key={practice.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                aria-controls={practice.id}
+                onClick={() => jumpToPractice(idx)}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-mono font-medium transition-all ${
+                  isActive
+                    ? 'bg-white dark:bg-[#1E1C1A] text-[#191817] dark:text-[#FBF9F5] shadow-xs border border-[#C25E38] dark:border-[#E07A5F]'
+                    : 'text-[#7C7469] dark:text-[#8E867C] hover:text-[#191817] dark:hover:text-[#FBF9F5]'
+                }`}
+              >
+                <span className={`w-1.5 h-1.5 rounded-full transition-colors ${isActive ? 'bg-[#1065FF]' : 'bg-[#E5DDD0] dark:bg-[#33302C]'}`} />
+                <span className="font-bold text-[#C25E38] dark:text-[#E07A5F]">{practice.num}</span>
+                <span className="hidden sm:inline">{practice.shortCategory}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Asymmetric Split Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
         {/* Left Column (7 cols): Typography-Led Practice Index */}
-        <div className="lg:col-span-7 space-y-12">
+        <div className="lg:col-span-7 space-y-10 sm:space-y-12">
           {PRACTICES.map((practice, idx) => {
             const isActive = activeIdx === idx;
             return (
               <div
                 key={practice.id}
-                onClick={() => setActiveIdx(idx)}
+                id={practice.id}
+                ref={(el) => {
+                  sectionRefs.current[idx] = el;
+                }}
+                data-practice-index={idx}
+                tabIndex={0}
+                role="region"
+                aria-label={`Practice ${practice.num}: ${practice.title}`}
+                aria-current={isActive ? 'true' : undefined}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    jumpToPractice(idx);
+                  }
+                }}
+                onClick={() => jumpToPractice(idx)}
                 className={`group p-8 sm:p-10 rounded-2xl border transition-all duration-300 cursor-pointer ${
                   isActive
-                    ? 'bg-white dark:bg-[#141312] border-[#C25E38] dark:border-[#E07A5F] shadow-sm'
+                    ? 'bg-white dark:bg-[#141312] border-[#C25E38] dark:border-[#E07A5F] shadow-sm ring-1 ring-[#C25E38]/20 dark:ring-[#E07A5F]/20'
                     : 'bg-[#FAF6F0] dark:bg-[#11100F] border-[#E5DDD0] dark:border-[#242220] hover:border-[#DDD5C7] dark:hover:border-[#33302C] opacity-80 hover:opacity-100'
                 }`}
               >
@@ -234,8 +397,8 @@ export default function ScrollDrivenPracticeExplorer() {
                   </ul>
                 </div>
 
-                {/* Practice Link Action */}
-                <div className="pt-6 mt-6 border-t border-[#E5DDD0] dark:border-[#242220] flex items-center justify-between">
+                {/* Practice Link Action & Status */}
+                <div className="pt-6 mt-6 border-t border-[#E5DDD0] dark:border-[#242220] flex flex-wrap items-center justify-between gap-3">
                   <Link
                     href={practice.href}
                     className="inline-flex items-center text-xs font-mono font-semibold uppercase tracking-wider text-[#C25E38] dark:text-[#E07A5F] hover:underline"
@@ -244,8 +407,15 @@ export default function ScrollDrivenPracticeExplorer() {
                     <ArrowRight className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
                   </Link>
 
-                  <span className="text-[11px] font-mono text-[#7C7469] dark:text-[#8E867C]">
-                    Click to load visual stage
+                  <span className="text-[11px] font-mono text-[#7C7469] dark:text-[#8E867C] flex items-center gap-1.5">
+                    {isActive ? (
+                      <>
+                        <span className="w-2 h-2 rounded-full bg-[#1065FF] animate-pulse" />
+                        <span className="text-[#1065FF] dark:text-[#60A5FA] font-semibold">Active in Architectural Stage</span>
+                      </>
+                    ) : (
+                      <span>Scroll or click to view visual stage</span>
+                    )}
                   </span>
                 </div>
               </div>
@@ -253,11 +423,11 @@ export default function ScrollDrivenPracticeExplorer() {
           })}
         </div>
 
-        {/* Right Column (5 cols): Sticky Bespoke Vector Practice Stage */}
-        <div className="lg:col-span-5 lg:sticky lg:top-28">
-          <div className="w-full bg-[#FAF6F0] dark:bg-[#141312] border border-[#E5DDD0] dark:border-[#242220] rounded-2xl p-5 sm:p-7 shadow-xs flex flex-col justify-between">
+        {/* Right Column / Mobile Top: Sticky Bespoke Vector Practice Stage */}
+        <div className="order-first lg:order-last lg:col-span-5 sticky top-16 sm:top-20 lg:top-28 z-20 mb-8 lg:mb-0">
+          <div className="w-full bg-[#FAF6F0]/95 dark:bg-[#141312]/95 backdrop-blur-md border border-[#E5DDD0] dark:border-[#242220] rounded-2xl p-4 sm:p-6 lg:p-7 shadow-sm flex flex-col justify-between">
             {/* Top Stage Bar */}
-            <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-[#E5DDD0] dark:border-[#242220]">
+            <div className="flex items-center justify-between pb-3 mb-3 sm:pb-3.5 sm:mb-4 border-b border-[#E5DDD0] dark:border-[#242220]">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#1065FF] animate-pulse" />
                 <span className="text-xs font-mono font-semibold uppercase tracking-wider text-[#191817] dark:text-[#FBF9F5]">
@@ -269,8 +439,25 @@ export default function ScrollDrivenPracticeExplorer() {
               </span>
             </div>
 
+            {/* Stage Progress Dots / Quick Navigation */}
+            <div className="flex items-center gap-1.5 mb-3 w-full">
+              {PRACTICES.map((p, idx) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => jumpToPractice(idx)}
+                  className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
+                    idx === activeIdx
+                      ? 'bg-[#1065FF] dark:bg-[#60A5FA]'
+                      : 'bg-[#E5DDD0] dark:bg-[#2C2926] hover:bg-[#C25E38]/40'
+                  }`}
+                  aria-label={`Jump to stage ${p.num}`}
+                />
+              ))}
+            </div>
+
             {/* Central Bespoke Vector Architectural Canvas */}
-            <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden border border-[#E5DDD0] dark:border-[#2C2926] bg-white dark:bg-[#121110] shadow-xs flex items-center justify-center p-4">
+            <div className="relative aspect-[16/9] sm:aspect-[4/3] w-full rounded-xl overflow-hidden border border-[#E5DDD0] dark:border-[#2C2926] bg-white dark:bg-[#121110] shadow-xs flex items-center justify-center p-3 sm:p-4">
               {/* Subtle Coordinate Grid */}
               <div className="absolute inset-0 pointer-events-none opacity-20">
                 <div
@@ -285,10 +472,10 @@ export default function ScrollDrivenPracticeExplorer() {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activePractice.id}
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.02 }}
-                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                  initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.96 }}
+                  animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1 }}
+                  exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 1.02 }}
+                  transition={{ duration: shouldReduceMotion ? 0.05 : 0.28, ease: 'easeOut' }}
                   className="w-full h-full flex flex-col items-center justify-between"
                 >
                   {/* Practice 01: Digital Presence */}
@@ -555,8 +742,8 @@ export default function ScrollDrivenPracticeExplorer() {
               </AnimatePresence>
             </div>
 
-            {/* Structured Practice Blueprint Card */}
-            <div className="mt-4 p-4 rounded-xl bg-white dark:bg-[#1A1917] border border-[#E5DDD0] dark:border-[#2C2926] space-y-2">
+            {/* Structured Practice Blueprint Card (Desktop & Tablet) */}
+            <div className="hidden sm:block mt-3 sm:mt-4 p-3 sm:p-4 rounded-xl bg-white dark:bg-[#1A1917] border border-[#E5DDD0] dark:border-[#2C2926] space-y-1.5 sm:space-y-2">
               <div className="flex items-center justify-between text-xs font-mono">
                 <span className="text-[#5A544E] dark:text-[#9E988F] uppercase font-semibold">
                   Required Inputs:
@@ -569,7 +756,7 @@ export default function ScrollDrivenPracticeExplorer() {
             </div>
 
             {/* Bottom Active Information & Navigation */}
-            <div className="pt-3 mt-3 border-t border-[#E5DDD0] dark:border-[#242220] flex items-center justify-between text-xs">
+            <div className="pt-2.5 mt-2.5 sm:pt-3 sm:mt-3 border-t border-[#E5DDD0] dark:border-[#242220] flex items-center justify-between text-xs">
               <span className="font-mono text-[#7C7469] dark:text-[#8E867C]">
                 Practice {activePractice.num} of 06
               </span>

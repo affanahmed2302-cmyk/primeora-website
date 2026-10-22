@@ -44,61 +44,40 @@ def check_robots_txt():
     req = urllib.request.Request(f'{BASE_URL}/robots.txt', headers={'User-Agent': 'Mozilla/5.0'})
     txt = urllib.request.urlopen(req).read().decode('utf-8')
     assert '/_next/' not in txt, 'Error: /_next/ is still blocked in robots.txt!'
+    assert 'User-Agent: *' in txt, 'Error: User-Agent: * rule missing in robots.txt!'
     assert 'User-Agent: OAI-SearchBot' in txt, 'Error: OAI-SearchBot rule missing in robots.txt!'
     assert 'User-Agent: GPTBot' in txt, 'Error: GPTBot rule missing in robots.txt!'
     assert 'User-Agent: PerplexityBot' in txt, 'Error: PerplexityBot rule missing in robots.txt!'
     assert 'Disallow: /admin/' in txt and 'Disallow: /api/' in txt, 'Error: Admin/API routes not disallowed in robots.txt!'
-    assert 'Allow: /$' in txt, 'Error: GPTBot homepage-only allow rule missing in robots.txt!'
-    assert 'Allow: /insights' in txt and 'Allow: /services' in txt, 'Error: Training crawler specific allow paths missing!'
     assert 'Sitemap: https://primeora-solutions.netlify.app/sitemap.xml' in txt, 'Error: Canonical sitemap link missing!'
 
-    # Extract GPTBot block rules from robots.txt
+    # Extract bot rules from robots.txt
     lines = txt.splitlines()
-    in_gptbot = False
-    gptbot_rules = []
+    bots = ['*', 'gptbot', 'oai-searchbot', 'perplexitybot']
+    bot_rules = {b: [] for b in bots}
+    current_bot = None
+
     for line in lines:
         line = line.strip()
-        if line.lower() == 'user-agent: gptbot':
-            in_gptbot = True
-            continue
-        elif line.lower().startswith('user-agent:') and in_gptbot:
-            break
-        elif in_gptbot:
+        if line.lower().startswith('user-agent:'):
+            agent = line.split(':', 1)[1].strip().lower()
+            current_bot = agent if agent in bot_rules else None
+        elif current_bot:
             if line.lower().startswith('allow:'):
-                gptbot_rules.append(('allow', line.split(':', 1)[1].strip()))
+                bot_rules[current_bot].append(('allow', line.split(':', 1)[1].strip()))
             elif line.lower().startswith('disallow:'):
-                gptbot_rules.append(('disallow', line.split(':', 1)[1].strip()))
+                bot_rules[current_bot].append(('disallow', line.split(':', 1)[1].strip()))
 
-    assert gptbot_rules, 'Error: Could not parse GPTBot rules from robots.txt'
+    for bot in bots:
+        assert bot_rules[bot], f'Error: No rules found for {bot}'
+        # Public pages should be allowed
+        for public_path in ['/', '/services', '/services/digital-presence', '/insights', '/about', '/founders', '/contact', '/process', '/work']:
+            assert evaluate_gptbot(public_path, bot_rules[bot]), f'{bot} unexpectedly disallowed for public path {public_path}'
+        # Admin and API should be disallowed
+        for admin_path in ['/admin/', '/admin/login', '/admin/enquiries', '/api/', '/api/enquiry']:
+            assert not evaluate_gptbot(admin_path, bot_rules[bot]), f'{bot} unexpectedly allowed for protected path {admin_path}'
 
-    # Test GPTBot evaluation matrix
-    matrix = [
-        ('/', True),
-        ('/services', True),
-        ('/services/', True),
-        ('/services/digital-presence', True),
-        ('/insights', True),
-        ('/insights/', True),
-        ('/insights/aeo-guide', True),
-        ('/about', False),
-        ('/founders', False),
-        ('/contact', False),
-        ('/process', False),
-        ('/readiness', False),
-        ('/work', False),
-        ('/admin', False),
-        ('/admin/login', False),
-        ('/api/enquiry', False),
-        ('/_next/static/css/test.css', False),
-        ('/services-fake', False),
-        ('/insights-fake', False),
-    ]
-
-    for path, expected in matrix:
-        actual = evaluate_gptbot(path, gptbot_rules)
-        assert actual == expected, f'GPTBot evaluation failed for path {path}: expected {expected}, got {actual}'
-
-    print('[PASS] Robots.txt directives confirmed: /_next/ unblocked, OAI-SearchBot/GPTBot/PerplexityBot enabled, GPTBot section restrictions RFC 9309 verified.')
+    print('[PASS] Robots.txt directives confirmed: /_next/ unblocked, public routes allowed for *, GPTBot, OAI-SearchBot, PerplexityBot; /admin/ and /api/ strictly protected.')
 
 def check_no_unqualified_fcp():
     path = r'src/components/motion/DigitalSystemsMap.tsx'
