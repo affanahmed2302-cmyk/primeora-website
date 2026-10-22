@@ -12,7 +12,33 @@ def check_gsc_meta_tag():
     assert old_token not in html, f'Error: Old GSC token {old_token} still present in HTML!'
     assert f'name="google-site-verification" content="{token}"' in html or f'content="{token}" name="google-site-verification"' in html, \
         f'GSC verification meta tag with token {token} missing or invalid in {BASE_URL}/'
-    print(f'[PASS] Google Search Console verification meta tag confirmed with new token: {token}')
+    print(f'[PASS] Google Search Console verification meta tag confirmed with token: {token}')
+
+def match_robots_rule(path, rule_pattern):
+    regex_pattern = '^'
+    i = 0
+    while i < len(rule_pattern):
+        c = rule_pattern[i]
+        if c == '*':
+            regex_pattern += '.*'
+        elif c == '$' and i == len(rule_pattern) - 1:
+            regex_pattern += '$'
+        else:
+            regex_pattern += re.escape(c)
+        i += 1
+    if not rule_pattern.endswith('$'):
+        regex_pattern += '.*'
+    return bool(re.match(regex_pattern, path))
+
+def evaluate_gptbot(path, rules):
+    matching_rules = []
+    for directive, pattern in rules:
+        if match_robots_rule(path, pattern):
+            matching_rules.append((len(pattern), directive, pattern))
+    if not matching_rules:
+        return True
+    matching_rules.sort(key=lambda x: (x[0], 1 if x[1] == 'allow' else 0), reverse=True)
+    return matching_rules[0][1] == 'allow'
 
 def check_robots_txt():
     req = urllib.request.Request(f'{BASE_URL}/robots.txt', headers={'User-Agent': 'Mozilla/5.0'})
@@ -22,9 +48,57 @@ def check_robots_txt():
     assert 'User-Agent: GPTBot' in txt, 'Error: GPTBot rule missing in robots.txt!'
     assert 'User-Agent: PerplexityBot' in txt, 'Error: PerplexityBot rule missing in robots.txt!'
     assert 'Disallow: /admin/' in txt and 'Disallow: /api/' in txt, 'Error: Admin/API routes not disallowed in robots.txt!'
-    assert 'Allow: /insights' in txt or 'Allow: /services' in txt, 'Error: Training crawler specific allow paths missing!'
+    assert 'Allow: /$' in txt, 'Error: GPTBot homepage-only allow rule missing in robots.txt!'
+    assert 'Allow: /insights' in txt and 'Allow: /services' in txt, 'Error: Training crawler specific allow paths missing!'
     assert 'Sitemap: https://primeora-solutions.netlify.app/sitemap.xml' in txt, 'Error: Canonical sitemap link missing!'
-    print('[PASS] Robots.txt directives confirmed: /_next/ unblocked, OAI-SearchBot/GPTBot/PerplexityBot enabled, admin/api protected.')
+
+    # Extract GPTBot block rules from robots.txt
+    lines = txt.splitlines()
+    in_gptbot = False
+    gptbot_rules = []
+    for line in lines:
+        line = line.strip()
+        if line.lower() == 'user-agent: gptbot':
+            in_gptbot = True
+            continue
+        elif line.lower().startswith('user-agent:') and in_gptbot:
+            break
+        elif in_gptbot:
+            if line.lower().startswith('allow:'):
+                gptbot_rules.append(('allow', line.split(':', 1)[1].strip()))
+            elif line.lower().startswith('disallow:'):
+                gptbot_rules.append(('disallow', line.split(':', 1)[1].strip()))
+
+    assert gptbot_rules, 'Error: Could not parse GPTBot rules from robots.txt'
+
+    # Test GPTBot evaluation matrix
+    matrix = [
+        ('/', True),
+        ('/services', True),
+        ('/services/', True),
+        ('/services/digital-presence', True),
+        ('/insights', True),
+        ('/insights/', True),
+        ('/insights/aeo-guide', True),
+        ('/about', False),
+        ('/founders', False),
+        ('/contact', False),
+        ('/process', False),
+        ('/readiness', False),
+        ('/work', False),
+        ('/admin', False),
+        ('/admin/login', False),
+        ('/api/enquiry', False),
+        ('/_next/static/css/test.css', False),
+        ('/services-fake', False),
+        ('/insights-fake', False),
+    ]
+
+    for path, expected in matrix:
+        actual = evaluate_gptbot(path, gptbot_rules)
+        assert actual == expected, f'GPTBot evaluation failed for path {path}: expected {expected}, got {actual}'
+
+    print('[PASS] Robots.txt directives confirmed: /_next/ unblocked, OAI-SearchBot/GPTBot/PerplexityBot enabled, GPTBot section restrictions RFC 9309 verified.')
 
 def check_no_unqualified_fcp():
     path = r'src/components/motion/DigitalSystemsMap.tsx'
@@ -44,7 +118,6 @@ def check_analytics_module():
     print('[PASS] Centralized analytics module confirmed with G-9JN6EWLSXV fallback and cookie gating.')
 
 def check_auth_security_boundary():
-    # Verify that admin routes and APIs are strictly protected by authentication
     endpoints = [
         ('/api/admin/session', 401),
         ('/api/admin/enquiries', 401),

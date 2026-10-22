@@ -4,11 +4,14 @@ Disallow: /admin/
 Disallow: /api/
 
 User-Agent: GPTBot
-Allow: /
-Allow: /insights
-Allow: /services
+Allow: /$
+Allow: /insights$
+Allow: /insights/
+Allow: /services$
+Allow: /services/
 Disallow: /admin/
 Disallow: /api/
+Disallow: /
 
 User-Agent: OAI-SearchBot
 Allow: /
@@ -17,8 +20,6 @@ Disallow: /api/
 
 User-Agent: PerplexityBot
 Allow: /
-Allow: /insights
-Allow: /services
 Disallow: /admin/
 Disallow: /api/
 

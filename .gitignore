@@ -16,12 +16,16 @@
 # Misc
 .DS_Store
 *.pem
+*.key
+*.secret
+*.credentials
 
 # Local env files - strictly protected
 .env*.local
 .env
 .env.production
 .env.staging
+!.env.example
 
 # Vercel & Netlify
 .vercel
