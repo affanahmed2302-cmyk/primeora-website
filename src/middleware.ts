@@ -22,7 +22,7 @@ const MAX_GENERAL_PAYLOAD_BYTES = 64 * 1024; // 64KB
 const MAX_UPLOAD_PAYLOAD_BYTES = 5 * 1024 * 1024; // 5MB for team portrait uploads
 
 const CSP_DIRECTIVES =
-  "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://images.unsplash.com https://dvhxcukgxgoptzprolfe.supabase.co https://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://dvhxcukgxgoptzprolfe.supabase.co https://*.supabase.co https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://stats.g.doubleclick.net; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'; ";
+  "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://images.unsplash.com https://dvhxcukgxgoptzprolfe.supabase.co https://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://dvhxcukgxgoptzprolfe.supabase.co https://*.supabase.co https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://stats.g.doubleclick.net; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests;";
 
 /**
  * Standard Web Crypto base64url decoding to Uint8Array
@@ -102,16 +102,27 @@ function isAllowedOrigin(req: NextRequest): boolean {
   const origin = req.headers.get('origin');
   const referer = req.headers.get('referer');
   const secFetchSite = req.headers.get('sec-fetch-site');
+  const csrfHeader = req.headers.get('x-primeora-csrf');
 
   // If Sec-Fetch-Site indicates explicit cross-site request, block
   if (secFetchSite === 'cross-site') {
     return false;
   }
 
+  const isStateChanging = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method.toUpperCase());
+
+  // For state-changing mutations: if BOTH Origin and Referer are absent,
+  // reject unless explicit verified anti-CSRF custom header is attached
+  if (isStateChanging && !origin && !referer) {
+    if (csrfHeader !== '1') {
+      return false;
+    }
+  }
+
   const targetHost = req.nextUrl.host.toLowerCase();
 
   const verifyHost = (urlStr: string | null): boolean => {
-    if (!urlStr) return true; // Direct/same-site fallback if header stripped by client
+    if (!urlStr) return false;
     try {
       const parsed = new URL(urlStr);
       const host = parsed.host.toLowerCase();
@@ -119,7 +130,8 @@ function isAllowedOrigin(req: NextRequest): boolean {
       if (host === targetHost) return true;
       // Allow official production and development hosts
       if (host === 'primeora-solutions.netlify.app') return true;
-      if (host.startsWith('localhost:') || host.startsWith('127.0.0.1:')) return true;
+      if (host.startsWith('localhost:') || host === 'localhost') return true;
+      if (host.startsWith('127.0.0.1:') || host === '127.0.0.1') return true;
       return false;
     } catch {
       return false;

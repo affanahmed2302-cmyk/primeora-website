@@ -128,7 +128,7 @@ export default function AdminEnquiriesPage() {
     try {
       const res = await fetch('/api/admin/enquiries', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Primeora-CSRF': '1' },
         body: JSON.stringify({
           id: selectedEnquiry.id,
           status: targetStatus,
@@ -172,7 +172,7 @@ export default function AdminEnquiriesPage() {
     try {
       const res = await fetch('/api/admin/enquiries/retry-notification', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Primeora-CSRF': '1' },
         body: JSON.stringify({ id: enquiryId }),
       });
       const data = await res.json();

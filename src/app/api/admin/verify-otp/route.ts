@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { readBoundedJson, validateCsrfAndOrigin } from '@/lib/request-guard';
 import { getSupabaseAdminClient, isSupabaseConfigured } from '@/lib/supabase';
-import { recordFailedAttempt, clearRateLimit, checkRateLimit } from '@/lib/rate-limiter';
+import { getTrustedClientIp, recordFailedAttempt, clearRateLimit, checkRateLimit } from '@/lib/rate-limiter';
 
 export async function POST(req: NextRequest) {
   try {
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() || '127.0.0.1';
-    const body = await req.json().catch(() => ({}));
+    const ip = getTrustedClientIp(req);
+    const csrfCheck = validateCsrfAndOrigin(req);
+    if (!csrfCheck.valid) return NextResponse.json({ success: false, error: csrfCheck.error }, { status: 403 });
+    const { data: body, error: bErr } = await readBoundedJson<any>(req, 16 * 1024);
+    if (bErr || !body) return NextResponse.json({ success: false, error: bErr || 'Invalid request body' }, { status: 400 });
     const { email: rawEmail, token: rawToken } = body;
 
     if (!rawEmail || !rawToken) {

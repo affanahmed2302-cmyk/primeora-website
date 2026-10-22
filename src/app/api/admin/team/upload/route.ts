@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifySession, requiresPasswordChange } from '@/lib/auth';
+import { verifySession, requiresPasswordChange, requiresMfaVerification } from '@/lib/auth';
+import { validateCsrfAndOrigin } from '@/lib/request-guard';
 import { getSupabaseAdminClient, isSupabaseConfigured } from '@/lib/supabase';
 import path from 'path';
 import fs from 'fs';
@@ -60,6 +61,13 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  if (requiresMfaVerification(session)) {
+    return NextResponse.json(
+      { success: false, error: 'Forbidden: Multi-Factor Authentication (AAL2) required.' },
+      { status: 403 }
+    );
+  }
+
   if (requiresPasswordChange(session)) {
     return NextResponse.json(
       {
@@ -67,6 +75,14 @@ export async function POST(req: NextRequest) {
         error: 'Password change required before performing administrative media uploads.',
         mustChangePassword: true,
       },
+      { status: 403 }
+    );
+  }
+
+  const csrfCheck = validateCsrfAndOrigin(req);
+  if (!csrfCheck.valid) {
+    return NextResponse.json(
+      { success: false, error: csrfCheck.error || 'CSRF validation failed.' },
       { status: 403 }
     );
   }

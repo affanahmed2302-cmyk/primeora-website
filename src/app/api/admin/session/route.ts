@@ -19,6 +19,8 @@ export async function GET(req: NextRequest) {
       fullName: session.fullName,
       role: session.role,
       mustChangePassword: Boolean(session.mustChangePassword),
+      aal: session.aal || 'aal2',
+      mfaPending: Boolean(session.mfaPending),
     },
   });
 

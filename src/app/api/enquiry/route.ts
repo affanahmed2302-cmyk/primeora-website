@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { saveEnquiry, getEnquiries, checkEnquiryRateLimit } from '@/lib/cms-store';
 import { sendEnquiryNotification } from '@/lib/notifications';
+import { getTrustedClientIp, hashIdentifier } from '@/lib/rate-limiter';
+import { readBoundedJson } from '@/lib/request-guard';
 import crypto from 'crypto';
 
 // In-memory rate limiting tracker (per-instance defense)
@@ -17,18 +19,21 @@ function sanitizeText(str: unknown, maxLength: number): string {
 
 export async function POST(req: NextRequest) {
   try {
-    // 1. Request Size Guard: Max 32KB
-    const contentLength = req.headers.get('content-length');
-    if (contentLength && parseInt(contentLength, 10) > 32768) {
+    // 1. Bounded body consumption: Max 32KB stream reader
+    const { data: body, error: bodyError, status: bodyStatus } = await readBoundedJson<Record<string, unknown>>(
+      req,
+      32 * 1024
+    );
+    if (bodyError || !body) {
       return NextResponse.json(
-        { success: false, error: 'Payload too large. Submissions must not exceed 32KB.' },
-        { status: 413 }
+        { success: false, error: bodyError || 'Invalid request body' },
+        { status: bodyStatus || 400 }
       );
     }
 
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() || '127.0.0.1';
+    const ip = getTrustedClientIp(req);
     const now = Date.now();
-    const ipHash = crypto.createHash('sha256').update(ip).digest('hex').substring(0, 16);
+    const ipHash = hashIdentifier(ip);
 
     // 2. In-Memory Rate Limiting (Defense-in-depth)
     const memRecord = inMemorySubmissions.get(ipHash);
@@ -55,12 +60,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    let body: Record<string, unknown>;
-    try {
-      body = await req.json();
-    } catch {
-      return NextResponse.json({ success: false, error: 'Invalid JSON payload format.' }, { status: 400 });
-    }
+
 
     // 4. Honeypot check (_hp must be absent or empty)
     if (body._hp && String(body._hp).trim() !== '') {

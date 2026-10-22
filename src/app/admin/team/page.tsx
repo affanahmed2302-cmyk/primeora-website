@@ -162,6 +162,7 @@ export default function AdminTeamManagementPage() {
     try {
       const res = await fetch('/api/admin/team/upload', {
         method: 'POST',
+        headers: { 'X-Primeora-CSRF': '1' },
         body: formData,
       });
 
@@ -198,7 +199,7 @@ export default function AdminTeamManagementPage() {
     try {
       const res = await fetch('/api/admin/team', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Primeora-CSRF': '1' },
         body: JSON.stringify({ id: member.id, status: nextStatus }),
       });
       if (res.ok) {
@@ -225,12 +226,12 @@ export default function AdminTeamManagementPage() {
       await Promise.all([
         fetch('/api/admin/team', {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'X-Primeora-CSRF': '1' },
           body: JSON.stringify({ id: currentMember.id, displayOrder: newOrderCurrent }),
         }),
         fetch('/api/admin/team', {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'X-Primeora-CSRF': '1' },
           body: JSON.stringify({ id: targetMember.id, displayOrder: newOrderTarget }),
         }),
       ]);
@@ -258,7 +259,7 @@ export default function AdminTeamManagementPage() {
 
       const res = await fetch(endpoint, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Primeora-CSRF': '1' },
         body: JSON.stringify(formState),
       });
 
@@ -299,6 +300,7 @@ export default function AdminTeamManagementPage() {
     try {
       const res = await fetch(`/api/admin/team?id=${deleteTarget.id}`, {
         method: 'DELETE',
+        headers: { 'X-Primeora-CSRF': '1' },
       });
       const data = await res.json();
 

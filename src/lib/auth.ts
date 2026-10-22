@@ -29,11 +29,18 @@ export interface AdminSession {
   fullName: string;
   role: 'super_admin' | 'content_editor';
   mustChangePassword?: boolean;
+  aal?: 'aal1' | 'aal2';
+  mfaPending?: boolean;
   exp: number;
 }
 
 // Generate HMAC-SHA256 Signed Session Token
-export function signSession(user: AdminUser, expiresInSeconds = 28800): string {
+export function signSession(
+  user: AdminUser,
+  expiresInSeconds = 28800,
+  aal: 'aal1' | 'aal2' = 'aal2',
+  mfaPending: boolean = false
+): string {
   const secretKey = getSecretKey();
   const payload: AdminSession = {
     userId: user.id,
@@ -41,6 +48,8 @@ export function signSession(user: AdminUser, expiresInSeconds = 28800): string {
     fullName: user.fullName,
     role: user.role,
     mustChangePassword: Boolean(user.mustChangePassword),
+    aal,
+    mfaPending,
     exp: Math.floor(Date.now() / 1000) + expiresInSeconds,
   };
 
@@ -116,6 +125,12 @@ export function isContentEditorOrSuperAdmin(session: AdminSession | null | undef
     session !== undefined &&
     (session.role === 'super_admin' || session.role === 'content_editor')
   );
+}
+
+// Check if session requires MFA verification (AAL2 assurance level)
+export function requiresMfaVerification(session: AdminSession | null | undefined): boolean {
+  if (!session) return false;
+  return Boolean(session.mfaPending || session.aal === 'aal1');
 }
 
 // Check if user is locked to forced password change (temporary credential)

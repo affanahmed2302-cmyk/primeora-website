@@ -11,7 +11,7 @@ import {
   Inbox,
   LogOut,
   ExternalLink,
-  ShieldCheck,
+  ShieldCheck, ShieldAlert, QrCode, X,
   RefreshCw,
   Mail,
   ChevronRight,
@@ -28,6 +28,13 @@ export default function AdminDashboardPage() {
   const [enquiries, setEnquiries] = useState<EnquirySubmission[]>([]);
   const [loading, setLoading] = useState(true);
   const [resetSuccess, setResetSuccess] = useState(false);
+  const [mfaStatus, setMfaStatus] = useState<any>(null);
+  const [enrollingMfa, setEnrollingMfa] = useState(false);
+  const [mfaModalOpen, setMfaModalOpen] = useState(false);
+  const [qrCodeData, setQrCodeData] = useState<{ qrCode: string; secret: string; factorId: string } | null>(null);
+  const [enrollCode, setEnrollCode] = useState('');
+  const [enrollStatus, setEnrollStatus] = useState<'idle' | 'verifying' | 'success' | 'error'>('idle');
+  const [enrollError, setEnrollError] = useState('');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -53,6 +60,12 @@ export default function AdminDashboardPage() {
         const enqData = await enqRes.json();
         setEnquiries(enqData.enquiries || []);
       }
+
+      const mfaRes = await fetch('/api/admin/mfa/status');
+      if (mfaRes.ok) {
+        const mfaData = await mfaRes.json();
+        setMfaStatus(mfaData.mfa);
+      }
     } catch {
       router.push('/admin/login');
     } finally {
@@ -63,6 +76,58 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     fetchSessionAndData();
   }, []);
+
+  const startMfaEnrollment = async () => {
+    setEnrollingMfa(true);
+    try {
+      const res = await fetch('/api/admin/mfa/enroll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Primeora-CSRF': '1' }
+      });
+      const data = await res.json();
+      if (data.success && data.factorId) {
+        setQrCodeData({ qrCode: data.qrCode, secret: data.secret, factorId: data.factorId });
+        setMfaModalOpen(true);
+        setEnrollStatus('idle');
+        setEnrollError('');
+        setEnrollCode('');
+      } else {
+        alert(data.error || 'Failed to start MFA enrollment');
+      }
+    } catch {
+      alert('Network error initializing MFA enrollment');
+    } finally {
+      setEnrollingMfa(false);
+    }
+  };
+
+  const confirmMfaEnrollment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!enrollCode || enrollCode.length !== 6 || !qrCodeData) return;
+    setEnrollStatus('verifying');
+    setEnrollError('');
+    try {
+      const res = await fetch('/api/admin/mfa/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Primeora-CSRF': '1' },
+        body: JSON.stringify({ factorId: qrCodeData.factorId, code: enrollCode.trim() })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setEnrollStatus('success');
+        setTimeout(() => {
+          setMfaModalOpen(false);
+          fetchSessionAndData();
+        }, 1500);
+      } else {
+        setEnrollStatus('error');
+        setEnrollError(data.error || 'Invalid 6-digit code');
+      }
+    } catch {
+      setEnrollStatus('error');
+      setEnrollError('Network error verifying code');
+    }
+  };
 
   const handleLogout = async () => {
     await fetch('/api/admin/logout', { method: 'POST' });
@@ -234,6 +299,134 @@ export default function AdminDashboardPage() {
             </div>
           </Link>
         </div>
+
+        {/* Multi-Factor Authentication (TOTP) Governance Card */}
+        <div className="bg-white dark:bg-[#1A1917] p-6 rounded-xl border border-[#E6DFD5] dark:border-[#2C2926] shadow-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                mfaStatus?.enrolled
+                  ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                  : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
+              }`}>
+                {mfaStatus?.enrolled ? <ShieldCheck className="w-5 h-5" /> : <ShieldAlert className="w-5 h-5" />}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base font-bold text-[#191817] dark:text-white">
+                    Multi-Factor Authentication (TOTP)
+                  </h3>
+                  <span className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded ${
+                    mfaStatus?.enrolled
+                      ? 'bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800'
+                      : 'bg-amber-100 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800'
+                  }`}>
+                    {mfaStatus?.enrolled ? 'ACTIVE & ENFORCED (AAL2)' : 'PENDING FOUNDER ENROLLMENT'}
+                  </span>
+                </div>
+                <p className="text-xs text-[#6E6862] dark:text-[#A8A29A] mt-1 leading-relaxed">
+                  {mfaStatus?.enrolled
+                    ? 'Your administrative account is protected with hardware/software authenticator verification (RFC 6238 TOTP).'
+                    : 'Configure your authenticator app (Google Authenticator, 1Password) to elevate account security and enforce AAL2 assurance.'}
+                </p>
+              </div>
+            </div>
+
+            {!mfaStatus?.enrolled && (
+              <button
+                onClick={startMfaEnrollment}
+                disabled={enrollingMfa}
+                className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-[#C25E38] hover:bg-[#A84E2D] rounded-lg shadow-xs transition-colors flex-shrink-0 disabled:opacity-50"
+              >
+                {enrollingMfa ? <RefreshCw className="w-4 h-4 animate-spin" /> : <QrCode className="w-4 h-4" />}
+                <span>Set Up Authenticator App</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* MFA Enrollment Modal */}
+        {mfaModalOpen && qrCodeData && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="bg-white dark:bg-[#1A1917] max-w-md w-full rounded-2xl p-6 border border-[#E6DFD5] dark:border-[#2C2926] shadow-xl space-y-5 animate-in fade-in zoom-in-95">
+              <div className="flex items-center justify-between border-b border-[#E6DFD5] dark:border-[#2C2926] pb-3">
+                <div className="flex items-center gap-2">
+                  <KeyRound className="w-5 h-5 text-[#C25E38]" />
+                  <h3 className="text-base font-bold text-[#191817] dark:text-white">
+                    Set Up Authenticator App
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setMfaModalOpen(false)}
+                  className="text-[#8C867E] hover:text-[#191817] dark:hover:text-white p-1 rounded-md"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="text-center space-y-3">
+                <p className="text-xs text-[#6E6862] dark:text-[#A8A29A]">
+                  1. Scan the QR code using Google Authenticator, Authy, or 1Password:
+                </p>
+                {qrCodeData.qrCode && (
+                  <div
+                    className="w-48 h-48 mx-auto bg-white p-2 rounded-xl border border-[#E6DFD5] shadow-xs flex items-center justify-center [&>svg]:w-full [&>svg]:h-full"
+                    dangerouslySetInnerHTML={{ __html: qrCodeData.qrCode }}
+                  />
+                )}
+                <div className="bg-[#F7F4EE] dark:bg-[#201E1C] p-2.5 rounded-lg border border-[#E6DFD5] dark:border-[#2C2926] text-[11px] font-mono break-all text-left">
+                  <span className="text-[#8C867E] block text-[10px]">Manual Entry Secret:</span>
+                  <span className="text-[#C25E38] font-bold select-all">{qrCodeData.secret}</span>
+                </div>
+              </div>
+
+              <form onSubmit={confirmMfaEnrollment} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-[#5A544E] dark:text-[#A8A196] mb-1 font-mono text-center">
+                    2. Enter the 6-Digit Code Shown on Your Phone
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    required
+                    value={enrollCode}
+                    onChange={(e) => setEnrollCode(e.target.value.replace(/\D/g, ''))}
+                    placeholder="000000"
+                    className="w-full text-center tracking-[0.5em] text-xl font-mono py-2.5 rounded-lg border border-[#DDD5C7] dark:border-[#383430] bg-[#FBF9F5] dark:bg-[#201E1B] text-[#191817] dark:text-white focus:ring-2 focus:ring-[#C25E38] focus:outline-none"
+                  />
+                </div>
+
+                {enrollError && (
+                  <p className="text-xs text-red-600 text-center font-medium">{enrollError}</p>
+                )}
+
+                {enrollStatus === 'success' && (
+                  <p className="text-xs text-emerald-600 text-center font-bold">
+                    ✓ Authenticator verified! Multi-factor authentication is active.
+                  </p>
+                )}
+
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setMfaModalOpen(false)}
+                    className="w-1/2 py-2 text-xs font-medium border border-[#DDD5C7] dark:border-[#383430] rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={enrollStatus === 'verifying' || enrollCode.length !== 6}
+                    className="w-1/2 py-2 text-xs font-bold text-white bg-[#C25E38] hover:bg-[#A84E2D] rounded-lg transition-colors disabled:opacity-50"
+                  >
+                    {enrollStatus === 'verifying' ? 'Verifying...' : 'Verify & Activate'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
 
         {/* System & Compliance Status */}
         <div className="bg-white dark:bg-[#1A1917] p-6 rounded-xl border border-[#E6DFD5] dark:border-[#2C2926] space-y-4">

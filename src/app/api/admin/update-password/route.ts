@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { readBoundedJson, validateCsrfAndOrigin } from '@/lib/request-guard';
 import { getSupabaseAdminClient, isSupabaseConfigured } from '@/lib/supabase';
 import { signSession, verifySession } from '@/lib/auth';
+import { getTrustedClientIp } from '@/lib/rate-limiter';
 import { AdminUser } from '@/types';
 
 export async function POST(req: NextRequest) {
@@ -21,7 +23,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const body = await req.json().catch(() => ({}));
+    const { data: body, error: bErr } = await readBoundedJson<any>(req, 16 * 1024);
+    if (bErr || !body) return NextResponse.json({ success: false, error: bErr || 'Invalid request body' }, { status: 400 });
     const { accessToken, newPassword } = body;
 
     if (!newPassword || typeof newPassword !== 'string' || newPassword.length < 10) {
@@ -117,7 +120,9 @@ export async function POST(req: NextRequest) {
     }
 
     // 4. Record privacy-conscious audit event (Zero passwords or tokens stored)
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() || '127.0.0.1';
+    const ip = getTrustedClientIp(req);
+    const csrfCheck = validateCsrfAndOrigin(req);
+    if (!csrfCheck.valid) return NextResponse.json({ success: false, error: csrfCheck.error }, { status: 403 });
     const ipHash = crypto.createHash('sha256').update(ip).digest('hex').substring(0, 16);
     const emailHash = crypto.createHash('sha256').update(targetUserEmail).digest('hex').substring(0, 16);
 

@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { readBoundedJson, validateCsrfAndOrigin } from '@/lib/request-guard';
 import { getSupabaseAdminClient, isSupabaseConfigured } from '@/lib/supabase';
-import { checkRateLimit, maskEmail } from '@/lib/rate-limiter';
+import { getTrustedClientIp, checkRateLimit, maskEmail } from '@/lib/rate-limiter';
 
 export async function POST(req: NextRequest) {
   try {
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() || '127.0.0.1';
+    const ip = getTrustedClientIp(req);
+    const csrfCheck = validateCsrfAndOrigin(req);
+    if (!csrfCheck.valid) return NextResponse.json({ success: false, error: csrfCheck.error }, { status: 403 });
     
     // Strict rate limit: 3 requests per 15 minutes per IP
     const rateCheck = checkRateLimit(`pwd_reset_req:${ip}`, 3, 900);
@@ -21,7 +24,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const body = await req.json().catch(() => ({}));
+    const { data: body, error: bErr } = await readBoundedJson<any>(req, 16 * 1024);
+    if (bErr || !body) return NextResponse.json({ success: false, error: bErr || 'Invalid request body' }, { status: 400 });
     const rawEmail = body.email;
 
     if (!rawEmail || typeof rawEmail !== 'string') {

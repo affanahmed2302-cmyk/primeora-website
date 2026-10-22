@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTeamMembers, saveTeamMember, deleteTeamMember } from '@/lib/cms-store';
-import { verifySession, isSuperAdmin, requiresPasswordChange } from '@/lib/auth';
+import { verifySession, isSuperAdmin, requiresPasswordChange, requiresMfaVerification } from '@/lib/auth';
+import { readBoundedJson, validateCsrfAndOrigin } from '@/lib/request-guard';
 import { TeamMember } from '@/types';
 
 // Helper: Require authenticated admin session
@@ -13,12 +14,26 @@ function getAuthenticatedAdmin(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const session = getAuthenticatedAdmin(req);
   if (!session) {
-    return NextResponse.json({ success: false, error: 'Unauthorized: Valid administrative session required.' }, { status: 401 });
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized: Valid administrative session required.' },
+      { status: 401 }
+    );
+  }
+
+  if (requiresMfaVerification(session)) {
+    return NextResponse.json(
+      { success: false, error: 'Forbidden: Multi-Factor Authentication (AAL2) required.' },
+      { status: 403 }
+    );
   }
 
   if (requiresPasswordChange(session)) {
     return NextResponse.json(
-      { success: false, error: 'Password change required before accessing administrative operations.', mustChangePassword: true },
+      {
+        success: false,
+        error: 'Password change required before accessing administrative operations.',
+        mustChangePassword: true,
+      },
       { status: 403 }
     );
   }
@@ -29,7 +44,10 @@ export async function GET(req: NextRequest) {
     res.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
     return res;
   } catch {
-    return NextResponse.json({ success: false, error: 'Failed to retrieve team members.' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: 'Failed to retrieve team members.' },
+      { status: 500 }
+    );
   }
 }
 
@@ -37,18 +55,51 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const session = getAuthenticatedAdmin(req);
   if (!session) {
-    return NextResponse.json({ success: false, error: 'Unauthorized: Valid administrative session required.' }, { status: 401 });
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized: Valid administrative session required.' },
+      { status: 401 }
+    );
+  }
+
+  if (requiresMfaVerification(session)) {
+    return NextResponse.json(
+      { success: false, error: 'Forbidden: Multi-Factor Authentication (AAL2) required.' },
+      { status: 403 }
+    );
   }
 
   if (requiresPasswordChange(session)) {
     return NextResponse.json(
-      { success: false, error: 'Password change required before accessing administrative operations.', mustChangePassword: true },
+      {
+        success: false,
+        error: 'Password change required before accessing administrative operations.',
+        mustChangePassword: true,
+      },
+      { status: 403 }
+    );
+  }
+
+  const csrfCheck = validateCsrfAndOrigin(req);
+  if (!csrfCheck.valid) {
+    return NextResponse.json(
+      { success: false, error: csrfCheck.error || 'CSRF validation failed.' },
       { status: 403 }
     );
   }
 
   try {
-    const body = await req.json();
+    const { data: body, error: bodyError, status: bodyStatus } = await readBoundedJson<Partial<TeamMember>>(
+      req,
+      64 * 1024
+    );
+
+    if (bodyError || !body) {
+      return NextResponse.json(
+        { success: false, error: bodyError || 'Invalid request body' },
+        { status: bodyStatus || 400 }
+      );
+    }
+
     const {
       fullName,
       publicTitle,
@@ -82,7 +133,7 @@ export async function POST(req: NextRequest) {
       linkedinUrl: linkedinUrl ? String(linkedinUrl).trim() : undefined,
       portfolioUrl: portfolioUrl ? String(portfolioUrl).trim() : undefined,
       displayOrder: Number(displayOrder) || 10,
-      status: ['published', 'draft', 'inactive'].includes(status) ? status : 'draft',
+      status: ['published', 'draft', 'inactive'].includes(status as string) ? (status as any) : 'draft',
       isFounder: Boolean(isFounder),
     };
 
@@ -99,18 +150,51 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   const session = getAuthenticatedAdmin(req);
   if (!session) {
-    return NextResponse.json({ success: false, error: 'Unauthorized: Valid administrative session required.' }, { status: 401 });
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized: Valid administrative session required.' },
+      { status: 401 }
+    );
+  }
+
+  if (requiresMfaVerification(session)) {
+    return NextResponse.json(
+      { success: false, error: 'Forbidden: Multi-Factor Authentication (AAL2) required.' },
+      { status: 403 }
+    );
   }
 
   if (requiresPasswordChange(session)) {
     return NextResponse.json(
-      { success: false, error: 'Password change required before accessing administrative operations.', mustChangePassword: true },
+      {
+        success: false,
+        error: 'Password change required before accessing administrative operations.',
+        mustChangePassword: true,
+      },
+      { status: 403 }
+    );
+  }
+
+  const csrfCheck = validateCsrfAndOrigin(req);
+  if (!csrfCheck.valid) {
+    return NextResponse.json(
+      { success: false, error: csrfCheck.error || 'CSRF validation failed.' },
       { status: 403 }
     );
   }
 
   try {
-    const body = await req.json();
+    const { data: body, error: bodyError, status: bodyStatus } = await readBoundedJson<any>(
+      req,
+      64 * 1024
+    );
+
+    if (bodyError || !body) {
+      return NextResponse.json(
+        { success: false, error: bodyError || 'Invalid request body' },
+        { status: bodyStatus || 400 }
+      );
+    }
+
     const { id } = body;
 
     if (!id || typeof id !== 'string') {
@@ -131,7 +215,9 @@ export async function PUT(req: NextRequest) {
       publicTitle: typeof body.publicTitle === 'string' ? body.publicTitle.trim() : existing.publicTitle,
       department: typeof body.department === 'string' ? body.department.trim() : existing.department,
       bio: typeof body.bio === 'string' ? body.bio.trim() : existing.bio,
-      responsibilities: Array.isArray(body.responsibilities) ? body.responsibilities.map(String) : existing.responsibilities,
+      responsibilities: Array.isArray(body.responsibilities)
+        ? body.responsibilities.map(String)
+        : existing.responsibilities,
       photoUrl: typeof body.photoUrl === 'string' ? body.photoUrl.trim() : existing.photoUrl,
       linkedinUrl: typeof body.linkedinUrl === 'string' ? body.linkedinUrl.trim() : existing.linkedinUrl,
       portfolioUrl: typeof body.portfolioUrl === 'string' ? body.portfolioUrl.trim() : existing.portfolioUrl,
@@ -152,12 +238,26 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   const session = getAuthenticatedAdmin(req);
   if (!session) {
-    return NextResponse.json({ success: false, error: 'Unauthorized: Valid administrative session required.' }, { status: 401 });
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized: Valid administrative session required.' },
+      { status: 401 }
+    );
+  }
+
+  if (requiresMfaVerification(session)) {
+    return NextResponse.json(
+      { success: false, error: 'Forbidden: Multi-Factor Authentication (AAL2) required.' },
+      { status: 403 }
+    );
   }
 
   if (requiresPasswordChange(session)) {
     return NextResponse.json(
-      { success: false, error: 'Password change required before accessing administrative operations.', mustChangePassword: true },
+      {
+        success: false,
+        error: 'Password change required before accessing administrative operations.',
+        mustChangePassword: true,
+      },
       { status: 403 }
     );
   }
@@ -166,6 +266,14 @@ export async function DELETE(req: NextRequest) {
   if (!isSuperAdmin(session)) {
     return NextResponse.json(
       { success: false, error: 'Forbidden: Only super administrators can permanently delete records.' },
+      { status: 403 }
+    );
+  }
+
+  const csrfCheck = validateCsrfAndOrigin(req);
+  if (!csrfCheck.valid) {
+    return NextResponse.json(
+      { success: false, error: csrfCheck.error || 'CSRF validation failed.' },
       { status: 403 }
     );
   }

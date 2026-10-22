@@ -48,7 +48,7 @@ const nextConfig: NextConfig = {
           {
             key: 'Content-Security-Policy',
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://images.unsplash.com https://dvhxcukgxgoptzprolfe.supabase.co https://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://dvhxcukgxgoptzprolfe.supabase.co https://*.supabase.co https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://stats.g.doubleclick.net; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'; ",
+              "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://images.unsplash.com https://dvhxcukgxgoptzprolfe.supabase.co https://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://dvhxcukgxgoptzprolfe.supabase.co https://*.supabase.co https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://stats.g.doubleclick.net; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests;",
           },
         ],
       },

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getEnquiries, updateEnquiry, deleteEnquiry } from '@/lib/cms-store';
-import { verifySession, isSuperAdmin, requiresPasswordChange } from '@/lib/auth';
+import { verifySession, isSuperAdmin, requiresPasswordChange, requiresMfaVerification } from '@/lib/auth';
+import { readBoundedJson, validateCsrfAndOrigin } from '@/lib/request-guard';
+import { EnquiryStatus } from '@/types';
 
 function getAuthenticatedAdmin(req: NextRequest) {
   const cookie = req.cookies.get('admin_session')?.value;
@@ -11,13 +13,27 @@ function getAuthenticatedAdmin(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const session = getAuthenticatedAdmin(req);
   if (!session) {
-    return NextResponse.json({ success: false, error: 'Unauthorized: Administrative authentication required.' }, { status: 401 });
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized: Administrative authentication required.' },
+      { status: 401 }
+    );
+  }
+
+  if (requiresMfaVerification(session)) {
+    return NextResponse.json(
+      { success: false, error: 'Forbidden: Multi-Factor Authentication (AAL2) required.' },
+      { status: 403 }
+    );
   }
 
   // Enforce password change if temporary credentials were used
   if (requiresPasswordChange(session)) {
     return NextResponse.json(
-      { success: false, error: 'Password change required before accessing administrative operations.', mustChangePassword: true },
+      {
+        success: false,
+        error: 'Password change required before accessing administrative operations.',
+        mustChangePassword: true,
+      },
       { status: 403 }
     );
   }
@@ -68,12 +84,26 @@ export async function GET(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   const session = getAuthenticatedAdmin(req);
   if (!session) {
-    return NextResponse.json({ success: false, error: 'Unauthorized: Administrative authentication required.' }, { status: 401 });
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized: Administrative authentication required.' },
+      { status: 401 }
+    );
+  }
+
+  if (requiresMfaVerification(session)) {
+    return NextResponse.json(
+      { success: false, error: 'Forbidden: Multi-Factor Authentication (AAL2) required.' },
+      { status: 403 }
+    );
   }
 
   if (requiresPasswordChange(session)) {
     return NextResponse.json(
-      { success: false, error: 'Password change required before accessing administrative operations.', mustChangePassword: true },
+      {
+        success: false,
+        error: 'Password change required before accessing administrative operations.',
+        mustChangePassword: true,
+      },
       { status: 403 }
     );
   }
@@ -85,8 +115,28 @@ export async function PATCH(req: NextRequest) {
     );
   }
 
+  const csrfCheck = validateCsrfAndOrigin(req);
+  if (!csrfCheck.valid) {
+    return NextResponse.json(
+      { success: false, error: csrfCheck.error || 'CSRF validation failed.' },
+      { status: 403 }
+    );
+  }
+
   try {
-    const body = await req.json();
+    const { data: body, error: bodyError, status: bodyStatus } = await readBoundedJson<{
+      id?: string;
+      status?: string;
+      internalNotes?: string;
+    }>(req, 64 * 1024);
+
+    if (bodyError || !body) {
+      return NextResponse.json(
+        { success: false, error: bodyError || 'Invalid request body' },
+        { status: bodyStatus || 400 }
+      );
+    }
+
     const { id, status, internalNotes } = body;
 
     if (!id || typeof id !== 'string') {
@@ -96,7 +146,10 @@ export async function PATCH(req: NextRequest) {
     const VALID_STATUSES = ['new', 'in_review', 'contacted', 'resolved', 'archived'];
     if (status && !VALID_STATUSES.includes(status)) {
       return NextResponse.json(
-        { success: false, error: 'Invalid status. Permitted statuses are new, in_review, contacted, resolved, archived.' },
+        {
+          success: false,
+          error: 'Invalid status. Permitted statuses are new, in_review, contacted, resolved, archived.',
+        },
         { status: 400 }
       );
     }
@@ -104,7 +157,7 @@ export async function PATCH(req: NextRequest) {
     const sanitizedNotes = typeof internalNotes === 'string' ? internalNotes.slice(0, 5000) : undefined;
 
     const updated = await updateEnquiry(id, {
-      status: status || undefined,
+      status: (status as EnquiryStatus) || undefined,
       internalNotes: sanitizedNotes,
     });
 
@@ -125,12 +178,26 @@ export async function PATCH(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   const session = getAuthenticatedAdmin(req);
   if (!session) {
-    return NextResponse.json({ success: false, error: 'Unauthorized: Administrative authentication required.' }, { status: 401 });
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized: Administrative authentication required.' },
+      { status: 401 }
+    );
+  }
+
+  if (requiresMfaVerification(session)) {
+    return NextResponse.json(
+      { success: false, error: 'Forbidden: Multi-Factor Authentication (AAL2) required.' },
+      { status: 403 }
+    );
   }
 
   if (requiresPasswordChange(session)) {
     return NextResponse.json(
-      { success: false, error: 'Password change required before accessing administrative operations.', mustChangePassword: true },
+      {
+        success: false,
+        error: 'Password change required before accessing administrative operations.',
+        mustChangePassword: true,
+      },
       { status: 403 }
     );
   }
@@ -138,6 +205,14 @@ export async function DELETE(req: NextRequest) {
   if (!isSuperAdmin(session)) {
     return NextResponse.json(
       { success: false, error: 'Forbidden: Super administrator privileges required to delete client records.' },
+      { status: 403 }
+    );
+  }
+
+  const csrfCheck = validateCsrfAndOrigin(req);
+  if (!csrfCheck.valid) {
+    return NextResponse.json(
+      { success: false, error: csrfCheck.error || 'CSRF validation failed.' },
       { status: 403 }
     );
   }
