@@ -14,20 +14,24 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), browsing-topics=()"
     X-DNS-Prefetch-Control = "on"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://images.unsplash.com https://dvhxcukgxgoptzprolfe.supabase.co https://*.supabase.co https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://dvhxcukgxgoptzprolfe.supabase.co https://*.supabase.co https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://stats.g.doubleclick.net; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests;"
 
 # Admin portal security and indexing guard
 [[headers]]
   for = "/admin/*"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
-    Cache-Control = "no-store, no-cache, must-revalidate, proxy-revalidate"
+    Cache-Control = "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+    Pragma = "no-cache"
 
 # Inbound enquiry and team API caching guard
 [[headers]]
   for = "/api/admin/*"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
-    Cache-Control = "no-store, no-cache, must-revalidate, proxy-revalidate"
+    Cache-Control = "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+    Pragma = "no-cache"
 
 # Crawler directives cache guard (revalidate immediately upon every deploy)
 [[headers]]
@@ -35,6 +39,13 @@
   [headers.values]
     Content-Type = "text/plain; charset=utf-8"
     Cache-Control = "public, max-age=0, must-revalidate"
+
+# Favicon cache guard
+[[headers]]
+  for = "/favicon.ico"
+  [headers.values]
+    Content-Type = "image/x-icon"
+    Cache-Control = "public, max-age=86400, must-revalidate"
 
 # Non-production contexts: Deploy Previews & Branch Deploys must not be indexed by crawlers
 [context.deploy-preview.environment]

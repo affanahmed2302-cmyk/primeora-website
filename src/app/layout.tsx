@@ -37,12 +37,18 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/brand/primeora-emblem.svg', type: 'image/svg+xml' },
-      { url: '/brand/emblem-transparent.png', type: 'image/png' },
       { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/brand/primeora-emblem.png', type: 'image/png', sizes: '512x512' },
     ],
-    apple: [{ url: '/brand/emblem.png' }],
+    shortcut: '/favicon.ico',
+    apple: [
+      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/brand/primeora-emblem.png', sizes: '512x512', type: 'image/png' },
+    ],
   },
+  manifest: '/manifest.json',
   openGraph: {
     type: 'website',
     locale: 'en_IN',

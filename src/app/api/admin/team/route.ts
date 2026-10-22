@@ -111,10 +111,10 @@ export async function PUT(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { id, ...updates } = body;
+    const { id } = body;
 
-    if (!id) {
-      return NextResponse.json({ success: false, error: 'Member ID is required.' }, { status: 400 });
+    if (!id || typeof id !== 'string') {
+      return NextResponse.json({ success: false, error: 'Valid member ID is required.' }, { status: 400 });
     }
 
     const members = await getTeamMembers(true);
@@ -123,10 +123,21 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ success: false, error: 'Team member not found.' }, { status: 404 });
     }
 
+    // Mass assignment prevention: strictly pick allowed editable fields
     const updated: TeamMember = {
       ...existing,
-      ...updates,
       id, // Preserve immutable ID
+      fullName: typeof body.fullName === 'string' ? body.fullName.trim() : existing.fullName,
+      publicTitle: typeof body.publicTitle === 'string' ? body.publicTitle.trim() : existing.publicTitle,
+      department: typeof body.department === 'string' ? body.department.trim() : existing.department,
+      bio: typeof body.bio === 'string' ? body.bio.trim() : existing.bio,
+      responsibilities: Array.isArray(body.responsibilities) ? body.responsibilities.map(String) : existing.responsibilities,
+      photoUrl: typeof body.photoUrl === 'string' ? body.photoUrl.trim() : existing.photoUrl,
+      linkedinUrl: typeof body.linkedinUrl === 'string' ? body.linkedinUrl.trim() : existing.linkedinUrl,
+      portfolioUrl: typeof body.portfolioUrl === 'string' ? body.portfolioUrl.trim() : existing.portfolioUrl,
+      displayOrder: typeof body.displayOrder === 'number' ? body.displayOrder : existing.displayOrder,
+      status: ['published', 'draft', 'inactive'].includes(body.status) ? body.status : existing.status,
+      isFounder: typeof body.isFounder === 'boolean' ? body.isFounder : existing.isFounder,
     };
 
     const saved = await saveTeamMember(updated);

@@ -14,6 +14,43 @@ function getAuthenticatedAdmin(req: NextRequest) {
   return verifySession(cookie);
 }
 
+/**
+ * Validates the file buffer against official magic byte signatures
+ */
+function isValidImageSignature(buffer: Buffer, mimeType: string): boolean {
+  if (buffer.length < 12) return false;
+
+  // JPEG: FF D8 FF
+  if (mimeType === 'image/jpeg') {
+    return buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
+  }
+
+  // PNG: 89 50 4E 47 0D 0A 1A 0A
+  if (mimeType === 'image/png') {
+    return (
+      buffer[0] === 0x89 &&
+      buffer[1] === 0x50 &&
+      buffer[2] === 0x4e &&
+      buffer[3] === 0x47 &&
+      buffer[4] === 0x0d &&
+      buffer[5] === 0x0a &&
+      buffer[6] === 0x1a &&
+      buffer[7] === 0x0a
+    );
+  }
+
+  // WebP: RIFF (bytes 0-3) + WEBP (bytes 8-11)
+  if (mimeType === 'image/webp') {
+    const isRiff =
+      buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46;
+    const isWebp =
+      buffer[8] === 0x57 && buffer[9] === 0x45 && buffer[10] === 0x42 && buffer[11] === 0x50;
+    return isRiff && isWebp;
+  }
+
+  return false;
+}
+
 export async function POST(req: NextRequest) {
   const session = getAuthenticatedAdmin(req);
   if (!session) {
@@ -67,19 +104,30 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 3. Generate sanitized unique filename
+    const buffer = Buffer.from(await file.arrayBuffer());
+
+    // 3. Inspect magic bytes (defense-in-depth against polyglot and MIME spoofing)
+    if (!isValidImageSignature(buffer, file.type)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Security verification failed: File content does not match genuine image signature.',
+        },
+        { status: 400 }
+      );
+    }
+
+    // 4. Generate sanitized unique filename (strictly alphanumeric + timestamp, no path traversal)
     const ext = file.type === 'image/png' ? 'png' : file.type === 'image/webp' ? 'webp' : 'jpg';
     const timestamp = Date.now();
     const randomHex = Math.random().toString(36).substring(2, 8);
     const filename = `portrait_${timestamp}_${randomHex}.${ext}`;
 
-    const buffer = Buffer.from(await file.arrayBuffer());
-
-    // 4. Upload to Supabase Storage if configured
+    // 5. Upload to Supabase Storage if configured
     if (isSupabaseConfigured()) {
       const supabase = getSupabaseAdminClient();
       if (supabase) {
-        const { data, error } = await supabase.storage
+        const { error } = await supabase.storage
           .from('team-photos')
           .upload(filename, buffer, {
             contentType: file.type,
@@ -88,7 +136,6 @@ export async function POST(req: NextRequest) {
           });
 
         if (error) {
-          // If error is bucket not found, try to create it or report
           return NextResponse.json(
             { success: false, error: `Supabase Storage error: ${error.message}` },
             { status: 502 }
@@ -109,7 +156,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 5. Fallback for offline/local development if permitted
+    // 6. Fallback for offline/local development if permitted
     const uploadDir = path.join(process.cwd(), 'public', 'team', 'uploads');
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });

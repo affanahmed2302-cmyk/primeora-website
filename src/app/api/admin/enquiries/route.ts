@@ -89,13 +89,23 @@ export async function PATCH(req: NextRequest) {
     const body = await req.json();
     const { id, status, internalNotes } = body;
 
-    if (!id) {
-      return NextResponse.json({ success: false, error: 'Enquiry ID is required.' }, { status: 400 });
+    if (!id || typeof id !== 'string') {
+      return NextResponse.json({ success: false, error: 'Valid enquiry ID is required.' }, { status: 400 });
     }
 
+    const VALID_STATUSES = ['new', 'in_review', 'contacted', 'resolved', 'archived'];
+    if (status && !VALID_STATUSES.includes(status)) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid status. Permitted statuses are new, in_review, contacted, resolved, archived.' },
+        { status: 400 }
+      );
+    }
+
+    const sanitizedNotes = typeof internalNotes === 'string' ? internalNotes.slice(0, 5000) : undefined;
+
     const updated = await updateEnquiry(id, {
-      status,
-      internalNotes,
+      status: status || undefined,
+      internalNotes: sanitizedNotes,
     });
 
     if (!updated) {
@@ -127,23 +137,14 @@ export async function DELETE(req: NextRequest) {
 
   if (!isSuperAdmin(session)) {
     return NextResponse.json(
-      { success: false, error: 'Forbidden: Super administrator privileges required to delete client enquiries.' },
+      { success: false, error: 'Forbidden: Super administrator privileges required to delete client records.' },
       { status: 403 }
     );
   }
 
   try {
     const { searchParams } = new URL(req.url);
-    let id = searchParams.get('id');
-
-    if (!id) {
-      try {
-        const body = await req.json();
-        id = body?.id;
-      } catch {
-        // Ignored if query param wasn't present and body not JSON
-      }
-    }
+    const id = searchParams.get('id');
 
     if (!id) {
       return NextResponse.json({ success: false, error: 'Enquiry ID is required.' }, { status: 400 });
@@ -151,13 +152,10 @@ export async function DELETE(req: NextRequest) {
 
     const deleted = await deleteEnquiry(id);
     if (!deleted) {
-      return NextResponse.json({ success: false, error: 'Enquiry record not found or delete failed.' }, { status: 404 });
+      return NextResponse.json({ success: false, error: 'Enquiry record not found or deletion failed.' }, { status: 404 });
     }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Enquiry deleted successfully.',
-    });
+    return NextResponse.json({ success: true, message: 'Enquiry deleted successfully.' });
   } catch {
     return NextResponse.json({ success: false, error: 'Failed to delete enquiry record.' }, { status: 500 });
   }
